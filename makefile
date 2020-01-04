@@ -1,18 +1,14 @@
 .ONESHELL:
 build:
 	python src/main.py
-docs:
+thesis:
 	cd docs/thesis
-	ls
-	# thesis.aux fájl generálása (PDF fájl még hibás hivatkozásokat fog tartalmazni)
-	pdflatex thesis.tex
-	# Irodalomjegyzék generálása
-	bibtex thesis
-	# Jelölésjegyzék generálása (ha szükséges)
-	makeindex -s nomencl.ist -t thesis.nlg -o thesis.nls thesis.nlo
-# Végleges PDF fájl generálása
-	pdflatex thesis.tex
-	pdflatex thesis.tex
-	mkdir ../../dist/ || mv thesis.pdf ../../dist/thesis.pdf 
+	texfot pdflatex thesis.tex
+	texfot bibtex thesis
+	texfot makeindex -s nomencl.ist -t thesis.nlg -o thesis.nls thesis.nlo
+	texfot pdflatex thesis.tex
+	texfot pdflatex thesis.tex
+	mkdir -p ../../dist/
+	mv thesis.pdf ../../dist/thesis.pdf && echo "PDF built at ./dist/thesis.pdf"
 test:
 	echo "Test"
