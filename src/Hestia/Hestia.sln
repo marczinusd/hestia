@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HestiaQualityService", "HestiaQualityService\HestiaQualityService.csproj", "{2098695B-F8E6-4748-BA26-EEBB18FBB09E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{39BB93D3-D10F-4057-B9C1-F6498FE33699}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.HestiaQualityService", "Test.HestiaQualityService\Test.HestiaQualityService.csproj", "{82AF4D38-13F4-44F4-B844-E0BA1006C5ED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hestia.Model", "Hestia.Model\Hestia.Model.csproj", "{1A35818E-3A3F-4989-8B62-112EA2EFE530}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Hestia.Model", "Test.Hestia.Model\Test.Hestia.Model.csproj", "{31D305CA-E50F-4C54-96EB-127B2656B353}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2098695B-F8E6-4748-BA26-EEBB18FBB09E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2098695B-F8E6-4748-BA26-EEBB18FBB09E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2098695B-F8E6-4748-BA26-EEBB18FBB09E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2098695B-F8E6-4748-BA26-EEBB18FBB09E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82AF4D38-13F4-44F4-B844-E0BA1006C5ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82AF4D38-13F4-44F4-B844-E0BA1006C5ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82AF4D38-13F4-44F4-B844-E0BA1006C5ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82AF4D38-13F4-44F4-B844-E0BA1006C5ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A35818E-3A3F-4989-8B62-112EA2EFE530}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A35818E-3A3F-4989-8B62-112EA2EFE530}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A35818E-3A3F-4989-8B62-112EA2EFE530}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A35818E-3A3F-4989-8B62-112EA2EFE530}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31D305CA-E50F-4C54-96EB-127B2656B353}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31D305CA-E50F-4C54-96EB-127B2656B353}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31D305CA-E50F-4C54-96EB-127B2656B353}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31D305CA-E50F-4C54-96EB-127B2656B353}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{82AF4D38-13F4-44F4-B844-E0BA1006C5ED} = {39BB93D3-D10F-4057-B9C1-F6498FE33699}
+		{31D305CA-E50F-4C54-96EB-127B2656B353} = {39BB93D3-D10F-4057-B9C1-F6498FE33699}
+	EndGlobalSection
+EndGlobal

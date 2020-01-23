@@ -1,6 +1,6 @@
 .ONESHELL:
 build:
-	python src/main.py
+	dotnet build src/Hestia/Hestia.sln
 thesis:
 	cd docs/thesis
 	texfot pdflatex thesis.tex
@@ -11,4 +11,6 @@ thesis:
 	mkdir -p ../../dist/
 	mv thesis.pdf ../../dist/thesis.pdf && echo "PDF built at ./dist/thesis.pdf"
 test:
-	echo "Test"
+	dotnet test src/Hestia/Hestia.sln
+cover:
+	dotnet test src/Hestia/Hestia.sln /p:CollectCoverage=true /p:CoverletOutput=TestResults/ /p:CoverletOutputFormat=lcov
