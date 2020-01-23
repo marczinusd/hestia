@@ -1,7 +1,7 @@
 .ONESHELL:
 build:
 	dotnet build src/Hestia/Hestia.sln
-thesis:
+build_thesis:
 	cd docs/thesis
 	texfot pdflatex thesis.tex
 	texfot bibtex thesis
