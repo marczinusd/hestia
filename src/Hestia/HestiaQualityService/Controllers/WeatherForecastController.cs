@@ -11,8 +11,9 @@ namespace Hestia.Controllers
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
-        private static readonly string[] Summaries = {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+        private static readonly string[] Summaries =
+        {
+            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching",
         };
 
         private readonly ILogger<WeatherForecastController> _logger;
@@ -22,6 +23,10 @@ namespace Hestia.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Get Weather forecast.
+        /// </summary>
+        /// <returns>Weather forecasts.</returns>
         [HttpGet]
         public IEnumerable<WeatherForecast> Get()
         {
@@ -30,7 +35,7 @@ namespace Hestia.Controllers
                 {
                     Date = DateTime.Now.AddDays(index),
                     TemperatureC = rng.Next(-20, 55),
-                    Summary = Summaries[rng.Next(Summaries.Length)]
+                    Summary = Summaries[rng.Next(Summaries.Length)],
                 })
                 .ToArray();
         }

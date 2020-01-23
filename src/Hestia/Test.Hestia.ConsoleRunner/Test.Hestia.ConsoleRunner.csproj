@@ -4,7 +4,6 @@
     <IsPackable>false</IsPackable>
     <LangVersion>8</LangVersion>
     <Nullable>enable</Nullable>
-    <OutputType>Library</OutputType>
     <CodeAnalysisRuleSet>..\Hestia.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
@@ -17,7 +16,6 @@
     <PackageReference Include="FluentAssertions" Version="5.10.0" />
     <PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="3.4.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
-    <PackageReference Include="Moq" Version="4.13.1" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.113" />
     <PackageReference Include="xunit" Version="2.4.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
@@ -25,7 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Hestia.Model\Hestia.Model.csproj" />
+    <ProjectReference Include="..\Hestia.ConsoleRunner\Hestia.ConsoleRunner.csproj" />
   </ItemGroup>
-
 </Project>

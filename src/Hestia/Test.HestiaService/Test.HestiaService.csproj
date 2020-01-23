@@ -5,6 +5,7 @@
     <LangVersion>8</LangVersion>
     <Nullable>enable</Nullable>
     <OutputType>Library</OutputType>
+    <RootNamespace>Test.HestiaQualityService</RootNamespace>
     <CodeAnalysisRuleSet>..\Hestia.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
@@ -23,9 +24,4 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
     <PackageReference Include="coverlet.collector" Version="1.0.1" />
   </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Hestia.Model\Hestia.Model.csproj" />
-  </ItemGroup>
-
 </Project>
