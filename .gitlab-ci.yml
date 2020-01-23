@@ -1,0 +1,37 @@
+image: microsoft/dotnet:latest
+
+variables:
+  OBJECTS_DIRECTORY: "obj"
+  NUGET_PACKAGES_DIRECTORY: ".nuget"
+  SOURCE_CODE_PATH: "src/Hestia/"
+
+stages:
+  - build
+  - test
+
+cache:
+  key: "$CI_JOB_STAGE-$CI_COMMIT_REF_SLUG"
+  paths:
+    # Specify three paths that should be cached:
+    #
+    # 1) Main JSON file holding information about package dependency tree, packages versions,
+    # frameworks etc. It also holds information where to the dependencies were restored.
+    - "$SOURCE_CODE_PATH$OBJECTS_DIRECTORY/project.assets.json"
+    # 2) Other NuGet and MSBuild related files. Also needed.
+    - "$SOURCE_CODE_PATH$OBJECTS_DIRECTORY/*.csproj.nuget.*"
+    # 3) Path to the directory where restored dependencies are kept.
+    - "$NUGET_PACKAGES_DIRECTORY"
+  policy: pull-push
+
+before_script:
+  - "dotnet restore --packages $NUGET_PACKAGES_DIRECTORY"
+
+build:
+  stage: build
+  script:
+    - "dotnet build src/Hestia/Hestia.sln --no-restore"
+
+tests:
+  stage: test
+  script:
+    - "dotnet test src/Hestia/Hestia.sln --no-restore"
