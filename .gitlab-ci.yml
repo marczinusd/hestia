@@ -24,7 +24,7 @@ cache:
   policy: pull-push
 
 before_script:
-  - "dotnet restore --packages $NUGET_PACKAGES_DIRECTORY"
+  - "dotnet restore src/Hestia/Hestia.sln --packages $NUGET_PACKAGES_DIRECTORY"
 
 build:
   stage: build
