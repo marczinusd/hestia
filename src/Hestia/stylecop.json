@@ -2,9 +2,22 @@
   "$schema": "https://raw.githubusercontent.com/DotNetAnalyzers/StyleCopAnalyzers/master/StyleCop.Analyzers/StyleCop.Analyzers/Settings/stylecop.schema.json",
   "settings": {
     "orderingRules": {
-      "usingDirectivesPlacement": "preserve"
+      "usingDirectivesPlacement": "preserve",
+      "blankLinesBetweenUsingGroups": "allow",
+      "elementOrder": [
+        "kind",
+        "accessibility",
+        "constant",
+        "static",
+        "readonly"
+      ],
+      "systemUsingDirectivesFirst": true
     },
     "namingRules": {
+      "allowCommonHungarianPrefixes": false,
+      "allowedHungarianPrefixes": [],
+      "tupleElementNameCasing": "camelCase",
+      "includeInferredTupleElementNames": false
     },
     "documentationRules": {
       "documentExposedElements": true,
@@ -12,7 +25,8 @@
       "documentInterfaces": true,
       "documentPrivateElements": false,
       "documentInternalElements": false,
-      "xmlHeader": false
+      "xmlHeader": false,
+      "documentationCulture": "en-US"
     }
   }
 }
