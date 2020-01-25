@@ -478,3 +478,8 @@ dist/
 **/.idea/*
 **/TestResults/*
 **/obj/*
+
+# Cypress
+**/screenshots/*
+**/videos/*
+**/integration/examples/*
