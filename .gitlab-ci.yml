@@ -24,19 +24,21 @@ cache:
   policy: pull-push
 
 before_script:
-  - "curl --location https://deb.nodesource.com/setup_12.x | sudo bash -"
-  - "sudo apt-get install -y nodejs"
-  - "npm install --prefix src/hestia-web-ui"
   - "dotnet restore src/Hestia/Hestia.sln --packages $NUGET_PACKAGES_DIRECTORY"
 
 build:
   stage: build
   script:
     - "dotnet build src/Hestia/Hestia.sln --no-restore"
-    - "npm run-script build --prefix src/hestia-web-ui"
 
 tests:
   stage: test
   script:
     - "dotnet test src/Hestia/Hestia.sln --no-restore"
+
+test-ui:
+  image: node:latest
+  stage: test
+  script:
+    - "npm install --prefix src/hestia-web-ui"
     - "npm run-script testAll --prefix src/hestia-web-ui"
