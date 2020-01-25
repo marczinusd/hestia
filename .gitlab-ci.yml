@@ -37,8 +37,10 @@ tests:
     - "dotnet test src/Hestia/Hestia.sln --no-restore"
 
 test-ui:
+  before_script:
+    - "cd src/hestia-web-ui"
+    - "npm install"
   image: node:latest
   stage: test
   script:
-    - "npm install --prefix src/hestia-web-ui"
-    - "npm run-script testAll --prefix src/hestia-web-ui"
+    - "npm run-script testAll"
