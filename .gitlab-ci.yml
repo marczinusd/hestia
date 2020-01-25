@@ -24,7 +24,8 @@ cache:
   policy: pull-push
 
 before_script:
-  - "apt-get install -y nodejs"
+  - "curl --location https://deb.nodesource.com/setup_12.x | sudo bash -"
+  - "sudo apt-get install -y nodejs"
   - "npm install --prefix src/hestia-web-ui"
   - "dotnet restore src/Hestia/Hestia.sln --packages $NUGET_PACKAGES_DIRECTORY"
 
