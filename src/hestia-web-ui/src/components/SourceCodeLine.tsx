@@ -9,7 +9,7 @@ export interface SourceCodeLineProps {
 export const SourceCodeLine = (props: SourceCodeLineProps) => {
   const rootStyle: CSSProperties = {
     textAlign: "left",
-    fontSize: "1em"
+    fontSize: "1.3em"
   };
 
   const lineNumberStyle: CSSProperties = {
