@@ -37,11 +37,13 @@ export class File {
   constructor(
     content: string,
     path: string,
+    filename: string,
     extension: string | FileExtensions
   ) {
     this._Content = content;
     this._Extension = extension;
     this._Path = path;
+    this._Filename = filename;
   }
 
   get Content(): string {
@@ -56,7 +58,12 @@ export class File {
     return this._Extension;
   }
 
+  get Filename(): string {
+    return this._Filename;
+  }
+
   private readonly _Content: string;
   private readonly _Path: string;
   private readonly _Extension: string;
+  private readonly _Filename: string;
 }

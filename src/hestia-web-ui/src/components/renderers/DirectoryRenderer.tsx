@@ -33,7 +33,7 @@ export const renderStructure = (
     return (
       <TreeItem
         nodeId={(currentNodeId++).toString()}
-        label={file.Path + file.Extension}
+        label={file.Filename + file.Extension}
         onFocus={_ => onSelected(file)}
         key={currentNodeId}
       />

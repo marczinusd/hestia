@@ -1,25 +1,29 @@
 import React from "react";
 import { SourceCodeLine } from "./SourceCodeLine";
 import { Typography } from "@material-ui/core";
-import _ from "lodash";
+import { SourceCodeBreadCrumb } from "./SourceCodeBreadcrumb";
+import { File } from "../model/Repository";
 
 export interface SourceCodeProps {
-  source: string;
+  file: File | undefined;
 }
 
 export const SourceCode = (props: SourceCodeProps) => {
-  if (!props.source) {
+  if (!props.file || !props.file.Content) {
     return <Typography>Please select a source file</Typography>;
   }
 
-  const lines = props.source.split(/\r?\n/g);
+  const lines = props.file.Content.split(/\r?\n/g);
   return (
     <div>
-      {lines.map((line, index) => {
-        return (
-          <SourceCodeLine lineNumber={index + 1} text={line} key={index} />
-        );
-      })}
+      <SourceCodeBreadCrumb file={props.file} />
+      <div style={{ backgroundColor: "#424242" }}>
+        {lines.map((line, index) => {
+          return (
+            <SourceCodeLine lineNumber={index + 1} text={line} key={index} />
+          );
+        })}
+      </div>
     </div>
   );
 };

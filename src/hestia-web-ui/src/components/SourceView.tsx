@@ -10,7 +10,8 @@ import { Repository, File } from "../model/Repository";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      flexGrow: 1
+      flexGrow: 1,
+      marginTop: theme.spacing(2)
     },
     paper: {
       padding: theme.spacing(2),
@@ -30,9 +31,11 @@ export const SourceView = (props: SourceViewProps) => {
 
   return (
     <div>
-      <Grid container spacing={3}>
+      <Grid container spacing={1} className={classes.root}>
         <Grid item xs={12}>
-          <Paper className={classes.paper}>{props.Repository.Name}</Paper>
+          <Paper className={classes.paper}>
+            <h3>{props.Repository.Name}</h3>
+          </Paper>
         </Grid>
         <Grid item xs={6} sm={3}>
           <Paper className={classes.paper}>
@@ -44,7 +47,7 @@ export const SourceView = (props: SourceViewProps) => {
         </Grid>
         <Grid item xs={6} sm={9}>
           <Paper className={classes.paper}>
-            <SourceCode source={selected?.Content ?? ""} />
+            <SourceCode file={selected} />
           </Paper>
         </Grid>
       </Grid>
