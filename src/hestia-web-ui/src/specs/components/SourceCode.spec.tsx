@@ -1,9 +1,10 @@
 import React from "react";
 import { render } from "@testing-library/react";
 import { SourceCode } from "../../components/SourceCode";
+import "@testing-library/jest-dom/extend-expect";
 
-test("renders Source Code", () => {
-  const { getByText } = render(<SourceCode source="blablabla" />);
-  const linkElement = getByText(/Source Code/i);
+test("renders a line of code", () => {
+  const { getByText } = render(<SourceCode source="bla" />);
+  const linkElement = getByText(/bla/i);
   expect(linkElement).toBeInTheDocument();
 });

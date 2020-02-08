@@ -12,18 +12,20 @@ import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { ThemeProvider } from "@material-ui/core/styles";
 import { SourceView } from "./SourceView";
+import { dummyRepo } from "../dummies/dummyData";
 
 function App() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+  const darkModeOverride = true;
 
   const theme = React.useMemo(
     () =>
       createMuiTheme({
         palette: {
-          type: prefersDarkMode ? "dark" : "light"
+          type: darkModeOverride || prefersDarkMode ? "dark" : "light"
         }
       }),
-    [prefersDarkMode]
+    [prefersDarkMode, darkModeOverride]
   );
 
   const useStyles = makeStyles((theme: Theme) =>
@@ -62,7 +64,7 @@ function App() {
             <Button color="inherit">Login</Button>
           </Toolbar>
         </AppBar>
-        <SourceView />
+        <SourceView Repository={dummyRepo} />
       </Container>
     </ThemeProvider>
   );

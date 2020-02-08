@@ -1,43 +1,33 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import TreeView from "@material-ui/lab/TreeView";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import TreeItem from "@material-ui/lab/TreeItem";
+import { dummySourceStructure } from "../dummies/dummyData";
+import { renderStructure } from "./renderers/DirectoryRenderer";
+import { Directory, File } from "../model/Repository";
 
-const useStyles = makeStyles({
-  root: {
-    height: 216,
-    flexGrow: 1,
-    maxWidth: 400
-  }
-});
+export interface SourceStructureProps {
+  rootDirectory: Directory;
+  selectionChanged: (file: File | undefined) => void;
+}
 
-export const SourceStructure = () => {
+export const SourceStructure = (props: SourceStructureProps) => {
+  const [selected, setSelected] = useState<File>();
+  const useStyles = makeStyles({
+    root: {
+      flexGrow: 1
+    }
+  });
+
+  useEffect(() => {
+    props.selectionChanged(selected);
+  }, [selected, props]);
+
   const classes = useStyles();
 
   return (
     <div>
-      Source Structure
-      <TreeView
-        className={classes.root}
-        defaultCollapseIcon={<ExpandMoreIcon />}
-        defaultExpandIcon={<ChevronRightIcon />}
-      >
-        <TreeItem nodeId="1" label="Applications">
-          <TreeItem nodeId="2" label="Calendar" />
-          <TreeItem nodeId="3" label="Chrome" />
-          <TreeItem nodeId="4" label="Webstorm" />
-        </TreeItem>
-        <TreeItem nodeId="5" label="Documents">
-          <TreeItem nodeId="6" label="Material-UI">
-            <TreeItem nodeId="7" label="src">
-              <TreeItem nodeId="8" label="index.js" />
-              <TreeItem nodeId="9" label="tree-view.js" />
-            </TreeItem>
-          </TreeItem>
-        </TreeItem>
-      </TreeView>
+      {renderStructure(dummySourceStructure, classes.root, f => {
+        setSelected(f);
+      })}
     </div>
   );
 };

@@ -4,7 +4,7 @@ import App from "../../components/App";
 
 test("renders Source View", () => {
   const { getByText } = render(<App />);
-  const linkElement = getByText(/Source View/i);
+  const linkElement = getByText(/Dummy/i);
   expect(linkElement).toBeInTheDocument();
 });
 

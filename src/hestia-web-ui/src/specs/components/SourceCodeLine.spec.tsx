@@ -14,12 +14,6 @@ test("renders line number", () => {
   expect(lineNumber).toBeInTheDocument();
 });
 
-test("container aligns text left", () => {
-  const { getByText } = render(<SourceCodeLine lineNumber={1} text="hello" />);
-  const container = getByText(/hello/).parentElement;
-  expect(container).toHaveStyle("text-align: left");
-});
-
 test("renders line number in monospaced font", () => {
   const { getByText } = render(<SourceCodeLine lineNumber={1} text="hello" />);
   const lineNumber = getByText(/1/);
