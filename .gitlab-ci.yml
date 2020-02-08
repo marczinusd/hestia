@@ -41,4 +41,5 @@ cover:
   script:
     - dotnet test src/Hestia/Hestia.sln /p:CollectCoverage=true /p:Exclude="[xunit*]*" /p:CoverletOutput="../coverage.json" /p:MergeWith="../coverage.json" /maxcpucount:1
     - dotnet tool install --global Codecov.Tool
+    - export PATH="$PATH:/root/.dotnet/tools"
     - codecov -f src/Hestia/coverage.json
