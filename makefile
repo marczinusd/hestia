@@ -13,4 +13,6 @@ build_thesis:
 test:
 	dotnet test src/Hestia/Hestia.sln
 cover:
+# for some reason this generates coverage per-assembly, which doesn't play well with literally ANYTHING
+# how to merge these reports together?
 	dotnet test src/Hestia/Hestia.sln /p:CollectCoverage=true /p:CoverletOutput=TestResults/ /p:CoverletOutputFormat=lcov
