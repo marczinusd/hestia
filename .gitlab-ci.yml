@@ -35,3 +35,10 @@ test:
   stage: test
   script:
     - "dotnet test src/Hestia/Hestia.sln --no-restore"
+
+cover:
+  stage: test
+  script:
+    - dotnet test Hestia.sln /p:CollectCoverage=true /p:Exclude="[xunit*]*" /p:CoverletOutput="../coverage.json" /p:MergeWith="../coverage.json" /maxcpucount:1
+    - dotnet tool install --global Codecov.Tool
+    - codecov -f coverage.json
