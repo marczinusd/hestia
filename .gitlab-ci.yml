@@ -44,21 +44,20 @@ test-ui:
   stage: test
   script:
     - "npm run-script testAll"
-
-test-cypress-e2e-chrome:
-  image: cypress/browsers:node12.14.0-chrome79-ff71
-  before_script:
-    - "cd src/hestia-web-ui"
-    - "npm install"
-  stage: test
-  script:
-    - $(npm bin)/cypress run --browser chrome
-  # artifacts:
-  #   expire_in: 1 week
-  #   when: always
-  #   paths:
-  #     - cypress/screenshots
-  #     - cypress/videos
-  #   reports:
-  #     junit:
-  #     - results/TEST-*.xml
+# test-cypress-e2e-chrome:
+#   image: cypress/browsers:node12.14.0-chrome79-ff71
+#   before_script:
+#     - "cd src/hestia-web-ui"
+#     - "npm install"
+#   stage: test
+#   script:
+#     - $(npm bin)/cypress run --browser chrome
+# artifacts:
+#   expire_in: 1 week
+#   when: always
+#   paths:
+#     - cypress/screenshots
+#     - cypress/videos
+#   reports:
+#     junit:
+#     - results/TEST-*.xml

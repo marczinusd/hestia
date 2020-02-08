@@ -482,3 +482,6 @@ dist/
 **/screenshots/*
 **/videos/*
 **/integration/examples/*
+
+# Ionide
+**/.ionide/*
