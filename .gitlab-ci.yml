@@ -3,7 +3,7 @@ image: mcr.microsoft.com/dotnet/core/sdk:3.1
 variables:
   OBJECTS_DIRECTORY: "obj"
   NUGET_PACKAGES_DIRECTORY: ".nuget"
-  SOURCE_CODE_PATH: "src/Hestia/"
+  SOURCE_CODE_PATH: "src/"
 
 stages:
   - build
@@ -24,22 +24,22 @@ cache:
   policy: pull-push
 
 before_script:
-  - "dotnet restore src/Hestia/Hestia.sln --packages $NUGET_PACKAGES_DIRECTORY"
+  - "dotnet restore src/Hestia.sln --packages $NUGET_PACKAGES_DIRECTORY"
 
 build:
   stage: build
   script:
-    - "dotnet build src/Hestia/Hestia.sln --no-restore"
+    - "dotnet build src/Hestia.sln --no-restore"
 
 test:
   stage: test
   script:
-    - "dotnet test src/Hestia/Hestia.sln --no-restore"
+    - "dotnet test src/Hestia.sln --no-restore"
 
 cover:
   stage: test
   script:
-    - dotnet test src/Hestia/Hestia.sln /p:CollectCoverage=true /p:Exclude="[xunit*]*" /p:CoverletOutput="../coverage.json" /p:MergeWith="../coverage.json" /maxcpucount:1
+    - dotnet test src/Hestia.sln /p:CollectCoverage=true /p:Exclude="[xunit*]*" /p:CoverletOutput="../coverage.json" /p:MergeWith="../coverage.json" /maxcpucount:1
     - dotnet tool install --global Codecov.Tool
     - export PATH="$PATH:/root/.dotnet/tools"
-    - codecov -f src/Hestia/coverage.json
+    - codecov -f src/coverage.json
