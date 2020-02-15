@@ -1,9 +1,10 @@
-﻿using System.Linq;
+﻿using System.Text.Json;
 using CommandLine;
 using Hestia.Model;
 using Hestia.Model.Stats;
 using Hestia.Model.Wrappers;
 using static LanguageExt.Prelude;
+using IOFile = System.IO.File;
 
 namespace Hestia.ConsoleRunner
 {
@@ -17,13 +18,14 @@ namespace Hestia.ConsoleRunner
                   .WithParsed(options =>
                   {
                       var enricher = new StatsEnricher(new DiskIOWrapper(), new GitCommands());
-                      enricher.Enrich(new Repository(0,
-                                                     "dummy",
-                                                     new Directory("a",
-                                                                   options.RepositoryPath,
-                                                                   Enumerable.Empty<Directory>(),
-                                                                   Enumerable.Empty<File>()),
-                                                     Some(options.CoveragePath)));
+                      var rootDirectory = DirectoryBuilder.BuildDirectoryStructureFromFilePath(options.RepositoryPath);
+                      var repository = new Repository(options.RepositoryId,
+                                                      options.RepositoryName,
+                                                      rootDirectory,
+                                                      Some(options.CoveragePath));
+                      var enrichedRepository = enricher.Enrich(repository);
+
+                      IOFile.WriteAllText(options.OutputPath, JsonSerializer.Serialize(enrichedRepository));
                   });
         }
 
@@ -43,11 +45,28 @@ namespace Hestia.ConsoleRunner
                     HelpText = "Path to the coverage result file for the selected repo")]
             public string CoveragePath { get; set; }
 
-            // ReSharper disable once UnusedMember.Local
+            // ReSharper disable once UnusedAutoPropertyAccessor.Local
+            [Option('i',
+                    "repositoryId",
+                    Required = false,
+                    Default = 0,
+                    HelpText =
+                        "Used to specify the id of the repository which will appear in the JSON representation.")]
+            public int RepositoryId { get; set; }
+
+            // ReSharper disable once UnusedAutoPropertyAccessor.Local
+            [Option('n',
+                    "repositoryName",
+                    Required = false,
+                    Default = "dummy",
+                    HelpText = "Used to specify the name of the repository that'll appear in the json representation.")]
+            public string RepositoryName { get; set; }
+
+            // ReSharper disable once UnusedAutoPropertyAccessor.Local
             [Option('o',
                     "outpath",
                     Required = true,
-                    HelpText = "Path to write the repository's JSON representation",
+                    HelpText = "Path to write the repository's JSON representation to",
                     Default = "repository.json")]
             public string OutputPath { get; set; }
         }
