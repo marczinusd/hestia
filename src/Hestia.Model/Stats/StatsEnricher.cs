@@ -28,7 +28,10 @@ namespace Hestia.Model.Stats
             // ReSharper disable once UnusedVariable
             var result = directory.Files.Select(f => _ioWrapper.ReadAllLinesFromFile(f.Path));
 
-            return new Directory(directory.Name, directory.Path, directory.Directories, directory.Files);
+            return new Directory(directory.Name,
+                                 directory.Path,
+                                 directory.Directories,
+                                 directory.Files);
         }
 
         // ReSharper disable once UnusedMember.Global
@@ -36,7 +39,11 @@ namespace Hestia.Model.Stats
         {
             var content = _ioWrapper.ReadAllLinesFromFile(file.Path);
 
-            return new File(content, file.Path, file.Filename, file.Extension, Option<FileGitStats>.None,
+            return new File(content,
+                            file.Path,
+                            file.Filename,
+                            file.Extension,
+                            Option<FileGitStats>.None,
                             Option<FileCoverageStats>.None);
         }
 

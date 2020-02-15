@@ -15,7 +15,9 @@ namespace Hestia.DAL
         {
             Repositories.Add(new Repository(
                                             "bla",
-                                            new Directory("blabla", "/", Enumerable.Empty<Directory>(),
+                                            new Directory("blabla",
+                                                          "/",
+                                                          Enumerable.Empty<Directory>(),
                                                           Enumerable.Empty<File>()),
                                             Option<string>.None));
         }
