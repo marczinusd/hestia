@@ -17,7 +17,7 @@ namespace Hestia.ConsoleRunner
                   .ParseArguments<Options>(args)
                   .WithParsed(options =>
                   {
-                      var enricher = new StatsEnricher(new DiskIOWrapper(), new GitCommands());
+                      var enricher = new StatsEnricher(new DiskIOWrapper(), new GitCommands(new CommandLineExecutor()));
                       var rootDirectory = DirectoryBuilder.BuildDirectoryStructureFromFilePath(options.RepositoryPath);
                       var repository = new Repository(options.RepositoryId,
                                                       options.RepositoryName,
@@ -29,6 +29,7 @@ namespace Hestia.ConsoleRunner
                   });
         }
 
+        #nullable disable
         private class Options
         {
             // ReSharper disable once UnusedAutoPropertyAccessor.Local
@@ -70,5 +71,6 @@ namespace Hestia.ConsoleRunner
                     Default = "repository.json")]
             public string OutputPath { get; set; }
         }
+        #nullable restore
     }
 }

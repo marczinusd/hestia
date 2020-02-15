@@ -42,7 +42,8 @@ namespace Hestia.Model.Stats
         {
             var content = _ioWrapper.ReadAllLinesFromFile(file.Path);
 
-            return new File(file.Filename,
+            return new File(0,
+                            file.Filename,
                             file.Extension,
                             file.Path,
                             content,
