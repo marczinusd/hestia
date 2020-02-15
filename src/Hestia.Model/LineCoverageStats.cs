@@ -2,6 +2,12 @@ namespace Hestia.Model
 {
     public class LineCoverageStats
     {
-        private bool IsCovered { get; set; }
+        public LineCoverageStats(bool isCovered)
+        {
+            IsCovered = isCovered;
+        }
+
+        // ReSharper disable once UnusedAutoPropertyAccessor.Local
+        private bool IsCovered { get; }
     }
 }

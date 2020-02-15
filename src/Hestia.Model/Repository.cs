@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Hestia.Model
+﻿namespace Hestia.Model
 {
     public class Repository
     {
@@ -10,8 +8,8 @@ namespace Hestia.Model
             RootDirectory = rootDirectory;
         }
 
-        public string Name { get; private set; }
+        public string Name { get; }
 
-        public Directory RootDirectory { get; private set; }
+        public Directory RootDirectory { get; }
     }
 }
