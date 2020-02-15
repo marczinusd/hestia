@@ -9,7 +9,7 @@ namespace Hestia.ConsoleRunner
         public static void Main(string[] args)
         {
             // ReSharper disable once UnusedVariable
-            StatsEnricher enricher = new StatsEnricher(new DiskIOWrapper());
+            var enricher = new StatsEnricher(new DiskIOWrapper(), new GitCommands());
             Console.WriteLine("Hello World!");
         }
     }

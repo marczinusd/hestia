@@ -6,7 +6,12 @@ namespace Hestia.Model
 {
     public class File
     {
-        public File(IEnumerable<SourceLine> content, string path, string filename, string extension, Option<FileGitStats> gitStats, Option<FileCoverageStats> coverageStats)
+        public File(IEnumerable<SourceLine> content,
+                    string path,
+                    string filename,
+                    string extension,
+                    Option<FileGitStats> gitStats,
+                    Option<FileCoverageStats> coverageStats)
         {
             Content = content;
             Path = path;
