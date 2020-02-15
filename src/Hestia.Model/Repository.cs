@@ -15,8 +15,7 @@ namespace Hestia.Model
 
         public string Name { get; }
 
-        [NotMapped]
-        public Option<string> PathToCoverageResultFile { get; }
+        [NotMapped] public Option<string> PathToCoverageResultFile { get; }
 
         public Directory RootDirectory { get; }
 

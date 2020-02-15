@@ -30,10 +30,8 @@ namespace Hestia.Model
 
         public string Extension { get; }
 
-        [NotMapped]
-        public Option<FileGitStats> GitStats { get; }
+        [NotMapped] public Option<FileGitStats> GitStats { get; }
 
-        [NotMapped]
-        public Option<FileCoverageStats> CoverageStats { get; }
+        [NotMapped] public Option<FileCoverageStats> CoverageStats { get; }
     }
 }
