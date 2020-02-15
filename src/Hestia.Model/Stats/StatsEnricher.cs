@@ -34,7 +34,7 @@ namespace Hestia.Model.Stats
             // ReSharper disable once UnusedVariable
             var result = directory.Files.Select(f => _ioWrapper.ReadAllLinesFromFile(f.Path));
 
-            return new Directory(0, directory.Name, directory.Path,
+            return new Directory(directory.Name, directory.Path,
                                  directory.Directories,
                                  directory.Files);
         }

@@ -1,9 +1,9 @@
 ﻿namespace Hestia.DAL.Entities
 {
-    public class GitStatsEntity
+    public class LineCoverageEntity
     {
         public long Id { get; set; }
 
-        public long LifetimeChanges { get; set; }
+        public bool IsCovered { get; set; }
     }
 }

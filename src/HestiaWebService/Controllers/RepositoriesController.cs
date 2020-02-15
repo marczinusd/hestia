@@ -3,8 +3,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Hestia.DAL;
+using Hestia.DAL.Entities;
+using Hestia.DAL.Extensions;
 using Hestia.Model;
-using Hestia.Model.DummyData;
 using LanguageExt;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -36,8 +37,8 @@ namespace Hestia.Controllers
             _logger.LogDebug($"Invoking GET on {typeof(RepositoriesController).Name}");
 
             var identifiers = _context.Repositories
-                                      .ToArray()
-                                      .Select(repo => repo.AsRepositoryIdentifier());
+                                      .Select(r => r.MapEntityToModel()
+                                                    .AsRepositoryIdentifier());
 
             return new ActionResult<IEnumerable<RepositoryIdentifier>>(identifiers);
         }
@@ -57,13 +58,13 @@ namespace Hestia.Controllers
             var repository = await _context.Repositories.FindAsync(id);
             if (repository == null)
             {
-                _context.Add(DataRepository.DummyRepository);
-                _context.SaveChanges();
+                // _context.Add(DataRepository.DummyRepository);
+                // _context.SaveChanges();
                 _logger.LogDebug("Repository with {id} not found.");
                 return NotFound();
             }
 
-            return repository;
+            return repository.MapEntityToModel();
         }
 
         /// <summary>
@@ -81,11 +82,11 @@ namespace Hestia.Controllers
             var repository = await _context.Repositories.FindAsync(repositoryId);
 
             return FindFileById(repository, fileId)
-                   .Some(f => new ActionResult<FileDetails>(f.AsFileDetails()))
+                   .Some(f => new ActionResult<FileDetails>(f.MapEntityToModel().AsFileDetails()))
                    .None(() => NotFound());
         }
 
-        private Option<File> FindFileById(Repository repository, long fileId)
+        private Option<FileEntity> FindFileById(RepositoryEntity repository, long fileId)
         {
             return repository.RootDirectory.Files.First(f => f.Id == fileId);
         }

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Hestia.DAL.Entities;
 using Hestia.Model;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,7 +14,7 @@ namespace Hestia.DAL
         {
         }
 
-        [NotNull] public DbSet<Repository> Repositories { get; set; }
+        [NotNull] public DbSet<RepositoryEntity> Repositories { get; set; }
     }
 #nullable restore
 }

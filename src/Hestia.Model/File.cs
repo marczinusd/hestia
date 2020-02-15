@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 using Hestia.Model.Stats;
 using LanguageExt;
@@ -8,12 +7,6 @@ namespace Hestia.Model
 {
     public class File
     {
-        // EFCore needs parameterless ctors for entities
-        // ReSharper disable once UnusedMember.Global
-        public File()
-        {
-        }
-
         public File(long id,
                     string filename,
                     string extension,
@@ -31,20 +24,20 @@ namespace Hestia.Model
             CoverageStats = coverageStats;
         }
 
-        public long Id { get; set; }
+        public long Id { get; }
 
         [JsonIgnore]
-        public IEnumerable<SourceLine> Content { get; set; }
+        public IEnumerable<SourceLine> Content { get; }
 
-        public string Path { get; set; }
+        public string Path { get; }
 
-        public string Filename { get; set; }
+        public string Filename { get; }
 
-        public string Extension { get; set; }
+        public string Extension { get; }
 
-        [NotMapped] public Option<FileGitStats> GitStats { get; set; }
+        public Option<FileGitStats> GitStats { get; }
 
-        [NotMapped] public Option<FileCoverageStats> CoverageStats { get; set; }
+        public Option<FileCoverageStats> CoverageStats { get; }
 
         public FileDetails AsFileDetails()
         {
