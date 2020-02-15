@@ -19,7 +19,8 @@ namespace Hestia.DAL
                                                           "/",
                                                           Enumerable.Empty<Directory>(),
                                                           Enumerable.Empty<File>()),
-                                            Option<string>.None));
+                                            Option<string>.None,
+                                            1));
         }
 
         [NotNull] public DbSet<Repository> Repositories { get; set; }

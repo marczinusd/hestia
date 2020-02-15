@@ -19,7 +19,10 @@ namespace Hestia.Model.Stats
         // ReSharper disable once UnusedMember.Global
         public Repository Enrich(Repository repository)
         {
-            return new Repository(repository.Name, repository.RootDirectory, Option<string>.None);
+            return new Repository(repository.Name,
+                                  repository.RootDirectory,
+                                  Option<string>.None,
+                                  1);
         }
 
         // ReSharper disable once UnusedMember.Global
@@ -57,7 +60,7 @@ namespace Hestia.Model.Stats
         // ReSharper disable once UnusedParameter.Local
         private Repository CollectCoverageStats(Repository repository)
         {
-            return null;
+            return repository;
         }
     }
 }

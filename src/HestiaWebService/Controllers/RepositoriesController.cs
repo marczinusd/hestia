@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Hestia.DAL;
 using Hestia.Model;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -22,15 +23,32 @@ namespace Hestia.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        ///     Gets all available repository ids and names.
+        /// </summary>
+        /// <returns>Full list of repository ids and names.</returns>
         [HttpGet]
-        public ActionResult<IEnumerable<Repository>> GetAllRepositories()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<IEnumerable<RepositoryIdentifier>> GetAllRepositories()
         {
             _logger.LogDebug($"Invoking GET on {typeof(RepositoriesController).Name}");
 
-            return _context.Repositories.ToArray();
+            var identifiers = _context.Repositories
+                                      .ToArray()
+                                      .Select(repo => repo.AsRepositoryIdentifier());
+
+            return new ActionResult<IEnumerable<RepositoryIdentifier>>(identifiers);
         }
 
+        /// <summary>
+        ///     Looks up a repository by id.
+        /// </summary>
+        /// <param name="id">id of the repository to lookup.</param>
+        /// <returns>Full details of a repository with the id provided.</returns>
+        /// <response code="404">Returns 404 when a repository for id was not found.</response>
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(Repository), 200)]
         public async Task<ActionResult<Repository>> GetRepositoryById(long id)
         {
             _logger.LogDebug($"Invoking GET by id with id=${id} on {typeof(RepositoriesController).Name}");
