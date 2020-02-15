@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using Hestia.Model.Stats;
 using LanguageExt;
 
@@ -6,10 +7,10 @@ namespace Hestia.Model
 {
     public class File
     {
-        public File(IEnumerable<SourceLine> content,
-                    string path,
-                    string filename,
+        public File(string filename,
                     string extension,
+                    string path,
+                    IEnumerable<SourceLine> content,
                     Option<FileGitStats> gitStats,
                     Option<FileCoverageStats> coverageStats)
         {
@@ -29,8 +30,10 @@ namespace Hestia.Model
 
         public string Extension { get; }
 
+        [NotMapped]
         public Option<FileGitStats> GitStats { get; }
 
+        [NotMapped]
         public Option<FileCoverageStats> CoverageStats { get; }
     }
 }

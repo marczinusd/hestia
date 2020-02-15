@@ -4,7 +4,7 @@ namespace Hestia.Model
 {
     public class SourceLine
     {
-        public SourceLine(LineCoverageStats lineCoverageStats, string text, LineGitStats lineGitStats)
+        public SourceLine(string text, LineCoverageStats lineCoverageStats, LineGitStats lineGitStats)
         {
             LineCoverageStats = lineCoverageStats;
             Text = text;

@@ -19,10 +19,8 @@ namespace Hestia.Model.Stats
         // ReSharper disable once UnusedMember.Global
         public Repository Enrich(Repository repository)
         {
-            return new Repository(repository.Name,
-                                  repository.RootDirectory,
-                                  Option<string>.None,
-                                  1);
+            return new Repository(1, repository.Name, repository.RootDirectory,
+                                  Option<string>.None);
         }
 
         // ReSharper disable once UnusedMember.Global
@@ -42,10 +40,10 @@ namespace Hestia.Model.Stats
         {
             var content = _ioWrapper.ReadAllLinesFromFile(file.Path);
 
-            return new File(content,
-                            file.Path,
-                            file.Filename,
+            return new File(file.Filename,
                             file.Extension,
+                            file.Path,
+                            content,
                             Option<FileGitStats>.None,
                             Option<FileCoverageStats>.None);
         }

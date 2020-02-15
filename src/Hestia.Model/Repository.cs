@@ -1,10 +1,11 @@
-﻿using LanguageExt;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using LanguageExt;
 
 namespace Hestia.Model
 {
     public class Repository
     {
-        public Repository(string name, Directory rootDirectory, Option<string> pathToCoverageResultFile, long id)
+        public Repository(long id, string name, Directory rootDirectory, Option<string> pathToCoverageResultFile)
         {
             Name = name;
             RootDirectory = rootDirectory;
@@ -14,6 +15,7 @@ namespace Hestia.Model
 
         public string Name { get; }
 
+        [NotMapped]
         public Option<string> PathToCoverageResultFile { get; }
 
         public Directory RootDirectory { get; }
