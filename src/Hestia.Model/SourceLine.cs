@@ -4,6 +4,12 @@ namespace Hestia.Model
 {
     public class SourceLine
     {
+        // EFCore needs parameterless ctors for entities
+        // ReSharper disable once UnusedMember.Global
+        public SourceLine()
+        {
+        }
+
         public SourceLine(string text, LineCoverageStats lineCoverageStats, LineGitStats lineGitStats)
         {
             LineCoverageStats = lineCoverageStats;
@@ -11,10 +17,14 @@ namespace Hestia.Model
             LineGitStats = lineGitStats;
         }
 
-        public string Text { get; }
+        public long Id { get; set; }
 
-        public LineCoverageStats LineCoverageStats { get; }
+        public int LineNumber { get; set; }
 
-        public LineGitStats LineGitStats { get; }
+        public string Text { get; set; }
+
+        public LineCoverageStats LineCoverageStats { get; set; }
+
+        public LineGitStats LineGitStats { get; set; }
     }
 }

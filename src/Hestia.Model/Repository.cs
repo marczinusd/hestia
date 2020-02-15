@@ -1,10 +1,17 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using LanguageExt;
 
 namespace Hestia.Model
 {
     public class Repository
     {
+        // EFCore needs parameterless ctors for entities
+        // ReSharper disable once UnusedMember.Global
+        public Repository()
+        {
+        }
+
         public Repository(long id, string name, Directory rootDirectory, Option<string> pathToCoverageResultFile)
         {
             Name = name;
@@ -13,13 +20,14 @@ namespace Hestia.Model
             Id = id;
         }
 
-        public string Name { get; }
+        public string Name { get; set; }
 
-        [NotMapped] public Option<string> PathToCoverageResultFile { get; }
+        [NotMapped] public Option<string> PathToCoverageResultFile { get; set; }
 
-        public Directory RootDirectory { get; }
+        public Directory RootDirectory { get; set; }
 
-        public long Id { get; }
+        [Key]
+        public long Id { get; set; }
 
         public RepositoryIdentifier AsRepositoryIdentifier() => new RepositoryIdentifier(Id, Name);
     }

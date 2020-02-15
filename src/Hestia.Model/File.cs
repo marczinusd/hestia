@@ -8,6 +8,12 @@ namespace Hestia.Model
 {
     public class File
     {
+        // EFCore needs parameterless ctors for entities
+        // ReSharper disable once UnusedMember.Global
+        public File()
+        {
+        }
+
         public File(long id,
                     string filename,
                     string extension,
@@ -25,20 +31,20 @@ namespace Hestia.Model
             CoverageStats = coverageStats;
         }
 
-        public long Id { get; }
+        public long Id { get; set; }
 
         [JsonIgnore]
-        public IEnumerable<SourceLine> Content { get; }
+        public IEnumerable<SourceLine> Content { get; set; }
 
-        public string Path { get; }
+        public string Path { get; set; }
 
-        public string Filename { get; }
+        public string Filename { get; set; }
 
-        public string Extension { get; }
+        public string Extension { get; set; }
 
-        [NotMapped] public Option<FileGitStats> GitStats { get; }
+        [NotMapped] public Option<FileGitStats> GitStats { get; set; }
 
-        [NotMapped] public Option<FileCoverageStats> CoverageStats { get; }
+        [NotMapped] public Option<FileCoverageStats> CoverageStats { get; set; }
 
         public FileDetails AsFileDetails()
         {

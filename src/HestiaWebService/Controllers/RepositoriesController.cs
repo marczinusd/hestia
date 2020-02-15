@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Hestia.DAL;
 using Hestia.Model;
+using Hestia.Model.DummyData;
 using LanguageExt;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -56,6 +57,8 @@ namespace Hestia.Controllers
             var repository = await _context.Repositories.FindAsync(id);
             if (repository == null)
             {
+                _context.Add(DataRepository.DummyRepository);
+                _context.SaveChanges();
                 _logger.LogDebug("Repository with {id} not found.");
                 return NotFound();
             }
