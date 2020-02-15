@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Collections.Generic;
 
 namespace Hestia.DAL.Entities
 {
@@ -10,8 +10,8 @@ namespace Hestia.DAL.Entities
 
         public string Path { get; set; }
 
-        public DbSet<FileEntity> Files { get; set; }
+        public ICollection<FileEntity> Files { get; set; } = new List<FileEntity>();
 
-        public DbSet<DirectoryEntity> Directories { get; set; }
+        public ICollection<DirectoryEntity> Directories { get; set; } = new List<DirectoryEntity>();
     }
 }

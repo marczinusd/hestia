@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Hestia.DAL.Entities;
-using Hestia.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hestia.DAL

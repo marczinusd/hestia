@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Collections.Generic;
 
 namespace Hestia.DAL.Entities
 {
@@ -6,7 +6,7 @@ namespace Hestia.DAL.Entities
     {
         public long Id { get; set; }
 
-        public DbSet<LineEntity> Content { get; set; }
+        public ICollection<LineEntity> Content { get; set; } = new List<LineEntity>();
 
         public string Path { get; set; }
 

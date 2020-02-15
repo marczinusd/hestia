@@ -7,28 +7,24 @@ namespace Hestia.DAL.Extensions
 {
     public static class Mappers
     {
-        public static Repository MapEntityToModel(this RepositoryEntity entity)
-        {
-            return new Repository(entity.Id,
-                                  entity.Name,
-                                  entity.RootDirectory.MapEntityToModel(),
-                                  entity.PathToCoverageResultFile);
-        }
+        public static Repository MapEntityToModel(this RepositoryEntity entity) =>
+            new Repository(entity.Id,
+                           entity.Name,
+                           entity.RootDirectory.MapEntityToModel(),
+                           entity.PathToCoverageResultFile);
 
-        public static Directory MapEntityToModel(this DirectoryEntity entity)
-        {
-            return new Directory(entity.Name,
-                                 entity.Path,
-                                 entity.Directories.Select(d => d.MapEntityToModel()),
-                                 entity.Files.Select(f => f.MapEntityToModel()));
-        }
+        public static Directory MapEntityToModel(this DirectoryEntity entity) =>
+            new Directory(entity.Name,
+                          entity.Path,
+                          entity.Directories?.Select(d => d.MapEntityToModel()) ?? Enumerable.Empty<Directory>(),
+                          entity.Files?.Select(f => f.MapEntityToModel()) ?? Enumerable.Empty<File>());
 
         public static File MapEntityToModel(this FileEntity entity) =>
             new File(entity.Id,
                      entity.Filename,
                      entity.Extension,
                      entity.Path,
-                     entity.Content.Select(l => l.MapEntityToModel()),
+                     entity.Content?.Select(l => l.MapEntityToModel()) ?? Enumerable.Empty<SourceLine>(),
                      entity.GitStats.MapEntityToModel(),
                      entity.CoverageStats.MapEntityToModel());
 

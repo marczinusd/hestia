@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Hestia.DAL;
+using Hestia.DAL.DummyData;
 using Hestia.DAL.Entities;
 using Hestia.DAL.Extensions;
 using Hestia.Model;
@@ -23,6 +24,11 @@ namespace Hestia.Controllers
         public RepositoriesController([NotNull] HestiaContext context, ILogger<RepositoriesController> logger)
         {
             _context = context;
+            if (_context.Repositories == null || !_context.Repositories.Any())
+            {
+                _context.Setup();
+            }
+
             _logger = logger;
         }
 

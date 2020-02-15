@@ -4,7 +4,7 @@ namespace Hestia.DAL.DummyData
 {
     public static class DummyContextSetup
     {
-        public static void Setup(HestiaContext context)
+        public static void Setup(this HestiaContext context)
         {
             RepositoryEntity repository = new RepositoryEntity();
             repository.Name = "DummyEntity";
@@ -35,6 +35,7 @@ namespace Hestia.DAL.DummyData
             repository.RootDirectory.Directories.Add(directoryEntity2);
 
             context.Repositories.Add(repository);
+            context.SaveChanges();
         }
     }
 }
