@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Hestia.Model.Wrappers;
+using LanguageExt;
 
 namespace Hestia.Model.Stats
 {
@@ -32,7 +33,7 @@ namespace Hestia.Model.Stats
         {
             var content = _ioWrapper.ReadAllLinesFromFile(file.Path);
 
-            return new File(content, file.Path, file.Filename, file.Extension);
+            return new File(content, file.Path, file.Filename, file.Extension, Option<FileGitStats>.None, Option<FileCoverageStats>.None);
         }
     }
 }

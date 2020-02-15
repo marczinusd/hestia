@@ -1,3 +1,5 @@
+using Hestia.Model.Stats;
+
 namespace Hestia.Model
 {
     public class SourceLine

@@ -1,4 +1,4 @@
-namespace Hestia.Model
+namespace Hestia.Model.Stats
 {
     public class LineCoverageStats
     {
