@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Hestia.DAL;
 using Hestia.Model;
+using LanguageExt;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -46,7 +47,7 @@ namespace Hestia.Controllers
         /// <param name="id">id of the repository to lookup.</param>
         /// <returns>Full details of a repository with the id provided.</returns>
         /// <response code="404">Returns 404 when a repository for id was not found.</response>
-        [HttpGet("{id}")]
+        [HttpGet("[Controller]/{id}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(Repository), 200)]
         public async Task<ActionResult<Repository>> GetRepositoryById(long id)
@@ -60,6 +61,30 @@ namespace Hestia.Controllers
             }
 
             return repository;
+        }
+
+        /// <summary>
+        /// Look up file details by repository and file id.
+        /// </summary>
+        /// <param name="repositoryId">Id of the repository that contains the file.</param>
+        /// <param name="fileId">Id of the file.</param>
+        /// <returns>File with the provided id.</returns>
+        /// <response code="404">Returns 404 when a file for the provided id was not found.</response>
+        [HttpGet("[Controller]/{repositoryId}/files/{fileId}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(FileDetails), 200)]
+        public async Task<ActionResult<FileDetails>> GetFileById(long repositoryId, long fileId)
+        {
+            var repository = await _context.Repositories.FindAsync(repositoryId);
+
+            return FindFileById(repository, fileId)
+                   .Some(f => new ActionResult<FileDetails>(f.AsFileDetails()))
+                   .None(() => NotFound());
+        }
+
+        private Option<File> FindFileById(Repository repository, long fileId)
+        {
+            return repository.RootDirectory.Files.First(f => f.Id == fileId);
         }
     }
 }
