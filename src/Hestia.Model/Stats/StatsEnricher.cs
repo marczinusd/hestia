@@ -2,6 +2,7 @@
 using System.Linq;
 using Hestia.Model.Wrappers;
 using LanguageExt;
+using static LanguageExt.Prelude;
 
 namespace Hestia.Model.Stats
 {
@@ -19,12 +20,12 @@ namespace Hestia.Model.Stats
 
         // ReSharper disable once UnusedMember.Global
         [Pure]
-        public Repository Enrich(Repository repository)
+        public Repository Enrich(Repository repository, string pathToCoverageFile)
         {
             return new Repository(1,
                                   repository.Name,
                                   repository.RootDirectory,
-                                  Option<string>.None);
+                                  Some(pathToCoverageFile));
         }
 
         // ReSharper disable once UnusedMember.Global
@@ -32,9 +33,10 @@ namespace Hestia.Model.Stats
         public Directory Enrich(Directory directory)
         {
             // ReSharper disable once UnusedVariable
-            var result = directory.Files.Select(f => _ioWrapper.ReadAllLinesFromFile(f.Path));
+            var result = directory.Files.Select(f => _ioWrapper.ReadAllLinesFromFileAsSourceModel(f.Path));
 
-            return new Directory(directory.Name, directory.Path,
+            return new Directory(directory.Name,
+                                 directory.Path,
                                  directory.Directories,
                                  directory.Files);
         }
@@ -43,7 +45,7 @@ namespace Hestia.Model.Stats
         [Pure]
         public File Enrich(File file)
         {
-            var content = _ioWrapper.ReadAllLinesFromFile(file.Path);
+            var content = _ioWrapper.ReadAllLinesFromFileAsSourceModel(file.Path);
 
             return new File(0,
                             file.Filename,

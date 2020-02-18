@@ -1,7 +1,15 @@
-﻿namespace Hestia.Model.Wrappers
+﻿using System.Collections.Generic;
+
+namespace Hestia.Model.Wrappers
 {
     public interface IDiskIOWrapper
     {
-        SourceLine[] ReadAllLinesFromFile(string filePath);
+        SourceLine[] ReadAllLinesFromFileAsSourceModel(string filePath);
+
+        IEnumerable<string> ReadAllLinesFromFile(string filePath);
+
+        IEnumerable<string> EnumerateAllDirectoriesForPath(string path);
+
+        IEnumerable<string> EnumerateAllFilesForPath(string path);
     }
 }

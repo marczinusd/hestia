@@ -1,9 +1,8 @@
 ﻿using System.Text.Json;
 using CommandLine;
-using Hestia.Model;
+using Hestia.Model.Builders;
 using Hestia.Model.Stats;
 using Hestia.Model.Wrappers;
-using static LanguageExt.Prelude;
 using IOFile = System.IO.File;
 
 namespace Hestia.ConsoleRunner
@@ -17,13 +16,10 @@ namespace Hestia.ConsoleRunner
                   .ParseArguments<Options>(args)
                   .WithParsed(options =>
                   {
-                      var enricher = new StatsEnricher(new DiskIOWrapper(), new GitCommands(new CommandLineExecutor()));
-                      var rootDirectory = DirectoryBuilder.BuildDirectoryStructureFromFilePath(options.RepositoryPath);
-                      var repository = new Repository(options.RepositoryId,
-                                                      options.RepositoryName,
-                                                      rootDirectory,
-                                                      Some(options.CoveragePath));
-                      var enrichedRepository = enricher.Enrich(repository);
+                      var ioWrapper = new DiskIOWrapper();
+                      var enricher = new StatsEnricher(ioWrapper, new GitCommands(new CommandLineExecutor()));
+                      var repository = RepositoryBuilder.BuildRepositoryFromDirectoryPath(options.RepositoryPath, ioWrapper);
+                      var enrichedRepository = enricher.Enrich(repository, options.CoveragePath);
 
                       IOFile.WriteAllText(options.OutputPath, JsonSerializer.Serialize(enrichedRepository));
                   });
@@ -40,6 +36,7 @@ namespace Hestia.ConsoleRunner
             public string RepositoryPath { get; set; }
 
             // ReSharper disable once UnusedAutoPropertyAccessor.Local
+            // ReSharper disable once UnusedMember.Local
             [Option('c',
                     "coveragePath",
                     Required = false,
@@ -47,6 +44,7 @@ namespace Hestia.ConsoleRunner
             public string CoveragePath { get; set; }
 
             // ReSharper disable once UnusedAutoPropertyAccessor.Local
+            // ReSharper disable once UnusedMember.Local
             [Option('i',
                     "repositoryId",
                     Required = false,
@@ -56,6 +54,7 @@ namespace Hestia.ConsoleRunner
             public int RepositoryId { get; set; }
 
             // ReSharper disable once UnusedAutoPropertyAccessor.Local
+            // ReSharper disable once UnusedMember.Local
             [Option('n',
                     "repositoryName",
                     Required = false,

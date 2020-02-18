@@ -1,4 +1,5 @@
 using Hestia.Model.Stats;
+using LanguageExt;
 
 namespace Hestia.Model
 {
@@ -6,8 +7,8 @@ namespace Hestia.Model
     {
         public SourceLine(int lineNumber,
                           string text,
-                          LineCoverageStats lineCoverageStats,
-                          LineGitStats lineGitStats)
+                          Option<LineCoverageStats> lineCoverageStats,
+                          Option<LineGitStats> lineGitStats)
         {
             LineCoverageStats = lineCoverageStats;
             Text = text;
@@ -19,8 +20,8 @@ namespace Hestia.Model
 
         public string Text { get; }
 
-        public LineCoverageStats LineCoverageStats { get; }
+        public Option<LineCoverageStats> LineCoverageStats { get; }
 
-        public LineGitStats LineGitStats { get; }
+        public Option<LineGitStats> LineGitStats { get; }
     }
 }
