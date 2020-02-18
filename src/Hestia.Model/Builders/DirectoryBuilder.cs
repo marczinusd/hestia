@@ -13,7 +13,7 @@ namespace Hestia.Model.Builders
             var directories = diskIoWrapper.EnumerateAllDirectoriesForPath(pathToDirectory);
             var files = diskIoWrapper.EnumerateAllFilesForPath(pathToDirectory);
 
-            return new Directory(Path.GetDirectoryName(pathToDirectory), 
+            return new Directory(Path.GetDirectoryName(pathToDirectory),
                                  Path.GetPathRoot(pathToDirectory),
                                  directories.Select(dir => BuildDirectoryFromDirectoryPath(Path.Join(pathToDirectory, dir), diskIoWrapper)),
                                  files.Select(file => FileBuilder.BuildFileFromPath(Path.Join(pathToDirectory, file), diskIoWrapper)));
