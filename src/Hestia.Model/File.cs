@@ -11,7 +11,7 @@ namespace Hestia.Model
                     string filename,
                     string extension,
                     string path,
-                    IEnumerable<SourceLine> content,
+                    IList<SourceLine> content,
                     Option<FileGitStats> gitStats,
                     Option<FileCoverageStats> coverageStats)
         {
@@ -27,7 +27,7 @@ namespace Hestia.Model
         public long Id { get; }
 
         [JsonIgnore]
-        public IEnumerable<SourceLine> Content { get; }
+        public IList<SourceLine> Content { get; }
 
         public string Path { get; }
 

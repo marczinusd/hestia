@@ -24,7 +24,7 @@ namespace Hestia.DAL.Extensions
                      entity.Filename,
                      entity.Extension,
                      entity.Path,
-                     entity.Content?.Select(l => l.MapEntityToModel()) ?? Enumerable.Empty<SourceLine>(),
+                     entity.Content?.Select(l => l.MapEntityToModel()).ToList() ?? Enumerable.Empty<SourceLine>().ToList(),
                      entity.GitStats.MapEntityToModel(),
                      entity.CoverageStats.MapEntityToModel());
 

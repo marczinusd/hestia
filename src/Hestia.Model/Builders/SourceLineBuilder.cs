@@ -8,7 +8,7 @@ namespace Hestia.Model.Builders
     {
         public static SourceLine[] BuildSourceLineFromLineOfCode(string[] lines)
         {
-            return lines.Select((line, index) => new SourceLine(index,
+            return lines.Select((line, index) => new SourceLine(index + 1,
                                                                 line,
                                                                 Option<LineCoverageStats>.None,
                                                                 Option<LineGitStats>.None)).ToArray();

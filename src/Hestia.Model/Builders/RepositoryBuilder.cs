@@ -17,7 +17,7 @@ namespace Hestia.Model.Builders
             }
 
             return new Repository(-1,
-                                  IO.Path.GetDirectoryName(rootPath),
+                                  IO.Path.GetDirectoryName(rootPath) ?? throw new InvalidOperationException(),
                                   DirectoryBuilder.BuildDirectoryFromDirectoryPath(rootPath, diskIoWrapper),
                                   Option<string>.None);
         }
