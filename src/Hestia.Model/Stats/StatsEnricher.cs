@@ -1,4 +1,6 @@
-﻿using System.Diagnostics.Contracts;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using Hestia.Model.Wrappers;
 using LanguageExt;
@@ -18,9 +20,14 @@ namespace Hestia.Model.Stats
             _gitCommands = gitCommands;
         }
 
+        [Pure]
+        public Repository Enrich(Repository repository, IEnumerable<Func<Repository, Repository>> enrichers) =>
+            enrichers.Fold(repository,
+                           (enrichedRepo, enricher) => enricher(enrichedRepo));
+
         // ReSharper disable once UnusedMember.Global
         [Pure]
-        public Repository Enrich(Repository repository, string pathToCoverageFile)
+        public Repository EnrichWithCoverage(Repository repository, string pathToCoverageFile)
         {
             return new Repository(1,
                                   repository.Name,
@@ -30,7 +37,7 @@ namespace Hestia.Model.Stats
 
         // ReSharper disable once UnusedMember.Global
         [Pure]
-        public Directory Enrich(Directory directory)
+        public Directory EnrichWithCoverage(Directory directory)
         {
             // ReSharper disable once UnusedVariable
             var result = directory.Files.Select(f => _ioWrapper.ReadAllLinesFromFileAsSourceModel(f.Path));
@@ -43,7 +50,7 @@ namespace Hestia.Model.Stats
 
         // ReSharper disable once UnusedMember.Global
         [Pure]
-        public File Enrich(File file)
+        public File EnrichWithCoverage(File file)
         {
             var content = _ioWrapper.ReadAllLinesFromFileAsSourceModel(file.Path);
 
@@ -54,6 +61,14 @@ namespace Hestia.Model.Stats
                             content,
                             Option<FileGitStats>.None,
                             Option<FileCoverageStats>.None);
+        }
+
+        public Repository EnrichWithGitStats(Repository repository)
+        {
+            return new Repository(repository.Id,
+                                  repository.Name,
+                                  repository.RootDirectory,
+                                  repository.PathToCoverageResultFile);
         }
 
         // ReSharper disable once UnusedMember.Local

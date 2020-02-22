@@ -3,9 +3,9 @@ using IO = System.IO;
 
 namespace Hestia.Model.Builders
 {
-    public static class PathValidator
+    public class PathValidator : IPathValidator
     {
-        public static void ValidateDirectoryPath(string path)
+        public void ValidateDirectoryPath(string path)
         {
             if (string.IsNullOrWhiteSpace(path))
             {

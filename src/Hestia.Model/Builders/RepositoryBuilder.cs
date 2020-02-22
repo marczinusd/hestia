@@ -8,17 +8,22 @@ namespace Hestia.Model.Builders
 {
     public static class RepositoryBuilder
     {
-        public static Repository BuildRepositoryFromDirectoryPath(string rootPath, IDiskIOWrapper diskIoWrapper)
+        public static Repository BuildRepositoryFromDirectoryPath(long repoId,
+                                                                  string rootPath,
+                                                                  IDiskIOWrapper diskIoWrapper,
+                                                                  IPathValidator pathValidator)
         {
-            PathValidator.ValidateDirectoryPath(rootPath);
+            pathValidator.ValidateDirectoryPath(rootPath);
             if (!IsGitRepository(rootPath, diskIoWrapper))
             {
                 throw new InvalidOperationException($"{rootPath} is not a git repository.");
             }
 
-            return new Repository(-1,
+            return new Repository(repoId,
                                   IO.Path.GetDirectoryName(rootPath) ?? throw new InvalidOperationException(),
-                                  DirectoryBuilder.BuildDirectoryFromDirectoryPath(rootPath, diskIoWrapper),
+                                  DirectoryBuilder.BuildDirectoryFromDirectoryPath(rootPath,
+                                                                                   diskIoWrapper,
+                                                                                   pathValidator),
                                   Option<string>.None);
         }
 

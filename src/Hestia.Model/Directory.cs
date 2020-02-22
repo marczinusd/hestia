@@ -4,7 +4,7 @@ namespace Hestia.Model
 {
     public class Directory
     {
-        public Directory(string name, string path, IEnumerable<Directory> directories, IEnumerable<File> files)
+        public Directory(string name, string path, IList<Directory> directories, IList<File> files)
         {
             Name = name;
             Path = path;
@@ -16,8 +16,8 @@ namespace Hestia.Model
 
         public string Path { get; }
 
-        public IEnumerable<File> Files { get; }
+        public IList<File> Files { get; }
 
-        public IEnumerable<Directory> Directories { get; }
+        public IList<Directory> Directories { get; }
     }
 }

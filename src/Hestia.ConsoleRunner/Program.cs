@@ -3,6 +3,7 @@ using CommandLine;
 using Hestia.Model.Builders;
 using Hestia.Model.Stats;
 using Hestia.Model.Wrappers;
+using Moq;
 using IOFile = System.IO.File;
 
 namespace Hestia.ConsoleRunner
@@ -18,8 +19,11 @@ namespace Hestia.ConsoleRunner
                   {
                       var ioWrapper = new DiskIOWrapper();
                       var enricher = new StatsEnricher(ioWrapper, new GitCommands(new CommandLineExecutor()));
-                      var repository = RepositoryBuilder.BuildRepositoryFromDirectoryPath(options.RepositoryPath, ioWrapper);
-                      var enrichedRepository = enricher.Enrich(repository, options.CoveragePath);
+                      var repository = RepositoryBuilder.BuildRepositoryFromDirectoryPath(-1,
+                                                                                          options.RepositoryPath,
+                                                                                          ioWrapper,
+                                                                                          Mock.Of<IPathValidator>());
+                      var enrichedRepository = enricher.EnrichWithCoverage(repository, options.CoveragePath);
 
                       IOFile.WriteAllText(options.OutputPath, JsonSerializer.Serialize(enrichedRepository));
                   });
