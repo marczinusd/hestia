@@ -16,15 +16,21 @@ namespace Hestia.DAL.Extensions
         public static Directory MapEntityToModel(this DirectoryEntity entity) =>
             new Directory(entity.Name,
                           entity.Path,
-                          entity.Directories?.Select(d => d.MapEntityToModel()).ToList() ?? Enumerable.Empty<Directory>().ToList(),
-                          entity.Files?.Select(f => f.MapEntityToModel()).ToList() ?? Enumerable.Empty<File>().ToList());
+                          entity.Directories?.Select(d => d.MapEntityToModel())
+                                .ToList() ?? Enumerable.Empty<Directory>()
+                                                       .ToList(),
+                          entity.Files?.Select(f => f.MapEntityToModel())
+                                .ToList() ?? Enumerable.Empty<File>()
+                                                       .ToList());
 
         public static File MapEntityToModel(this FileEntity entity) =>
             new File(entity.Id,
                      entity.Filename,
                      entity.Extension,
                      entity.Path,
-                     entity.Content?.Select(l => l.MapEntityToModel()).ToList() ?? Enumerable.Empty<SourceLine>().ToList(),
+                     entity.Content?.Select(l => l.MapEntityToModel())
+                           .ToList() ?? Enumerable.Empty<SourceLine>()
+                                                  .ToList(),
                      entity.GitStats.MapEntityToModel(),
                      entity.CoverageStats.MapEntityToModel());
 

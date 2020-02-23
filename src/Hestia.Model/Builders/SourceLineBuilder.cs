@@ -11,7 +11,8 @@ namespace Hestia.Model.Builders
             return lines.Select((line, index) => new SourceLine(index + 1,
                                                                 line,
                                                                 Option<LineCoverageStats>.None,
-                                                                Option<LineGitStats>.None)).ToArray();
+                                                                Option<LineGitStats>.None))
+                        .ToArray();
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using IO = System.IO;
 
 namespace Hestia.Model.Wrappers
 {
@@ -13,10 +12,11 @@ namespace Hestia.Model.Wrappers
             throw new NotImplementedException();
         }
 
-        public IEnumerable<string> ReadAllLinesFromFile(string filePath) => IO.File.ReadAllLines(filePath);
+        public IEnumerable<string> ReadAllLinesFromFile(string filePath) => System.IO.File.ReadAllLines(filePath);
 
-        public IEnumerable<string> EnumerateAllDirectoriesForPath(string path) => IO.Directory.GetDirectories(path);
+        public IEnumerable<string> EnumerateAllDirectoriesForPath(string path) =>
+            System.IO.Directory.GetDirectories(path);
 
-        public IEnumerable<string> EnumerateAllFilesForPath(string path) => IO.Directory.GetFiles(path);
+        public IEnumerable<string> EnumerateAllFilesForPath(string path) => System.IO.Directory.GetFiles(path);
     }
 }

@@ -74,7 +74,7 @@ namespace Hestia.Controllers
         }
 
         /// <summary>
-        /// Look up file details by repository and file id.
+        ///     Look up file details by repository and file id.
         /// </summary>
         /// <param name="repositoryId">Id of the repository that contains the file.</param>
         /// <param name="fileId">Id of the file.</param>
@@ -88,7 +88,8 @@ namespace Hestia.Controllers
             var repository = await _context.Repositories.FindAsync(repositoryId);
 
             return FindFileById(repository, fileId)
-                   .Some(f => new ActionResult<FileDetails>(f.MapEntityToModel().AsFileDetails()))
+                   .Some(f => new ActionResult<FileDetails>(f.MapEntityToModel()
+                                                             .AsFileDetails()))
                    .None(() => NotFound());
         }
 

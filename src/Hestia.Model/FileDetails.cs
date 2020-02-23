@@ -3,7 +3,7 @@
 namespace Hestia.Model
 {
     /// <summary>
-    /// Exposes the full details of a file to the JSON API.
+    ///     Exposes the full details of a file to the JSON API.
     /// </summary>
     public class FileDetails
     {

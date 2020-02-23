@@ -26,8 +26,7 @@ namespace Hestia.Model
 
         public long Id { get; }
 
-        [JsonIgnore]
-        public IList<SourceLine> Content { get; }
+        [JsonIgnore] public IList<SourceLine> Content { get; }
 
         public string Path { get; }
 
@@ -41,7 +40,13 @@ namespace Hestia.Model
 
         public FileDetails AsFileDetails()
         {
-            var hardCopy = new File(0, this.Filename, this.Extension, this.Path, Content, GitStats, CoverageStats);
+            var hardCopy = new File(0,
+                                    this.Filename,
+                                    this.Extension,
+                                    this.Path,
+                                    Content,
+                                    GitStats,
+                                    CoverageStats);
 
             return new FileDetails(hardCopy);
         }

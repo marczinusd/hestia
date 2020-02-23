@@ -29,7 +29,6 @@ namespace Hestia.ConsoleRunner
                   });
         }
 
-        #nullable disable
         private class Options
         {
             // ReSharper disable once UnusedAutoPropertyAccessor.Local
@@ -74,6 +73,5 @@ namespace Hestia.ConsoleRunner
                     Default = "repository.json")]
             public string OutputPath { get; set; }
         }
-        #nullable restore
     }
 }

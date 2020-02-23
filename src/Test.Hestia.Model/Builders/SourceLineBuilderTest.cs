@@ -10,6 +10,14 @@ namespace Test.Hestia.Model.Builders
         private const string SecondLine = "second line";
 
         [Fact]
+        public void SourceLineBuilderShouldReturnEmptyArrayForNoInputs()
+        {
+            SourceLineBuilder.BuildSourceLineFromLineOfCode(new string[0])
+                             .Should()
+                             .BeEmpty();
+        }
+
+        [Fact]
         public void SourceLineBuilderShouldReturnTwoDistinctLinesForTwoLinesOfCode()
         {
             var result = SourceLineBuilder.BuildSourceLineFromLineOfCode(new[] { FirstLine, SecondLine });
@@ -27,14 +35,6 @@ namespace Test.Hestia.Model.Builders
             result[1]
                 .LineNumber.Should()
                 .Be(2);
-        }
-
-        [Fact]
-        public void SourceLineBuilderShouldReturnEmptyArrayForNoInputs()
-        {
-            SourceLineBuilder.BuildSourceLineFromLineOfCode(new string[0])
-                             .Should()
-                             .BeEmpty();
         }
     }
 }

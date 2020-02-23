@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using SimpleExec;
 
 namespace Hestia.Model.Wrappers
 {
@@ -19,10 +20,10 @@ namespace Hestia.Model.Wrappers
                 .Result;
 
         public async Task<string[]> ExecuteAsync(string commandToExecute) =>
-            (await SimpleExec.Command.ReadAsync(commandToExecute)).Split(Environment.NewLine);
+            (await Command.ReadAsync(commandToExecute)).Split(Environment.NewLine);
 
         public async Task<string> ExecuteAsyncNoSplit(string commandToExecute) =>
-            await SimpleExec.Command.ReadAsync(commandToExecute);
+            await Command.ReadAsync(commandToExecute);
 
         public async Task<string[]> ExecuteAsync(IEnumerable<string> commandsToExecute) =>
             await ExecuteAsync(string.Join(" && ", commandsToExecute));

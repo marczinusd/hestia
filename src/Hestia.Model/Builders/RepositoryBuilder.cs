@@ -1,8 +1,8 @@
 using System;
+using System.IO;
 using System.Linq;
 using Hestia.Model.Wrappers;
 using LanguageExt;
-using IO = System.IO;
 
 namespace Hestia.Model.Builders
 {
@@ -20,7 +20,7 @@ namespace Hestia.Model.Builders
             }
 
             return new Repository(repoId,
-                                  IO.Path.GetDirectoryName(rootPath) ?? throw new InvalidOperationException(),
+                                  Path.GetDirectoryName(rootPath) ?? throw new InvalidOperationException(),
                                   DirectoryBuilder.BuildDirectoryFromDirectoryPath(rootPath,
                                                                                    diskIoWrapper,
                                                                                    pathValidator),

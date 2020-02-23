@@ -9,14 +9,19 @@ namespace Test.Hestia.Model.Builders
 {
     public class FileBuilderTest
     {
-        private static readonly string FilePath = Path.Join("C:", "somedir", "somesubdir", "somefile.ext");
-        private static string[] fileContent = { "first line", "second line" };
+        private static readonly string FilePath = Path.Join("C:",
+                                                            "somedir",
+                                                            "somesubdir",
+                                                            "somefile.ext");
+
+        private static readonly string[] FileContent = { "first line", "second line" };
 
         [Fact]
         public void FileBuilderShouldBuildFileObjectWithExpectedProperties()
         {
             var ioMock = new Mock<IDiskIOWrapper>();
-            ioMock.Setup(mock => mock.ReadAllLinesFromFile(FilePath)).Returns(fileContent);
+            ioMock.Setup(mock => mock.ReadAllLinesFromFile(FilePath))
+                  .Returns(FileContent);
 
             var result = FileBuilder.BuildFileFromPath(FilePath, ioMock.Object);
 

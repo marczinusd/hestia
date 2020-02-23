@@ -6,7 +6,7 @@ namespace Hestia.DAL.DummyData
     {
         public static void Setup(this HestiaContext context)
         {
-            RepositoryEntity repository = new RepositoryEntity();
+            var repository = new RepositoryEntity();
             repository.Name = "DummyEntity";
             repository.RootDirectory = new DirectoryEntity();
 
