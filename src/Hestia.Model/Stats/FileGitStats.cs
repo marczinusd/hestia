@@ -2,11 +2,14 @@
 {
     public class FileGitStats
     {
-        public FileGitStats(long lifetimeChanges)
+        public FileGitStats(int lifetimeChanges, int lifetimeAuthors)
         {
             LifetimeChanges = lifetimeChanges;
+            LifetimeAuthors = lifetimeAuthors;
         }
 
-        public long LifetimeChanges { get; }
+        public int LifetimeChanges { get; }
+
+        public int LifetimeAuthors { get; }
     }
 }

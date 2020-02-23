@@ -4,6 +4,8 @@
     {
         public long Id { get; set; }
 
-        public long LifetimeChanges { get; set; }
+        public int LifetimeChanges { get; set; }
+
+        public int LifetimeAuthors { get; set; }
     }
 }

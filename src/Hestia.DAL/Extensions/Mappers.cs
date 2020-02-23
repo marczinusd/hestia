@@ -29,7 +29,7 @@ namespace Hestia.DAL.Extensions
                      entity.CoverageStats.MapEntityToModel());
 
         public static FileGitStats MapEntityToModel(this GitStatsEntity entity) =>
-            new FileGitStats(entity.LifetimeChanges);
+            new FileGitStats(entity.LifetimeChanges, entity.LifetimeAuthors);
 
         public static FileCoverageStats MapEntityToModel(this CoverageEntity entity) =>
             new FileCoverageStats(entity.PercentageOfLineCoverage);

@@ -75,7 +75,7 @@ namespace Hestia.Model.Stats
         [Pure]
         private FileGitStats CollectGitStats(string fromFilePath)
         {
-            return new FileGitStats(_gitCommands.NumberOfChangesForFile(fromFilePath));
+            return new FileGitStats(_gitCommands.NumberOfChangesForFile(fromFilePath), _gitCommands.NumberOfDifferentAuthorsForFile(fromFilePath));
         }
 
         // ReSharper disable once UnusedMember.Local
