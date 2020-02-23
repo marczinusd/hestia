@@ -1,0 +1,4 @@
+﻿84818c7f0d38b26604e43e2ec5bcb164c6415973 [style] adjust styling around braces
+22a8f79e368b3916d16324b162cee2d92488f8ab [style] small style adjustments + cleanup
+4c6d72d36039e2a0fac1c815deab78e52038c001 [style] add resharper / rider settings to .editorconfig, adjust stylecop ruleset
+9c189855aed91df0c273305ce281fd819255bb3e [build] move dotnet source: src/Hestia -> src/

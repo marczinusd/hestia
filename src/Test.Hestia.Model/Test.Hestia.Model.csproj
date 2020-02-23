@@ -28,4 +28,15 @@
     <ProjectReference Include="..\Hestia.Model\Hestia.Model.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\GitLineLogOutput" />
+    <EmbeddedResource Include="Resources\GitLogOutput" />
+    <EmbeddedResource Include="Resources\GitPrettyLogOutput" />
+    <EmbeddedResource Include="Resources\GitShortlogOutput" />
+    <None Remove="Resources\GitLogOutput" />
+    <None Remove="Resources\GitLineLogOutput" />
+    <None Remove="Resources\GitPrettyLogOutput" />
+    <None Remove="Resources\GitShortlogOutput" />
+  </ItemGroup>
+
 </Project>

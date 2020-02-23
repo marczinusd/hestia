@@ -7,7 +7,7 @@ namespace Hestia.Model.Wrappers
     public class GitCommands : IGitCommands
     {
         private const string AuthorPattern = "\\s*Author:\\s*(.*)";
-        private const string ShortLogAuthorPattern = "\\s*(\\d+)\\s*(.*)$";
+        private const string ShortLogAuthorPattern = "\\s*\\d+\\s*(.*)";
         private const string CommitHeaderPattern = "^commit\\s+(.*)";
         private readonly ICommandLineExecutor _commandLineExecutor;
 
@@ -19,12 +19,12 @@ namespace Hestia.Model.Wrappers
                 .Execute(OnelineFileHistory(filePath))
                 .Length;
 
+        public int NumberOfChangesForLine(string filePath, int lineNumber) =>
+            ParseLineHistoryForNumberOfChanges(Exec(LineHistoryCommand(filePath, lineNumber)));
+
         public IEnumerable<int> NumberOfChangesForEachLine(string filePath, int lineCount) =>
             Enumerable.Range(1, lineCount)
-                      .Select(lineNumber =>
-                                  ParseLineHistoryForNumberOfChanges(_commandLineExecutor
-                                                                         .Execute(LineHistoryCommand(filePath,
-                                                                                                     lineNumber))));
+                      .Select(lineNumber => NumberOfChangesForLine(filePath, lineNumber));
 
         public int NumberOfDifferentAuthorsForFile(string filepath) =>
             ParseShortLogForUniqueAuthors(Exec(AuthorsForFileCommand(filepath)));
@@ -45,20 +45,20 @@ namespace Hestia.Model.Wrappers
             $"git log --pretty=oneline {filepath}";
 
         private string LineHistoryCommand(string filepath, int lineNumber) =>
-            $"git log -L {lineNumber},{lineNumber} {filepath}";
+            $"git log -L {lineNumber},{lineNumber}:\"{filepath}\"";
 
         private string AuthorsForFileCommand(string filepath) =>
             $"git shortlog -c -s {filepath}";
 
         private int ParseLineHistoryForNumberOfChanges(string[] commandOutput) =>
-            commandOutput.Select(line => Regex.Match(line, CommitHeaderPattern))
+            commandOutput.Where(line => Regex.IsMatch(line, CommitHeaderPattern))
                          .Count();
 
         private int ParseShortLogForUniqueAuthors(string[] commandOutput) =>
             commandOutput.Select(line => Regex.Match(line, ShortLogAuthorPattern)
                                               .Captures)
-                         .Where(capture => capture.Count == 2)
-                         .Select(capture => capture[1])
+                         .Where(capture => capture.Count == 1)
+                         .Select(capture => capture[0].Value)
                          .Distinct()
                          .Count();
 

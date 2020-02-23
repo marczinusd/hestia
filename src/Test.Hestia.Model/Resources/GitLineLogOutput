@@ -1,0 +1,38 @@
+﻿commit 75a554d4a9fd6003674d3ed456a6a939118ff8c9
+Author: David Marczinus <marczinus.david@gmail.com>
+Date:   Fri Jan 24 00:32:46 2020 +0100
+
+    Minor adjustments to styling
+
+diff --git a/src/Hestia/Hestia.sln b/src/Hestia/Hestia.sln
+--- a/src/Hestia/Hestia.sln
++++ b/src/Hestia/Hestia.sln
+@@ -2,7 +2,7 @@
+ Microsoft Visual Studio Solution File, Format Version 12.00
+-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HestiaQualityService", "HestiaQualityService\HestiaQualityService.csproj", "{2098695B-F8E6-4748-BA26-EEBB18FBB09E}"
++Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HestiaWebService", "HestiaWebService\HestiaWebService.csproj", "{2098695B-F8E6-4748-BA26-EEBB18FBB09E}"
+ EndProject
+ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{39BB93D3-D10F-4057-B9C1-F6498FE33699}"
+ EndProject
+-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.HestiaService", "Test.HestiaService\Test.HestiaService.csproj", "{82AF4D38-13F4-44F4-B844-E0BA1006C5ED}"
++Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.HestiaWebService", "Test.HestiaWebService\Test.HestiaWebService.csproj", "{82AF4D38-13F4-44F4-B844-E0BA1006C5ED}"
+ EndProject
+
+commit dd4f85b67b8bdc8fb8761786742b20f4179d9c2b
+Author: Someone Else <marczinus.david@gmail.com>
+Date:   Thu Jan 23 23:37:12 2020 +0100
+
+    Add StyleCop rulesets and fix issues
+
+diff --git a/src/Hestia/Hestia.sln b/src/Hestia/Hestia.sln
+--- a/src/Hestia/Hestia.sln
++++ b/src/Hestia/Hestia.sln
+@@ -2,7 +2,7 @@
+ Microsoft Visual Studio Solution File, Format Version 12.00
+ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HestiaQualityService", "HestiaQualityService\HestiaQualityService.csproj", "{2098695B-F8E6-4748-BA26-EEBB18FBB09E}"
+ EndProject
+ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{39BB93D3-D10F-4057-B9C1-F6498FE33699}"
+ EndProject
+-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.HestiaQualityService", "Test.HestiaQualityService\Test.HestiaQualityService.csproj", "{82AF4D38-13F4-44F4-B844-E0BA1006C5ED}"
++Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.HestiaService", "Test.HestiaService\Test.HestiaService.csproj", "{82AF4D38-13F4-44F4-B844-E0BA1006C5ED}"
+ EndProject

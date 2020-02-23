@@ -1,0 +1,23 @@
+﻿commit 84818c7f0d38b26604e43e2ec5bcb164c6415973
+Author: David Marczinus <marczinus.david@gmail.com>
+Date:   Sat Feb 15 16:29:55 2020 +0100
+
+    [style] adjust styling around braces
+
+commit 22a8f79e368b3916d16324b162cee2d92488f8ab
+Author: David Marczinus <marczinus.david@gmail.com>
+Date:   Sat Feb 15 14:43:41 2020 +0100
+
+    [style] small style adjustments + cleanup
+
+commit 4c6d72d36039e2a0fac1c815deab78e52038c001
+Author: David Marczinus <marczinus.david@gmail.com>
+Date:   Sat Feb 15 14:37:52 2020 +0100
+
+    [style] add resharper / rider settings to .editorconfig, adjust stylecop ruleset
+
+commit 9c189855aed91df0c273305ce281fd819255bb3e
+Author: David Marczinus <marczinus.david@gmail.com>
+Date:   Sun Feb 9 23:20:46 2020 +0100
+
+    [build] move dotnet source: src/Hestia -> src/
