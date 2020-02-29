@@ -38,7 +38,10 @@ namespace Hestia.DAL.Extensions
             new FileGitStats(entity.LifetimeChanges, entity.LifetimeAuthors);
 
         public static FileCoverageStats MapEntityToModel(this CoverageEntity entity) =>
-            new FileCoverageStats(entity.PercentageOfLineCoverage);
+            null; // todo
+
+        public static FileCoverage MapEntityToModel(this FileCoverageEntity entity) =>
+            new FileCoverage(entity.FileName, entity.LineCoverages);
 
         public static SourceLine MapEntityToModel(this LineEntity entity) =>
             new SourceLine(entity.LineNumber,

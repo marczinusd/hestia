@@ -18,5 +18,7 @@ namespace Hestia.Model.Wrappers
             System.IO.Directory.GetDirectories(path);
 
         public IEnumerable<string> EnumerateAllFilesForPath(string path) => System.IO.Directory.GetFiles(path);
+
+        public string ReadFileContent(string path) => System.IO.File.ReadAllText(path);
     }
 }

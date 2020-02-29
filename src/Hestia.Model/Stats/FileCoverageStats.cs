@@ -1,12 +1,17 @@
-﻿namespace Hestia.Model.Stats
+﻿using System.Linq;
+
+namespace Hestia.Model.Stats
 {
     public class FileCoverageStats
     {
-        public FileCoverageStats(decimal percentageOfLineCoverage)
+        public FileCoverageStats(FileCoverage coverage)
         {
-            PercentageOfLineCoverage = percentageOfLineCoverage;
+            Coverage = coverage;
         }
 
-        public decimal PercentageOfLineCoverage { get; }
+        public FileCoverage Coverage { get; }
+
+        public decimal PercentageOfLineCoverage =>
+            Coverage.LineCoverages.Count() / (decimal)Coverage.LineCoverages.Count(l => l.hitCount == 0);
     }
 }

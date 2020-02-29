@@ -37,6 +37,8 @@
     <None Remove="Resources\GitLineLogOutput" />
     <None Remove="Resources\GitPrettyLogOutput" />
     <None Remove="Resources\GitShortlogOutput" />
+    <None Remove="Resources\coverage.json" />
+    <EmbeddedResource Include="Resources\coverage.json" />
   </ItemGroup>
 
 </Project>

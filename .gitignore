@@ -485,3 +485,5 @@ dist/
 
 # Ionide
 **/.ionide/*
+
+**/coverage.*

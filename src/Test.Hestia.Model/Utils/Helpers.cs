@@ -7,14 +7,14 @@ namespace Test.Hestia.Model.Utils
 {
     public static class Helpers
     {
-        public static string LoadResource(string name, Assembly assembly = null)
+        public static string LoadResource(string name, Assembly? assembly = null)
         {
             if (assembly == null)
             {
                 assembly = Assembly.GetExecutingAssembly();
             }
 
-            string resourcePath = name;
+            var resourcePath = name;
 
             // ReSharper disable once RedundantNameQualifier
             if (!name.StartsWith(nameof(Test.Hestia.Model.Resources)))
@@ -23,11 +23,10 @@ namespace Test.Hestia.Model.Utils
                                        .Single(str => str.EndsWith(name));
             }
 
-            using (Stream stream = assembly.GetManifestResourceStream(resourcePath))
-            using (StreamReader reader = new StreamReader(stream ?? throw new Exception()))
-            {
-                return reader.ReadToEnd();
-            }
+            using var stream = assembly.GetManifestResourceStream(resourcePath);
+            using var reader = new StreamReader(stream ?? throw new Exception());
+
+            return reader.ReadToEnd();
         }
     }
 }
