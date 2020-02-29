@@ -2,18 +2,19 @@ namespace Hestia.Model.Stats
 {
     public class LineGitStats
     {
-        // ReSharper disable once UnusedMember.Global
-        public LineGitStats()
+        public LineGitStats(int lineNumber, int modifiedInNumberOfCommits, int numberOfLifetimeAuthors)
         {
-        }
-
-        public LineGitStats(int modifiedInNumberOfCommits)
-        {
+            LineNumber = lineNumber;
             ModifiedInNumberOfCommits = modifiedInNumberOfCommits;
+            NumberOfLifetimeAuthors = numberOfLifetimeAuthors;
         }
 
         public long Id { get; set; }
 
+        public int LineNumber { get; }
+
         public int ModifiedInNumberOfCommits { get; }
+
+        public int NumberOfLifetimeAuthors { get; }
     }
 }

@@ -3,7 +3,6 @@ using CommandLine;
 using Hestia.Model.Builders;
 using Hestia.Model.Stats;
 using Hestia.Model.Wrappers;
-using Moq;
 using IOFile = System.IO.File;
 
 namespace Hestia.ConsoleRunner
@@ -22,13 +21,14 @@ namespace Hestia.ConsoleRunner
                       var repository = RepositoryBuilder.BuildRepositoryFromDirectoryPath(-1,
                                                                                           options.RepositoryPath,
                                                                                           ioWrapper,
-                                                                                          Mock.Of<IPathValidator>());
-                      var enrichedRepository = enricher.EnrichWithCoverage(repository, options.CoveragePath);
+                                                                                          new PathValidator());
+                      var enrichedRepository = enricher.EnrichWithGitStats(repository);
 
                       IOFile.WriteAllText(options.OutputPath, JsonSerializer.Serialize(enrichedRepository));
                   });
         }
 
+        // ReSharper disable once ClassNeverInstantiated.Local
         private class Options
         {
             // ReSharper disable once UnusedAutoPropertyAccessor.Local
@@ -62,12 +62,12 @@ namespace Hestia.ConsoleRunner
                     "repositoryName",
                     Required = false,
                     Default = "dummy",
-                    HelpText = "Used to specify the name of the repository that'll appear in the json representation.")]
+                    HelpText = "Used to specify the name of the repository that will appear in the json representation.")]
             public string RepositoryName { get; set; }
 
             // ReSharper disable once UnusedAutoPropertyAccessor.Local
             [Option('o',
-                    "outpath",
+                    "outPath",
                     Required = true,
                     HelpText = "Path to write the repository's JSON representation to",
                     Default = "repository.json")]

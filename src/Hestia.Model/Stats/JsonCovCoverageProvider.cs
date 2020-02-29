@@ -15,27 +15,26 @@ namespace Hestia.Model.Stats
             _diskIoWrapper = diskIoWrapper;
         }
 
-        public IEnumerable<FileCoverage> ParseFileCoveragesFromFilePath(string filePath)
-        {
-            // JSON structure: Assembly[] -> File[] -> Class[] -> Method[] -> Lines & Branches
-            return JObject
-                   .Parse(_diskIoWrapper.ReadFileContent(filePath))
-                   .Children<JProperty>() // assemblies
-                   .SelectMany(assembly =>
-                                   assembly.Values()) // project to physical files
-                   .OfType<JProperty>()
-                   .SelectMany(f => f.Values()
-                                     .SelectMany(c => c.Values())
-                                     .OfType<JProperty>()
-                                     .Select(method =>
-                                                 (f.Name,
-                                                  ParseLineCoverageJObject(method
-                                                                           .Children()["Lines"]
-                                                                           .First() as JObject))))
-                   .GroupBy(x => x.Name, tuple => tuple) // project to (FileName, Lines[]) group
-                   .Select(g => new
-                               FileCoverage(g.Key, g.SelectMany(l => l.Item2)));
-        }
+        // JSON structure: Assembly[] -> File[] -> Class[] -> Method[] -> Lines & Branches
+        // See example json in Test.Hestia.Model.Resources -> coverage.json
+        public IEnumerable<FileCoverage> ParseFileCoveragesFromFilePath(string filePath) =>
+            JObject
+                .Parse(_diskIoWrapper.ReadFileContent(filePath))
+                .Children<JProperty>() // assemblies
+                .SelectMany(assembly =>
+                                assembly.Values()) // project to physical files
+                .OfType<JProperty>()
+                .SelectMany(f => f.Values()
+                                  .SelectMany(c => c.Values())
+                                  .OfType<JProperty>()
+                                  .Select(method =>
+                                              (f.Name,
+                                               ParseLineCoverageJObject(method
+                                                                        .Children()["Lines"]
+                                                                        .First() as JObject))))
+                .GroupBy(x => x.Name, tuple => tuple) // project to (FileName, Lines[]) group
+                .Select(g => new
+                            FileCoverage(g.Key, g.SelectMany(l => l.Item2)));
 
         public Task<IEnumerable<FileCoverage>> ParseFileCoveragesFromFilePathAsync(string filePath)
             => Task.Run(() => ParseFileCoveragesFromFilePath(filePath));

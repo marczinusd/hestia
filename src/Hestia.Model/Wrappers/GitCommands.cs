@@ -33,13 +33,15 @@ namespace Hestia.Model.Wrappers
             ParseNumberOfUniqueAuthorsFromGitHistory(Exec(LineHistoryCommand(filePath,
                                                                              lineNumber)));
 
-        public IEnumerable<(int numberOfAuthors, int numberOfCommits)> NumberOfDifferentAuthorsAndChangesForLine(
-            string filePath,
-            int lineCount) =>
+        public IEnumerable<(int lineNumber, int numberOfAuthors, int numberOfCommits)>
+            NumberOfDifferentAuthorsAndChangesForLine(
+                string filePath,
+                int lineCount) =>
             Enumerable.Range(1, lineCount)
-                      .Select(line => Exec(LineHistoryCommand(filePath, line)))
-                      .Select(output => (ParseLineHistoryForNumberOfChanges(output),
-                                         ParseNumberOfUniqueAuthorsFromGitHistory(output)));
+                      .Select(line => (line, Exec(LineHistoryCommand(filePath, line))))
+                      .Select(tuple => (tuple.line,
+                                        ParseLineHistoryForNumberOfChanges(tuple.Item2),
+                                        ParseNumberOfUniqueAuthorsFromGitHistory(tuple.Item2)));
 
         private string OnelineFileHistory(string filepath) =>
             $"git log --pretty=oneline {filepath}";
@@ -58,7 +60,8 @@ namespace Hestia.Model.Wrappers
             commandOutput.Select(line => Regex.Match(line, ShortLogAuthorPattern)
                                               .Captures)
                          .Where(capture => capture.Count == 1)
-                         .Select(capture => capture[0].Value)
+                         .Select(capture => capture[0]
+                                     .Value)
                          .Distinct()
                          .Count();
 

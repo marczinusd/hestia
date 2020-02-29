@@ -50,7 +50,7 @@ namespace Hestia.DAL.Extensions
                            entity.LineGitStats.MapEntityToModel());
 
         public static LineGitStats MapEntityToModel(this LineGitStatsEntity entity) =>
-            new LineGitStats(entity.ModifiedInNumberOfCommits);
+            new LineGitStats(entity.LineNumber, entity.ModifiedInNumberOfCommits, entity.NumberOfLifetimeAuthors);
 
         public static LineCoverageStats MapEntityToModel(this LineCoverageEntity entity) =>
             new LineCoverageStats(entity.IsCovered);
