@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -16,24 +17,24 @@ namespace Hestia.Model.Wrappers
             => _commandLineExecutor = commandLineExecutor;
 
         public int NumberOfChangesForFile(string filePath) =>
-            Exec(OnelineFileHistory(filePath), Path.GetDirectoryName(filePath))
+            Exec(OnelineFileHistory(filePath), Path.GetDirectoryName(filePath) ?? string.Empty)
                 .Length;
 
         public int NumberOfChangesForLine(string filePath, int lineNumber) =>
             ParseLineHistoryForNumberOfChanges(Exec(LineHistoryCommand(filePath, lineNumber),
-                                                    Path.GetDirectoryName(filePath)));
+                                                    Path.GetDirectoryName(filePath) ?? string.Empty));
 
         public IEnumerable<int> NumberOfChangesForEachLine(string filePath, int lineCount) =>
             Enumerable.Range(1, lineCount)
                       .Select(lineNumber => NumberOfChangesForLine(filePath, lineNumber));
 
         public int NumberOfDifferentAuthorsForFile(string filePath) =>
-            ParseShortLogForUniqueAuthors(Exec(AuthorsForFileCommand(filePath), Path.GetDirectoryName(filePath)));
+            ParseShortLogForUniqueAuthors(Exec(AuthorsForFileCommand(filePath), Path.GetDirectoryName(filePath) ?? string.Empty));
 
         public int NumberOfDifferentAuthorForLine(string filePath, int lineNumber) =>
             ParseNumberOfUniqueAuthorsFromGitHistory(Exec(LineHistoryCommand(filePath,
                                                                              lineNumber),
-                                                          Path.GetDirectoryName(filePath)));
+                                                          Path.GetDirectoryName(filePath) ?? string.Empty));
 
         public IEnumerable<(int lineNumber, int numberOfAuthors, int numberOfCommits)>
             NumberOfDifferentAuthorsAndChangesForLine(
@@ -41,7 +42,7 @@ namespace Hestia.Model.Wrappers
                 int lineCount) =>
             Enumerable.Range(1, lineCount)
                       .Select(line =>
-                                  (line, Exec(LineHistoryCommand(filePath, line), Path.GetDirectoryName(filePath))))
+                                  (line, Exec(LineHistoryCommand(filePath, line), Path.GetDirectoryName(filePath) ?? string.Empty)))
                       .Select(tuple => (tuple.line,
                                         ParseLineHistoryForNumberOfChanges(tuple.Item2),
                                         ParseNumberOfUniqueAuthorsFromGitHistory(tuple.Item2)));
