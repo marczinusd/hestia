@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -27,12 +26,20 @@ namespace Hestia.ConsoleRunner
                           builder.AddConsole();
                       });
                       var logger = factory.CreateLogger<Program>();
-                      var enricher = new StatsEnricher(new DiskIOWrapper(), new GitCommands(new CommandLineExecutor()), factory.CreateLogger<StatsEnricher>());
+                      var enricher = new StatsEnricher(new DiskIOWrapper(),
+                                                       new GitCommands(new CommandLineExecutor()),
+                                                       factory.CreateLogger<StatsEnricher>());
                       var repository = BuildRepositoryWithOptions(options);
 
                       var enrichedRepository = enricher.EnrichWithCoverage(enricher.EnrichWithGitStats(repository));
 
-                      IOFile.WriteAllText(options.OutputPath, JsonSerializer.Serialize(enrichedRepository));
+                      logger.LogInformation($"Writing results to output...");
+                      IOFile.WriteAllText(options.OutputPath,
+                                          JsonSerializer.Serialize(enrichedRepository,
+                                                                   new JsonSerializerOptions
+                                                                   {
+                                                                       WriteIndented = true,
+                                                                   }));
                       logger.LogInformation($"Output created at {options.OutputPath}");
                   });
         }
