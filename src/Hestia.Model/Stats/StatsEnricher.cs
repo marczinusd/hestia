@@ -6,6 +6,7 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Hestia.Model.Wrappers;
 using LanguageExt;
+using Microsoft.Extensions.Logging;
 using static LanguageExt.Prelude;
 
 namespace Hestia.Model.Stats
@@ -19,13 +20,16 @@ namespace Hestia.Model.Stats
     public class StatsEnricher
     {
         private readonly IGitCommands _gitCommands;
+        private readonly ILogger<StatsEnricher> _logger;
         private readonly IDiskIOWrapper _ioWrapper;
 
         public StatsEnricher(IDiskIOWrapper ioWrapper,
-                             IGitCommands gitCommands)
+                             IGitCommands gitCommands,
+                             ILogger<StatsEnricher> logger)
         {
             _ioWrapper = ioWrapper;
             _gitCommands = gitCommands;
+            _logger = logger;
         }
 
         public Repository Enrich(Repository repository, IEnumerable<Func<Repository, Repository>> enrichers) =>
@@ -75,6 +79,7 @@ namespace Hestia.Model.Stats
 
         public File EnrichWithCoverage(File file, FileCoverage coverage)
         {
+            _logger.LogInformation($"Loading coverage information for {file.Filename}");
             if (coverage == null || coverage.Equals(default))
             {
                 return file;
@@ -116,6 +121,7 @@ namespace Hestia.Model.Stats
 
         public File EnrichWithGitStats(File file)
         {
+            _logger.LogInformation($"Loading git stats for {file.Filename}");
             var gitStats = new FileGitStats(_gitCommands.NumberOfChangesForFile(file.FullPath),
                                             _gitCommands.NumberOfDifferentAuthorsForFile(file.FullPath));
             var lineStats = _gitCommands.NumberOfDifferentAuthorsAndChangesForLine(file.FullPath, file.Content.Count)

@@ -7,6 +7,7 @@ using CommandLine;
 using Hestia.Model.Builders;
 using Hestia.Model.Stats;
 using Hestia.Model.Wrappers;
+using Microsoft.Extensions.Logging;
 using IOFile = System.IO.File;
 
 namespace Hestia.ConsoleRunner
@@ -20,8 +21,12 @@ namespace Hestia.ConsoleRunner
                   .ParseArguments<Options>(args)
                   .WithParsed(options =>
                   {
+                      var factory = LoggerFactory.Create(builder =>
+                      {
+                          builder.AddConsole();
+                      });
                       var ioWrapper = new DiskIOWrapper();
-                      var enricher = new StatsEnricher(ioWrapper, new GitCommands(new CommandLineExecutor()));
+                      var enricher = new StatsEnricher(ioWrapper, new GitCommands(new CommandLineExecutor()), factory.CreateLogger<StatsEnricher>());
                       var repository = RepositoryBuilder.BuildRepositoryFromDirectoryPath(options.RepositoryId,
                                                                                           options.RepositoryName,
                                                                                           options.RepositoryPath,
