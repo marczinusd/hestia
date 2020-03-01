@@ -61,7 +61,8 @@ namespace Hestia.Model.Stats
                                                                          ResolveCoverageProvider()
                                                                              .ParseFileCoveragesFromFilePath(coveragePath)
                                                                              .SingleOrDefault(cov => cov.FileName ==
-                                                                                                     Path.Join(f.Path, f.Filename))))
+                                                                                                     Path.Join(f.Path,
+                                                                                                               f.Filename))))
                                    .ToList());
 
         public IObservable<File> EnrichObservable(File file, IEnumerable<FileCoverage> fileCoverages) =>
@@ -127,7 +128,8 @@ namespace Hestia.Model.Stats
             var lineStats = _gitCommands.NumberOfDifferentAuthorsAndChangesForLine(file.FullPath, file.Content.Count)
                                         .Select(x => new LineGitStats(x.lineNumber,
                                                                       x.numberOfCommits,
-                                                                      x.numberOfAuthors));
+                                                                      x.numberOfAuthors))
+                                        .ToList(); // force evaluation
 
             var enrichedContent =
                 file.Content.Select(line => new SourceLine(line.LineNumber,
@@ -154,8 +156,10 @@ namespace Hestia.Model.Stats
         public Directory EnrichWithGitStats(Directory directory) =>
             new Directory(directory.Name,
                           directory.Path,
-                          directory.Directories.Select(EnrichWithGitStats).ToList(),
-                          directory.Files.Select(EnrichWithGitStats).ToList());
+                          directory.Directories.Select(EnrichWithGitStats)
+                                   .ToList(),
+                          directory.Files.Select(EnrichWithGitStats)
+                                   .ToList());
 
         // TODO: actually implement this once multiple providers are added
         private ICoverageProvider ResolveCoverageProvider() => new JsonCovCoverageProvider(_ioWrapper);
