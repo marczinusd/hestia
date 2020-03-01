@@ -14,7 +14,7 @@ namespace Test.Hestia.Model.Stats
         public void JsonCovCoverageProviderParsesCoverageJsonAsExpected()
         {
             const string filePath = "somePath";
-            Mock<IDiskIOWrapper> ioWrapperMock = new Mock<IDiskIOWrapper>();
+            var ioWrapperMock = new Mock<IDiskIOWrapper>();
             ioWrapperMock.Setup(mock => mock.ReadFileContent(filePath))
                          .Returns(() => Helpers.LoadResource("coverage.json",
                                                              typeof(JsonCovCoverageProviderTest).Assembly));
@@ -32,20 +32,17 @@ namespace Test.Hestia.Model.Stats
                   .Contain("Directory.cs");
             result[0]
                 .LineCoverages.Should()
-                .BeEquivalentTo(new[]
-                {
-                    (15, 0),
-                    (17, 2),
-                    (19, 5),
-                    (21, 7),
-                    (7, 5),
-                    (8, 5),
-                    (9, 5),
-                    (10, 5),
-                    (11, 5),
-                    (12, 5),
-                    (13, 5),
-                });
+                .BeEquivalentTo(new LineCoverage(15, 0),
+                                new LineCoverage(17, 2),
+                                new LineCoverage(19, 5),
+                                new LineCoverage(21, 7),
+                                new LineCoverage(7, 5),
+                                new LineCoverage(8, 5),
+                                new LineCoverage(9, 5),
+                                new LineCoverage(10, 5),
+                                new LineCoverage(11, 5),
+                                new LineCoverage(12, 5),
+                                new LineCoverage(13, 5));
         }
     }
 }

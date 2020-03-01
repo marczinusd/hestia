@@ -1,3 +1,5 @@
+using System;
+
 namespace Hestia.Model.Stats
 {
     public class LineCoverage
@@ -12,6 +14,36 @@ namespace Hestia.Model.Stats
 
         public int HitCount { get; }
 
+        public override bool Equals(object? obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return Equals((LineCoverage)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(LineNumber, HitCount);
+        }
+
         public override string ToString() => $"({LineNumber}, {HitCount})";
+
+        private bool Equals(LineCoverage other)
+        {
+            return LineNumber == other.LineNumber && HitCount == other.HitCount;
+        }
     }
 }

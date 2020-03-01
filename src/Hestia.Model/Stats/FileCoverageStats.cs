@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Newtonsoft.Json;
 
 namespace Hestia.Model.Stats
 {
@@ -9,6 +10,9 @@ namespace Hestia.Model.Stats
             Coverage = coverage;
         }
 
+        // Store the coverage for stats, but don't render it unless file details are rendered
+        [System.Text.Json.Serialization.JsonIgnore]
+        [JsonIgnore]
         public FileCoverage Coverage { get; }
 
         public decimal PercentageOfLineCoverage =>
