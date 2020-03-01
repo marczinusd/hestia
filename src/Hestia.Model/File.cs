@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Serialization;
 using Hestia.Model.Stats;
 using LanguageExt;
@@ -27,6 +28,8 @@ namespace Hestia.Model
         public long Id { get; }
 
         [JsonIgnore] public IList<SourceLine> Content { get; }
+
+        [JsonIgnore] public string FullPath => System.IO.Path.Join(Path, Filename);
 
         public string Path { get; }
 

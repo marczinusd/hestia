@@ -1,4 +1,8 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text.Json;
 using CommandLine;
 using Hestia.Model.Builders;
 using Hestia.Model.Stats;
@@ -18,11 +22,18 @@ namespace Hestia.ConsoleRunner
                   {
                       var ioWrapper = new DiskIOWrapper();
                       var enricher = new StatsEnricher(ioWrapper, new GitCommands(new CommandLineExecutor()));
-                      var repository = RepositoryBuilder.BuildRepositoryFromDirectoryPath(-1,
+                      var repository = RepositoryBuilder.BuildRepositoryFromDirectoryPath(options.RepositoryId,
+                                                                                          options.RepositoryName,
                                                                                           options.RepositoryPath,
+                                                                                          Path.Join(options
+                                                                                                        .RepositoryPath,
+                                                                                                    options.SourcePath),
+                                                                                          options.SourceExtensions
+                                                                                                 .ToArray(),
+                                                                                          options.CoveragePath,
                                                                                           ioWrapper,
                                                                                           new PathValidator());
-                      var enrichedRepository = enricher.EnrichWithGitStats(repository);
+                      var enrichedRepository = enricher.EnrichWithCoverage(enricher.EnrichWithGitStats(repository));
 
                       IOFile.WriteAllText(options.OutputPath, JsonSerializer.Serialize(enrichedRepository));
                   });
@@ -31,47 +42,72 @@ namespace Hestia.ConsoleRunner
         // ReSharper disable once ClassNeverInstantiated.Local
         private class Options
         {
-            // ReSharper disable once UnusedAutoPropertyAccessor.Local
+            public Options(string repositoryPath,
+                           string coveragePath,
+                           int repositoryId,
+                           string repositoryName,
+                           string outputPath,
+                           IEnumerable<string> sourceExtensions,
+                           string sourcePath)
+            {
+                RepositoryPath = repositoryPath;
+                CoveragePath = coveragePath;
+                RepositoryId = repositoryId;
+                RepositoryName = repositoryName;
+                OutputPath = outputPath;
+                SourceExtensions = sourceExtensions;
+                SourcePath = sourcePath;
+            }
+
             [Option('r',
                     "repositoryPath",
                     Required = true,
                     HelpText = "Path to the repository to analyze")]
-            public string RepositoryPath { get; set; }
+            public string RepositoryPath { get; }
 
-            // ReSharper disable once UnusedAutoPropertyAccessor.Local
-            // ReSharper disable once UnusedMember.Local
             [Option('c',
                     "coveragePath",
                     Required = false,
                     HelpText = "Path to the coverage result file for the selected repo")]
-            public string CoveragePath { get; set; }
+            public string CoveragePath { get; }
 
-            // ReSharper disable once UnusedAutoPropertyAccessor.Local
-            // ReSharper disable once UnusedMember.Local
             [Option('i',
                     "repositoryId",
                     Required = false,
                     Default = 0,
                     HelpText =
-                        "Used to specify the id of the repository which will appear in the JSON representation.")]
-            public int RepositoryId { get; set; }
+                        "Used to specify the id of the repository which will appear in the JSON representation")]
+            public int RepositoryId { get; }
 
-            // ReSharper disable once UnusedAutoPropertyAccessor.Local
-            // ReSharper disable once UnusedMember.Local
             [Option('n',
                     "repositoryName",
                     Required = false,
                     Default = "dummy",
-                    HelpText = "Used to specify the name of the repository that will appear in the json representation.")]
-            public string RepositoryName { get; set; }
+                    HelpText =
+                        "Used to specify the name of the repository that will appear in the json representation")]
+            public string RepositoryName { get; }
 
-            // ReSharper disable once UnusedAutoPropertyAccessor.Local
             [Option('o',
                     "outPath",
-                    Required = true,
+                    Required = false,
                     HelpText = "Path to write the repository's JSON representation to",
                     Default = "repository.json")]
-            public string OutputPath { get; set; }
+            public string OutputPath { get; }
+
+            [Option('e',
+                    "extensions",
+                    Required = true,
+                    HelpText =
+                        "Array of valid source file extensions you want to parse, separated by a comma, e.g: '.js,.ts'",
+                    Separator = ',')]
+            public IEnumerable<string> SourceExtensions { get; }
+
+            [Option('s',
+                    "sourcePath",
+                    Required = false,
+                    HelpText = "Path **relative** to the rootpath, where the source code is located",
+                    Default = "src")]
+            public string SourcePath { get; }
         }
     }
 }

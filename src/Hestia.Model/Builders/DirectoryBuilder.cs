@@ -7,6 +7,7 @@ namespace Hestia.Model.Builders
     public static class DirectoryBuilder
     {
         public static Directory BuildDirectoryFromDirectoryPath(string pathToDirectory,
+                                                                string[] sourceExtensions,
                                                                 IDiskIOWrapper diskIoWrapper,
                                                                 IPathValidator pathValidator)
         {
@@ -20,10 +21,13 @@ namespace Hestia.Model.Builders
                                  directories
                                      .Select(dir => BuildDirectoryFromDirectoryPath(Path.Join(pathToDirectory,
                                                                                               GetDirectoryName(dir)),
+                                                                                    sourceExtensions,
                                                                                     diskIoWrapper,
                                                                                     pathValidator))
+                                     .Where(dir => dir.Files.Any()) // filter directories with no source files
                                      .ToList(),
-                                 files.Select(file =>
+                                 files.Where(file => !sourceExtensions.Any() || sourceExtensions.Contains(Path.GetExtension(file)))
+                                      .Select(file =>
                                                   FileBuilder.BuildFileFromPath(Path.Join(pathToDirectory,
                                                                                           Path.GetFileName(file)),
                                                                                 diskIoWrapper))

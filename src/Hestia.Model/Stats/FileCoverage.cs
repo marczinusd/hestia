@@ -9,14 +9,14 @@ namespace Hestia.Model.Stats
                             IEnumerable<(int lineNumber, int hitCount)> lineCoverages)
         {
             FileName = fileName;
-            LineCoverages = lineCoverages;
+            LineCoverages = lineCoverages.Select(tuple => new LineCoverage(tuple.lineNumber, tuple.hitCount));
         }
 
         public string FileName { get; }
 
-        public IEnumerable<(int lineNumber, int hitCount)> LineCoverages { get; }
+        public IEnumerable<LineCoverage> LineCoverages { get; }
 
         public override string ToString() =>
-            $"{FileName} : {string.Join(" ", LineCoverages.Select(lc => $"({lc.lineNumber}, {lc.hitCount}"))}";
+            $"{FileName} : {string.Join(" ", LineCoverages.Select(lc => lc.ToString()))}";
     }
 }

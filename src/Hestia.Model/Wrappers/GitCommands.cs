@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -15,46 +16,47 @@ namespace Hestia.Model.Wrappers
             => _commandLineExecutor = commandLineExecutor;
 
         public int NumberOfChangesForFile(string filePath) =>
-            _commandLineExecutor
-                .Execute(OnelineFileHistory(filePath))
+            Exec(OnelineFileHistory(filePath), Path.GetDirectoryName(filePath))
                 .Length;
 
         public int NumberOfChangesForLine(string filePath, int lineNumber) =>
-            ParseLineHistoryForNumberOfChanges(Exec(LineHistoryCommand(filePath, lineNumber)));
+            ParseLineHistoryForNumberOfChanges(Exec(LineHistoryCommand(filePath, lineNumber),
+                                                    Path.GetDirectoryName(filePath)));
 
         public IEnumerable<int> NumberOfChangesForEachLine(string filePath, int lineCount) =>
             Enumerable.Range(1, lineCount)
                       .Select(lineNumber => NumberOfChangesForLine(filePath, lineNumber));
 
-        public int NumberOfDifferentAuthorsForFile(string filepath) =>
-            ParseShortLogForUniqueAuthors(Exec(AuthorsForFileCommand(filepath)));
+        public int NumberOfDifferentAuthorsForFile(string filePath) =>
+            ParseShortLogForUniqueAuthors(Exec(AuthorsForFileCommand(filePath), Path.GetDirectoryName(filePath)));
 
         public int NumberOfDifferentAuthorForLine(string filePath, int lineNumber) =>
             ParseNumberOfUniqueAuthorsFromGitHistory(Exec(LineHistoryCommand(filePath,
-                                                                             lineNumber)));
+                                                                             lineNumber),
+                                                          Path.GetDirectoryName(filePath)));
 
         public IEnumerable<(int lineNumber, int numberOfAuthors, int numberOfCommits)>
             NumberOfDifferentAuthorsAndChangesForLine(
                 string filePath,
                 int lineCount) =>
             Enumerable.Range(1, lineCount)
-                      .Select(line => (line, Exec(LineHistoryCommand(filePath, line))))
+                      .Select(line =>
+                                  (line, Exec(LineHistoryCommand(filePath, line), Path.GetDirectoryName(filePath))))
                       .Select(tuple => (tuple.line,
                                         ParseLineHistoryForNumberOfChanges(tuple.Item2),
                                         ParseNumberOfUniqueAuthorsFromGitHistory(tuple.Item2)));
 
         private string OnelineFileHistory(string filepath) =>
-            $"git log --pretty=oneline {filepath}";
+            $"log --pretty=oneline {filepath}";
 
         private string LineHistoryCommand(string filepath, int lineNumber) =>
-            $"git log -L {lineNumber},{lineNumber}:\"{filepath}\"";
+            $"log -L {lineNumber},{lineNumber}:\"{filepath}\"";
 
         private string AuthorsForFileCommand(string filepath) =>
-            $"git shortlog -c -s {filepath}";
+            $"shortlog -c -s {filepath}";
 
         private int ParseLineHistoryForNumberOfChanges(string[] commandOutput) =>
-            commandOutput.Where(line => Regex.IsMatch(line, CommitHeaderPattern))
-                         .Count();
+            commandOutput.Count(line => Regex.IsMatch(line, CommitHeaderPattern));
 
         private int ParseShortLogForUniqueAuthors(string[] commandOutput) =>
             commandOutput.Select(line => Regex.Match(line, ShortLogAuthorPattern)
@@ -73,6 +75,7 @@ namespace Hestia.Model.Wrappers
                          .Distinct()
                          .Count();
 
-        private string[] Exec(string command) => _commandLineExecutor.Execute(command);
+        private string[] Exec(string command, string workingDirectory) =>
+            _commandLineExecutor.Execute("git", command, workingDirectory);
     }
 }

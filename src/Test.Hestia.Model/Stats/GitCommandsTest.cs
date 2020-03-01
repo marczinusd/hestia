@@ -16,15 +16,15 @@ namespace Test.Hestia.Model.Stats
             var gitLogOutput =
                 Helpers.LoadResource(Resources.Paths.GitPrettyLogOutput, typeof(GitCommandsTest).Assembly);
             var executorMock = new Mock<ICommandLineExecutor>();
-            var fileName = "bla.js";
-            var gitCommand = $"git log --pretty=oneline {fileName}";
-            executorMock.Setup(mock => mock.Execute(It.Is<string>(command => command == gitCommand)))
+            var fileName = "dir/bla.js";
+            var gitCommand = $"log --pretty=oneline {fileName}";
+            executorMock.Setup(mock => mock.Execute("git", It.Is<string>(command => command == gitCommand), "dir"))
                         .Returns(gitLogOutput.Split(Environment.NewLine));
             var gitCommands = new GitCommands(executorMock.Object);
 
             var result = gitCommands.NumberOfChangesForFile(fileName);
 
-            executorMock.Verify(mock => mock.Execute(gitCommand), Times.Once);
+            executorMock.Verify(mock => mock.Execute("git", gitCommand, "dir"), Times.Once);
             result.Should()
                   .Be(4);
         }
@@ -34,16 +34,16 @@ namespace Test.Hestia.Model.Stats
         {
             var lineHistory = Helpers.LoadResource(Resources.Paths.GitLineLogOutput, typeof(GitCommandsTest).Assembly);
             var executorMock = new Mock<ICommandLineExecutor>();
-            var fileName = "bla.js";
+            var fileName = "dir/bla.js";
             var lineNumber = 2;
-            var gitCommand = $"git log -L {lineNumber},{lineNumber}:\"{fileName}\"";
-            executorMock.Setup(mock => mock.Execute(It.Is<string>(command => command == gitCommand)))
+            var gitCommand = $"log -L {lineNumber},{lineNumber}:\"{fileName}\"";
+            executorMock.Setup(mock => mock.Execute("git", It.Is<string>(command => command == gitCommand), "dir"))
                         .Returns(lineHistory.Split(Environment.NewLine));
             var gitCommands = new GitCommands(executorMock.Object);
 
             var result = gitCommands.NumberOfChangesForLine(fileName, lineNumber);
 
-            executorMock.Verify(mock => mock.Execute(It.Is<string>(s => s == gitCommand)), Times.Once);
+            executorMock.Verify(mock => mock.Execute("git", It.Is<string>(s => s == gitCommand), "dir"), Times.Once);
             result.Should()
                   .Be(2);
         }
@@ -53,20 +53,20 @@ namespace Test.Hestia.Model.Stats
         {
             var lineHistory = Helpers.LoadResource(Resources.Paths.GitLineLogOutput, typeof(GitCommandsTest).Assembly);
             var executorMock = new Mock<ICommandLineExecutor>();
-            var fileName = "bla.js";
-            var gitCommandFirstLine = $"git log -L 1,1:\"{fileName}\"";
-            var gitCommandSecondLine = $"git log -L 2,2:\"{fileName}\"";
-            executorMock.Setup(mock => mock.Execute(It.Is<string>(command => command == gitCommandFirstLine)))
+            var fileName = "dir/bla.js";
+            var gitCommandFirstLine = $"log -L 1,1:\"{fileName}\"";
+            var gitCommandSecondLine = $"log -L 2,2:\"{fileName}\"";
+            executorMock.Setup(mock => mock.Execute("git", It.Is<string>(command => command == gitCommandFirstLine), "dir"))
                         .Returns(lineHistory.Split(Environment.NewLine));
-            executorMock.Setup(mock => mock.Execute(It.Is<string>(command => command == gitCommandSecondLine)))
+            executorMock.Setup(mock => mock.Execute("git", It.Is<string>(command => command == gitCommandSecondLine), "dir"))
                         .Returns(lineHistory.Split(Environment.NewLine));
             var gitCommands = new GitCommands(executorMock.Object);
 
             var result = gitCommands.NumberOfChangesForEachLine(fileName, 2)
                                     .ToArray();
 
-            executorMock.Verify(mock => mock.Execute(It.Is<string>(s => s == gitCommandFirstLine)), Times.Once);
-            executorMock.Verify(mock => mock.Execute(It.Is<string>(s => s == gitCommandSecondLine)), Times.Once);
+            executorMock.Verify(mock => mock.Execute("git", It.Is<string>(s => s == gitCommandFirstLine), "dir"), Times.Once);
+            executorMock.Verify(mock => mock.Execute("git", It.Is<string>(s => s == gitCommandSecondLine), "dir"), Times.Once);
             result.Should()
                   .BeEquivalentTo(new[] { 2, 2 });
         }
@@ -76,16 +76,16 @@ namespace Test.Hestia.Model.Stats
         {
             var lineHistory = Helpers.LoadResource(Resources.Paths.GitLineLogOutput, typeof(GitCommandsTest).Assembly);
             var executorMock = new Mock<ICommandLineExecutor>();
-            var fileName = "bla.js";
+            var fileName = "dir/bla.js";
             var lineNumber = 2;
-            var gitCommand = $"git log -L {lineNumber},{lineNumber}:\"{fileName}\"";
-            executorMock.Setup(mock => mock.Execute(It.Is<string>(command => command == gitCommand)))
+            var gitCommand = $"log -L {lineNumber},{lineNumber}:\"{fileName}\"";
+            executorMock.Setup(mock => mock.Execute("git", It.Is<string>(command => command == gitCommand), "dir"))
                         .Returns(lineHistory.Split(Environment.NewLine));
             var gitCommands = new GitCommands(executorMock.Object);
 
             var result = gitCommands.NumberOfDifferentAuthorForLine(fileName, lineNumber);
 
-            executorMock.Verify(mock => mock.Execute(It.Is<string>(s => s == gitCommand)), Times.Once);
+            executorMock.Verify(mock => mock.Execute("git", It.Is<string>(s => s == gitCommand), "dir"), Times.Once);
             result.Should()
                   .Be(2);
         }
@@ -95,15 +95,15 @@ namespace Test.Hestia.Model.Stats
         {
             var fileAuthors = Helpers.LoadResource(Resources.Paths.GitShortlogOutput, typeof(GitCommandsTest).Assembly);
             var executorMock = new Mock<ICommandLineExecutor>();
-            var fileName = "bla.js";
-            var gitCommand = $"git shortlog -c -s {fileName}";
-            executorMock.Setup(mock => mock.Execute(It.Is<string>(command => command == gitCommand)))
+            var fileName = "dir/bla.js";
+            var gitCommand = $"shortlog -c -s {fileName}";
+            executorMock.Setup(mock => mock.Execute("git", It.Is<string>(command => command == gitCommand), "dir"))
                         .Returns(fileAuthors.Split(Environment.NewLine));
             var gitCommands = new GitCommands(executorMock.Object);
 
             var result = gitCommands.NumberOfDifferentAuthorsForFile(fileName);
 
-            executorMock.Verify(mock => mock.Execute(gitCommand), Times.Once);
+            executorMock.Verify(mock => mock.Execute("git", gitCommand, "dir"), Times.Once);
             result.Should()
                   .Be(2);
         }

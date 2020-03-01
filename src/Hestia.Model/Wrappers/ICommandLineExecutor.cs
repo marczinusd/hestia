@@ -5,16 +5,13 @@ namespace Hestia.Model.Wrappers
 {
     public interface ICommandLineExecutor
     {
-        string[] Execute(IEnumerable<string> commandsToExecute);
 
-        string[] Execute(string commandToExecute);
+        string[] Execute(string commandToExecute, string args, string workingDirectory);
 
-        string ExecuteNoSplit(string commandToExecute);
+        string ExecuteNoSplit(string commandToExecute, string args, string workingDirectory);
 
-        Task<string[]> ExecuteAsync(string commandToExecute);
+        Task<string[]> ExecuteAsync(string commandToExecute, string args, string workingDirectory);
 
-        Task<string> ExecuteAsyncNoSplit(string commandToExecute);
-
-        Task<string[]> ExecuteAsync(IEnumerable<string> commandsToExecute);
+        Task<string> ExecuteAsyncNoSplit(string commandToExecute, string args, string workingDirectory);
     }
 }

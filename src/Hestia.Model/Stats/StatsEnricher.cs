@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Hestia.Model.Wrappers;
+using LanguageExt;
 using static LanguageExt.Prelude;
 
 namespace Hestia.Model.Stats
@@ -31,8 +33,14 @@ namespace Hestia.Model.Stats
                            (enrichedRepo, enricher) => enricher(enrichedRepo));
 
         // ReSharper disable once UnusedMember.Global
-        public Repository EnrichWithCoverage(Repository repository, string pathToCoverageFile)
+        public Repository EnrichWithCoverage(Repository repository)
         {
+            var pathToCoverageFile = match(repository.PathToCoverageResultFile,
+                                           s => s,
+                                           () =>
+                                               throw new
+                                                   OptionIsNoneException($"{nameof(repository.PathToCoverageResultFile)} cannot be None"));
+
             return new Repository(1,
                                   repository.Name,
                                   EnrichWithCoverage(repository.RootDirectory, pathToCoverageFile),
@@ -49,7 +57,7 @@ namespace Hestia.Model.Stats
                                                                          ResolveCoverageProvider()
                                                                              .ParseFileCoveragesFromFilePath(coveragePath)
                                                                              .SingleOrDefault(cov => cov.FileName ==
-                                                                                                     f.Path)))
+                                                                                                     Path.Join(f.Path, f.Filename))))
                                    .ToList());
 
         public IObservable<File> EnrichObservable(File file, IEnumerable<FileCoverage> fileCoverages) =>
@@ -67,20 +75,20 @@ namespace Hestia.Model.Stats
 
         public File EnrichWithCoverage(File file, FileCoverage coverage)
         {
-            if (coverage.Equals(default))
+            if (coverage == null || coverage.Equals(default))
             {
                 return file;
             }
 
             var enrichedContent =
                 _ioWrapper
-                    .ReadAllLinesFromFileAsSourceModel(file.Path)
+                    .ReadAllLinesFromFileAsSourceModel(Path.Join(file.Path, file.Filename))
                     .Select(l =>
                     {
                         var coveredLine =
-                            coverage.LineCoverages.SingleOrDefault(c => c.lineNumber == l.LineNumber);
+                            coverage.LineCoverages.SingleOrDefault(c => c.LineNumber == l.LineNumber);
 
-                        return coveredLine.Equals(default)
+                        return coveredLine == null || coveredLine.Equals(default)
                                    ? l
                                    : new SourceLine(l.LineNumber,
                                                     l.Text,
@@ -108,9 +116,9 @@ namespace Hestia.Model.Stats
 
         public File EnrichWithGitStats(File file)
         {
-            var gitStats = new FileGitStats(_gitCommands.NumberOfChangesForFile(file.Path),
-                                            _gitCommands.NumberOfDifferentAuthorsForFile(file.Path));
-            var lineStats = _gitCommands.NumberOfDifferentAuthorsAndChangesForLine(file.Path, file.Content.Count)
+            var gitStats = new FileGitStats(_gitCommands.NumberOfChangesForFile(file.FullPath),
+                                            _gitCommands.NumberOfDifferentAuthorsForFile(file.FullPath));
+            var lineStats = _gitCommands.NumberOfDifferentAuthorsAndChangesForLine(file.FullPath, file.Content.Count)
                                         .Select(x => new LineGitStats(x.lineNumber,
                                                                       x.numberOfCommits,
                                                                       x.numberOfAuthors));
@@ -131,18 +139,19 @@ namespace Hestia.Model.Stats
                             file.CoverageStats);
         }
 
-        public Repository EnrichWithGitStats(Repository repository)
-        {
-            return new Repository(repository.Id,
-                                  repository.Name,
-                                  repository.RootDirectory,
-                                  repository.PathToCoverageResultFile);
-        }
+        public Repository EnrichWithGitStats(Repository repository) =>
+            new Repository(repository.Id,
+                           repository.Name,
+                           EnrichWithGitStats(repository.RootDirectory),
+                           repository.PathToCoverageResultFile);
 
-        private ICoverageProvider ResolveCoverageProvider()
-        {
-            // TODO
-            return new JsonCovCoverageProvider(_ioWrapper);
-        }
+        public Directory EnrichWithGitStats(Directory directory) =>
+            new Directory(directory.Name,
+                          directory.Path,
+                          directory.Directories.Select(EnrichWithGitStats).ToList(),
+                          directory.Files.Select(EnrichWithGitStats).ToList());
+
+        // TODO: actually implement this once multiple providers are added
+        private ICoverageProvider ResolveCoverageProvider() => new JsonCovCoverageProvider(_ioWrapper);
     }
 }

@@ -7,25 +7,23 @@ namespace Hestia.Model.Wrappers
 {
     public class CommandLineExecutor : ICommandLineExecutor
     {
-        public string[] Execute(IEnumerable<string> commandsToExecute) =>
-            ExecuteAsync(commandsToExecute)
-                .Result;
+        private readonly bool _echoDetails;
 
-        public string[] Execute(string commandToExecute) =>
-            ExecuteAsync(commandToExecute)
-                .Result;
+        public CommandLineExecutor(bool echoDetails = false)
+        {
+            _echoDetails = echoDetails;
+        }
 
-        public string ExecuteNoSplit(string commandToExecute) =>
-            ExecuteAsyncNoSplit(commandToExecute)
-                .Result;
+        public string[] Execute(string commandToExecute, string args, string workingDirectory) =>
+            ExecuteAsync(commandToExecute, args, workingDirectory).Result;
 
-        public async Task<string[]> ExecuteAsync(string commandToExecute) =>
-            (await Command.ReadAsync(commandToExecute)).Split(Environment.NewLine);
+        public string ExecuteNoSplit(string commandToExecute, string args, string workingDirectory) =>
+            ExecuteAsyncNoSplit(commandToExecute, args, workingDirectory).Result;
 
-        public async Task<string> ExecuteAsyncNoSplit(string commandToExecute) =>
-            await Command.ReadAsync(commandToExecute);
+        public async Task<string[]> ExecuteAsync(string commandToExecute, string args, string workingDirectory) =>
+            (await Command.ReadAsync(commandToExecute, args, workingDirectory, _echoDetails)).Split(Environment.NewLine);
 
-        public async Task<string[]> ExecuteAsync(IEnumerable<string> commandsToExecute) =>
-            await ExecuteAsync(string.Join(" && ", commandsToExecute));
+        public async Task<string> ExecuteAsyncNoSplit(string commandToExecute, string args, string workingDirectory) =>
+            await Command.ReadAsync(commandToExecute, args, workingDirectory, _echoDetails);
     }
 }

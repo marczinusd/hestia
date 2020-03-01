@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Hestia.Model.Stats;
+using LanguageExt;
 
 namespace Hestia.Model.Wrappers
 {
@@ -7,9 +10,12 @@ namespace Hestia.Model.Wrappers
     {
         public SourceLine[] ReadAllLinesFromFileAsSourceModel(string filePath)
         {
-            Console.WriteLine(filePath);
-
-            throw new NotImplementedException();
+            return ReadAllLinesFromFile(filePath)
+                   .Select((line, i) => new SourceLine(i + 1,
+                                                       line,
+                                                       Option<LineCoverageStats>.None,
+                                                       Option<LineGitStats>.None))
+                   .ToArray();
         }
 
         public IEnumerable<string> ReadAllLinesFromFile(string filePath) => System.IO.File.ReadAllLines(filePath);

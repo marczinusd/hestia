@@ -23,6 +23,7 @@ namespace Test.Hestia.Model.Builders
                      .Returns(Enumerable.Empty<string>());
 
             var directory = DirectoryBuilder.BuildDirectoryFromDirectoryPath(DirPath,
+                                                                             Array.Empty<string>(),
                                                                              ioWrapper.Object,
                                                                              Mock.Of<IPathValidator>());
 
@@ -52,6 +53,7 @@ namespace Test.Hestia.Model.Builders
                      .Returns(new[] { Path.Join(DirPath, "bla2.js") });
 
             var result = DirectoryBuilder.BuildDirectoryFromDirectoryPath(DirPath,
+                                                                          Array.Empty<string>(),
                                                                           ioWrapper.Object,
                                                                           Mock.Of<IPathValidator>());
 
@@ -86,6 +88,7 @@ namespace Test.Hestia.Model.Builders
 
             var validator = new Mock<IPathValidator>();
             DirectoryBuilder.BuildDirectoryFromDirectoryPath(DirPath,
+                                                             Array.Empty<string>(),
                                                              ioWrapper.Object,
                                                              validator.Object);
 

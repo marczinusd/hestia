@@ -22,7 +22,11 @@ namespace Test.Hestia.Model.Builders
                      .Returns(Enumerable.Empty<string>());
 
             Action act = () => RepositoryBuilder.BuildRepositoryFromDirectoryPath(-1,
+                                                                                  string.Empty,
                                                                                   DirPath,
+                                                                                  string.Empty,
+                                                                                  Array.Empty<string>(),
+                                                                                  string.Empty,
                                                                                   ioWrapper.Object,
                                                                                   validator.Object);
 

@@ -12,6 +12,8 @@ namespace Hestia.Model.Stats
         public FileCoverage Coverage { get; }
 
         public decimal PercentageOfLineCoverage =>
-            Coverage.LineCoverages.Count() / (decimal)Coverage.LineCoverages.Count(l => l.hitCount == 0);
+            !Coverage.LineCoverages.Any()
+                ? 0
+                : Coverage.LineCoverages.Count(l => l.HitCount > 0) / (decimal)Coverage.LineCoverages.Count();
     }
 }
