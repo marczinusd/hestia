@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using CommandLine;
+using Hestia.Model;
 using Hestia.Model.Builders;
 using Hestia.Model.Stats;
 using Hestia.Model.Wrappers;
@@ -25,24 +26,29 @@ namespace Hestia.ConsoleRunner
                       {
                           builder.AddConsole();
                       });
-                      var ioWrapper = new DiskIOWrapper();
-                      var enricher = new StatsEnricher(ioWrapper, new GitCommands(new CommandLineExecutor()), factory.CreateLogger<StatsEnricher>());
-                      var repository = RepositoryBuilder.BuildRepositoryFromDirectoryPath(options.RepositoryId,
-                                                                                          options.RepositoryName,
-                                                                                          options.RepositoryPath,
-                                                                                          Path.Join(options
-                                                                                                        .RepositoryPath,
-                                                                                                    options.SourcePath),
-                                                                                          options.SourceExtensions
-                                                                                                 .ToArray(),
-                                                                                          options.CoveragePath,
-                                                                                          ioWrapper,
-                                                                                          new PathValidator());
+                      var logger = factory.CreateLogger<Program>();
+                      var enricher = new StatsEnricher(new DiskIOWrapper(), new GitCommands(new CommandLineExecutor()), factory.CreateLogger<StatsEnricher>());
+                      var repository = BuildRepositoryWithOptions(options);
+
                       var enrichedRepository = enricher.EnrichWithCoverage(enricher.EnrichWithGitStats(repository));
 
                       IOFile.WriteAllText(options.OutputPath, JsonSerializer.Serialize(enrichedRepository));
+                      logger.LogInformation($"Output created at {options.OutputPath}");
                   });
         }
+
+        private static Repository BuildRepositoryWithOptions(Options options) =>
+            RepositoryBuilder.BuildRepositoryFromDirectoryPath(options.RepositoryId,
+                                                               options.RepositoryName,
+                                                               options.RepositoryPath,
+                                                               Path.Join(options
+                                                                             .RepositoryPath,
+                                                                         options.SourcePath),
+                                                               options.SourceExtensions
+                                                                      .ToArray(),
+                                                               options.CoveragePath,
+                                                               new DiskIOWrapper(),
+                                                               new PathValidator());
 
         // ReSharper disable once ClassNeverInstantiated.Local
         private class Options
