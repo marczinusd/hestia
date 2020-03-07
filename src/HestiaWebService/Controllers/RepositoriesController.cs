@@ -1,13 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Hestia.DAL;
-using Hestia.DAL.DummyData;
-using Hestia.DAL.Entities;
-using Hestia.DAL.Extensions;
 using Hestia.Model;
-using LanguageExt;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -18,17 +12,10 @@ namespace Hestia.Controllers
     [Route("[controller]")]
     public class RepositoriesController : ControllerBase
     {
-        private readonly HestiaContext _context;
         private readonly ILogger<RepositoriesController> _logger;
 
-        public RepositoriesController([NotNull] HestiaContext context, ILogger<RepositoriesController> logger)
+        public RepositoriesController(ILogger<RepositoriesController> logger)
         {
-            _context = context;
-            if (_context.Repositories == null || !_context.Repositories.Any())
-            {
-                _context.Setup();
-            }
-
             _logger = logger;
         }
 
@@ -42,11 +29,7 @@ namespace Hestia.Controllers
         {
             _logger.LogDebug($"Invoking GET on {typeof(RepositoriesController).Name}");
 
-            var identifiers = _context.Repositories
-                                      .Select(r => r.MapEntityToModel()
-                                                    .AsRepositoryIdentifier());
-
-            return new ActionResult<IEnumerable<RepositoryIdentifier>>(identifiers);
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -58,19 +41,10 @@ namespace Hestia.Controllers
         [HttpGet("[Controller]/{id}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(RepositorySnapshot), 200)]
-        public async Task<ActionResult<RepositorySnapshot>> GetRepositoryById(long id)
+        public Task<ActionResult<RepositorySnapshot>> GetRepositoryById(long id)
         {
             _logger.LogDebug($"Invoking GET by id with id=${id} on {typeof(RepositoriesController).Name}");
-            var repository = await _context.Repositories.FindAsync(id);
-            if (repository == null)
-            {
-                // _context.Add(DataRepository.DummyRepository);
-                // _context.SaveChanges();
-                _logger.LogDebug("Repository with {id} not found.");
-                return NotFound();
-            }
-
-            return repository.MapEntityToModel();
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -83,19 +57,9 @@ namespace Hestia.Controllers
         [HttpGet("[Controller]/{repositoryId}/files/{fileId}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(FileDetails), 200)]
-        public async Task<ActionResult<FileDetails>> GetFileById(long repositoryId, long fileId)
+        public Task<ActionResult<FileDetails>> GetFileById(long repositoryId, long fileId)
         {
-            var repository = await _context.Repositories.FindAsync(repositoryId);
-
-            return FindFileById(repository, fileId)
-                   .Some(f => new ActionResult<FileDetails>(f.MapEntityToModel()
-                                                             .AsFileDetails()))
-                   .None(() => NotFound());
-        }
-
-        private Option<FileEntity> FindFileById(RepositoryEntity repository, long fileId)
-        {
-            return repository.RootDirectory.Files.First(f => f.Id == fileId);
+            throw new NotImplementedException();
         }
     }
 }
