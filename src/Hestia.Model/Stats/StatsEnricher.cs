@@ -13,16 +13,16 @@ namespace Hestia.Model.Stats
     /// <remarks>
     ///     Do note that all of these operations are **very** costly -- even more so if you're using Windows.
     /// </remarks>
-    public class StatsEnricher
+    public class StatsEnricher : IStatsEnricher
     {
         private readonly ICommandLineExecutor _executor;
         private readonly IGitCommands _gitCommands;
         private readonly IDiskIOWrapper _ioWrapper;
-        private readonly ILogger<StatsEnricher> _logger;
+        private readonly ILogger<IStatsEnricher> _logger;
 
         public StatsEnricher(IDiskIOWrapper ioWrapper,
                              IGitCommands gitCommands,
-                             ILogger<StatsEnricher> logger,
+                             ILogger<IStatsEnricher> logger,
                              ICommandLineExecutor executor)
         {
             _ioWrapper = ioWrapper;

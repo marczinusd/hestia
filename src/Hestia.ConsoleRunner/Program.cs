@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Hestia.Model.Stats;
 using Hestia.Model.Wrappers;
 using Microsoft.Extensions.Logging;
 using IOFile = System.IO.File;
@@ -15,13 +16,14 @@ namespace Hestia.ConsoleRunner
             {
                 builder.AddConsole();
             });
-
             var executor = new CommandLineExecutor();
-
+            var enricher = new StatsEnricher(new DiskIOWrapper(),
+                                             new GitCommands(executor),
+                                             factory.CreateLogger<IStatsEnricher>(),
+                                             executor);
             var runner = new HestiaConsoleRunner(factory,
-                                                 new DiskIOWrapper(),
-                                                 new GitCommands(executor),
-                                                 executor);
+                                                 enricher);
+
             runner.Run(args);
         }
     }

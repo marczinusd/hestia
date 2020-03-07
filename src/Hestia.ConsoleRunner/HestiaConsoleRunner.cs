@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -16,19 +17,13 @@ namespace Hestia.ConsoleRunner
     public class HestiaConsoleRunner
     {
         private readonly ILoggerFactory _loggerFactory;
-        private readonly IDiskIOWrapper _ioWrapper;
-        private readonly IGitCommands _gitCommands;
-        private readonly ICommandLineExecutor _executor;
+        private readonly IStatsEnricher _statsEnricher;
 
         public HestiaConsoleRunner(ILoggerFactory loggerFactory,
-                                   IDiskIOWrapper ioWrapper,
-                                   IGitCommands gitCommands,
-                                   ICommandLineExecutor executor)
+                                   IStatsEnricher statsEnricher)
         {
             _loggerFactory = loggerFactory;
-            _ioWrapper = ioWrapper;
-            _gitCommands = gitCommands;
-            _executor = executor;
+            _statsEnricher = statsEnricher;
         }
 
         public void Run(string[] args)
@@ -38,14 +33,10 @@ namespace Hestia.ConsoleRunner
                   .WithParsed(options =>
                   {
                       var logger = _loggerFactory.CreateLogger<HestiaConsoleRunner>();
-                      var enricher = new StatsEnricher(_ioWrapper,
-                                                       _gitCommands,
-                                                       _loggerFactory.CreateLogger<StatsEnricher>(),
-                                                       _executor);
                       var repository = BuildRepositoryWithOptions(options);
 
-                      var enrichedRepository = repository.Apply(enricher.EnrichWithCoverage)
-                                                         .Apply(enricher.EnrichWithGitStats);
+                      var enrichedRepository = repository.Apply(_statsEnricher.EnrichWithCoverage)
+                                                         .Apply(_statsEnricher.EnrichWithGitStats);
 
                       logger.LogInformation("Writing results to output...");
                       File.WriteAllText(options.OutputPath,
@@ -71,6 +62,7 @@ namespace Hestia.ConsoleRunner
                                                    new PathValidator()).Build();
 
         // ReSharper disable once ClassNeverInstantiated.Local
+        [ExcludeFromCodeCoverage]
         private class Options
         {
             public Options(string repositoryPath,
