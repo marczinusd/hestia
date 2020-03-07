@@ -1,25 +1,43 @@
-﻿using LanguageExt;
+using System;
+using System.Linq;
+using LanguageExt;
 
 namespace Hestia.Model
 {
     public class Repository
     {
-        public Repository(long id, string name, Directory rootDirectory, Option<string> pathToCoverageResultFile)
+        public Repository(long repositoryId,
+                          string repositoryName,
+                          Option<RepositorySnapshot[]> snapshots,
+                          Option<string> coverageExecutionCommand,
+                          Option<string> coverageOutputLocation)
         {
-            Name = name;
-            RootDirectory = rootDirectory;
-            PathToCoverageResultFile = pathToCoverageResultFile;
-            Id = id;
+            RepositoryId = repositoryId;
+            RepositoryName = repositoryName;
+            Snapshots = snapshots;
+            CoverageExecutionCommand = coverageExecutionCommand;
+            CoverageOutputLocation = coverageOutputLocation;
         }
 
-        public string Name { get; }
+        public long RepositoryId { get; }
 
-        public Option<string> PathToCoverageResultFile { get; }
+        public string RepositoryName { get; }
 
-        public Directory RootDirectory { get; }
+        public Option<RepositorySnapshot[]> Snapshots { get; }
 
-        public long Id { get; }
+        public Option<string> CoverageExecutionCommand { get; }
 
-        public RepositoryIdentifier AsRepositoryIdentifier() => new RepositoryIdentifier(Id, Name);
+        public Option<string> CoverageOutputLocation { get; }
+
+        public Repository AddSnapshot(RepositorySnapshot snapshot) =>
+            new Repository(RepositoryId,
+                           RepositoryName,
+                           Snapshots.Match(s => s.Concat(new[] { snapshot })
+                                                 .ToArray(),
+                                           Array.Empty<RepositorySnapshot>),
+                           CoverageExecutionCommand,
+                           CoverageOutputLocation);
+
+        public RepositoryIdentifier AsRepositoryIdentifier() => new RepositoryIdentifier(RepositoryId, RepositoryName);
     }
 }

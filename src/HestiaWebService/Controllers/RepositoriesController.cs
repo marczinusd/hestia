@@ -57,8 +57,8 @@ namespace Hestia.Controllers
         /// <response code="404">Returns 404 when a repository for id was not found.</response>
         [HttpGet("[Controller]/{id}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(Repository), 200)]
-        public async Task<ActionResult<Repository>> GetRepositoryById(long id)
+        [ProducesResponseType(typeof(RepositorySnapshot), 200)]
+        public async Task<ActionResult<RepositorySnapshot>> GetRepositoryById(long id)
         {
             _logger.LogDebug($"Invoking GET by id with id=${id} on {typeof(RepositoriesController).Name}");
             var repository = await _context.Repositories.FindAsync(id);

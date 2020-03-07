@@ -7,6 +7,7 @@ using Hestia.Model;
 using Hestia.Model.Builders;
 using Hestia.Model.Stats;
 using Hestia.Model.Wrappers;
+using LanguageExt;
 using Microsoft.Extensions.Logging;
 using IOFile = System.IO.File;
 
@@ -26,14 +27,16 @@ namespace Hestia.ConsoleRunner
                           builder.AddConsole();
                       });
                       var logger = factory.CreateLogger<Program>();
+                      var executor = new CommandLineExecutor();
                       var enricher = new StatsEnricher(new DiskIOWrapper(),
-                                                       new GitCommands(new CommandLineExecutor()),
-                                                       factory.CreateLogger<StatsEnricher>());
+                                                       new GitCommands(executor),
+                                                       factory.CreateLogger<StatsEnricher>(),
+                                                       executor);
                       var repository = BuildRepositoryWithOptions(options);
 
                       var enrichedRepository = enricher.EnrichWithCoverage(enricher.EnrichWithGitStats(repository));
 
-                      logger.LogInformation($"Writing results to output...");
+                      logger.LogInformation("Writing results to output...");
                       IOFile.WriteAllText(options.OutputPath,
                                           JsonSerializer.Serialize(enrichedRepository,
                                                                    new JsonSerializerOptions
@@ -44,18 +47,17 @@ namespace Hestia.ConsoleRunner
                   });
         }
 
-        private static Repository BuildRepositoryWithOptions(Options options) =>
-            RepositoryBuilder.BuildRepositoryFromDirectoryPath(options.RepositoryId,
-                                                               options.RepositoryName,
-                                                               options.RepositoryPath,
-                                                               Path.Join(options
-                                                                             .RepositoryPath,
-                                                                         options.SourcePath),
-                                                               options.SourceExtensions
-                                                                      .ToArray(),
-                                                               options.CoveragePath,
-                                                               new DiskIOWrapper(),
-                                                               new PathValidator());
+        private static RepositorySnapshot BuildRepositoryWithOptions(Options options) =>
+            new RepositorySnapshotBuilderArguments(options.RepositoryId,
+                                                   options.RepositoryPath,
+                                                   Path.Join(options.RepositoryPath,
+                                                             options.SourcePath),
+                                                   options.SourceExtensions
+                                                          .ToArray(),
+                                                   options.CoveragePath,
+                                                   Option<string>.None,
+                                                   new DiskIOWrapper(),
+                                                   new PathValidator()).Build();
 
         // ReSharper disable once ClassNeverInstantiated.Local
         private class Options
@@ -103,6 +105,8 @@ namespace Hestia.ConsoleRunner
                     Default = "dummy",
                     HelpText =
                         "Used to specify the name of the repository that will appear in the json representation")]
+
+            // ReSharper disable once UnusedAutoPropertyAccessor.Local
             public string RepositoryName { get; }
 
             [Option('o',

@@ -4,6 +4,7 @@ using System.Linq;
 using FluentAssertions;
 using Hestia.Model.Builders;
 using Hestia.Model.Wrappers;
+using LanguageExt;
 using Moq;
 using Xunit;
 
@@ -20,15 +21,16 @@ namespace Test.Hestia.Model.Builders
             var validator = new Mock<IPathValidator>();
             ioWrapper.Setup(mock => mock.EnumerateAllDirectoriesForPath(DirPath))
                      .Returns(Enumerable.Empty<string>());
+            var args = new RepositorySnapshotBuilderArguments(-1,
+                                                              string.Empty,
+                                                              DirPath,
+                                                              Array.Empty<string>(),
+                                                              string.Empty,
+                                                              Option<string>.None,
+                                                              ioWrapper.Object,
+                                                              validator.Object);
 
-            Action act = () => RepositoryBuilder.BuildRepositoryFromDirectoryPath(-1,
-                                                                                  string.Empty,
-                                                                                  DirPath,
-                                                                                  string.Empty,
-                                                                                  Array.Empty<string>(),
-                                                                                  string.Empty,
-                                                                                  ioWrapper.Object,
-                                                                                  validator.Object);
+            Action act = () => args.Build();
 
             act.Should()
                .Throw<InvalidOperationException>();

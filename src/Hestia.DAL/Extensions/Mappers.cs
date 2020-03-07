@@ -2,16 +2,17 @@
 using Hestia.DAL.Entities;
 using Hestia.Model;
 using Hestia.Model.Stats;
+using LanguageExt;
 
 namespace Hestia.DAL.Extensions
 {
     public static class Mappers
     {
-        public static Repository MapEntityToModel(this RepositoryEntity entity) =>
-            new Repository(entity.Id,
-                           entity.Name,
+        public static RepositorySnapshot MapEntityToModel(this RepositoryEntity entity) =>
+            new RepositorySnapshot(entity.Id,
                            entity.RootDirectory.MapEntityToModel(),
-                           entity.PathToCoverageResultFile);
+                           entity.PathToCoverageResultFile,
+                           Option<string>.None);
 
         public static Directory MapEntityToModel(this DirectoryEntity entity) =>
             new Directory(entity.Name,

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using Hestia.Model.Builders;
 using Hestia.Model.Wrappers;
 using LanguageExt;
 using Microsoft.Extensions.Logging;
@@ -21,34 +22,77 @@ namespace Hestia.Model.Stats
     {
         private readonly IGitCommands _gitCommands;
         private readonly ILogger<StatsEnricher> _logger;
+        private readonly ICommandLineExecutor _executor;
         private readonly IDiskIOWrapper _ioWrapper;
 
         public StatsEnricher(IDiskIOWrapper ioWrapper,
                              IGitCommands gitCommands,
-                             ILogger<StatsEnricher> logger)
+                             ILogger<StatsEnricher> logger,
+                             ICommandLineExecutor executor)
         {
             _ioWrapper = ioWrapper;
             _gitCommands = gitCommands;
             _logger = logger;
+            _executor = executor;
         }
 
-        public Repository Enrich(Repository repository, IEnumerable<Func<Repository, Repository>> enrichers) =>
-            enrichers.Fold(repository,
+        public Repository Enrich(Repository repository,
+                                 string repoPath,
+                                 string sourceRoot,
+                                 string[] sourceExtensions,
+                                 string coverageCommand,
+                                 string coverageOutputLocation,
+                                 int firstCommitToSample,
+                                 int lastCommitToSample,
+                                 int numberOfSamples)
+        {
+            var args = new RepositorySnapshotBuilderArguments(-1,
+                                                              repoPath,
+                                                              sourceRoot,
+                                                              sourceExtensions,
+                                                              coverageOutputLocation,
+                                                              Option<string>.None,
+                                                              _ioWrapper,
+                                                              new PathValidator());
+            var sampleInterval = (lastCommitToSample - firstCommitToSample) / numberOfSamples;
+
+            return Enumerable.Range(0, numberOfSamples)
+                             .Select(i => firstCommitToSample + (i * sampleInterval))
+                             .Select(commitNo => _gitCommands.GetHashForNthCommit(repoPath, commitNo))
+                             .ToList() // force eval
+                             .Fold(repository,
+                                   (repo, hash) =>
+                                   {
+                                       _gitCommands.Checkout(hash, repoPath);
+                                       _executor.Execute(coverageCommand, string.Empty, repoPath);
+
+                                       return args.With(hash)
+                                                  .Build()
+                                                  .Apply(EnrichWithCoverage)
+                                                  .Apply(EnrichWithGitStats)
+                                                  .Apply(repo.AddSnapshot);
+                                   });
+        }
+
+        public RepositorySnapshot Enrich(RepositorySnapshot repositorySnapshot,
+                                         IEnumerable<Func<RepositorySnapshot, RepositorySnapshot>> enrichers) =>
+            enrichers.Fold(repositorySnapshot,
                            (enrichedRepo, enricher) => enricher(enrichedRepo));
 
         // ReSharper disable once UnusedMember.Global
-        public Repository EnrichWithCoverage(Repository repository)
+        public RepositorySnapshot EnrichWithCoverage(RepositorySnapshot repositorySnapshot)
         {
-            var pathToCoverageFile = match(repository.PathToCoverageResultFile,
+            _logger.LogDebug($"Enriching repository snapshot at {repositorySnapshot.AtHash} with git stats");
+            var pathToCoverageFile = match(repositorySnapshot.PathToCoverageResultFile,
                                            s => s,
                                            () =>
                                                throw new
-                                                   OptionIsNoneException($"{nameof(repository.PathToCoverageResultFile)} cannot be None"));
+                                                   OptionIsNoneException($"{nameof(repositorySnapshot.PathToCoverageResultFile)} cannot be None"));
 
-            return new Repository(1,
-                                  repository.Name,
-                                  EnrichWithCoverage(repository.RootDirectory, pathToCoverageFile),
-                                  Some(pathToCoverageFile));
+            return new RepositorySnapshot(1,
+                                          EnrichWithCoverage(repositorySnapshot.RootDirectory, pathToCoverageFile),
+                                          Some(pathToCoverageFile),
+                                          Option<string>.None);
         }
 
         // ReSharper disable once UnusedMember.Global
@@ -147,11 +191,11 @@ namespace Hestia.Model.Stats
                             file.CoverageStats);
         }
 
-        public Repository EnrichWithGitStats(Repository repository) =>
-            new Repository(repository.Id,
-                           repository.Name,
-                           EnrichWithGitStats(repository.RootDirectory),
-                           repository.PathToCoverageResultFile);
+        public RepositorySnapshot EnrichWithGitStats(RepositorySnapshot repositorySnapshot) =>
+            new RepositorySnapshot(repositorySnapshot.SnapshotId,
+                                   EnrichWithGitStats(repositorySnapshot.RootDirectory),
+                                   repositorySnapshot.PathToCoverageResultFile,
+                                   Option<string>.None);
 
         public Directory EnrichWithGitStats(Directory directory) =>
             new Directory(directory.Name,
