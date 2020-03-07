@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using Hestia.Model.Builders;
 using Hestia.Model.Wrappers;
 using LanguageExt;
@@ -33,41 +32,34 @@ namespace Hestia.Model.Stats
         }
 
         public Repository Enrich(Repository repository,
-                                 string repoPath,
-                                 string sourceRoot,
-                                 string[] sourceExtensions,
-                                 string coverageCommand,
-                                 string coverageOutputLocation,
-                                 int firstCommitToSample,
-                                 int lastCommitToSample,
-                                 int numberOfSamples)
+                                 RepositoryStatsEnricherArguments args)
         {
             var initialSnapshotId = 1;
-            var args = new RepositorySnapshotBuilderArguments(initialSnapshotId,
-                                                              repoPath,
-                                                              sourceRoot,
-                                                              sourceExtensions,
-                                                              coverageOutputLocation,
-                                                              Option<string>.None,
-                                                              _ioWrapper,
-                                                              new PathValidator());
-            var sampleInterval = (lastCommitToSample - firstCommitToSample) / numberOfSamples;
+            var repoArgs = new RepositorySnapshotBuilderArguments(initialSnapshotId,
+                                                                  args.RepoPath,
+                                                                  args.SourceRoot,
+                                                                  args.SourceExtensions,
+                                                                  args.CoverageOutputLocation,
+                                                                  Option<string>.None,
+                                                                  _ioWrapper,
+                                                                  new PathValidator());
+            var sampleInterval = (args.LastCommitToSample - args.FirstCommitToSample) / args.NumberOfSamples;
 
-            return Enumerable.Range(0, numberOfSamples)
-                             .Select(i => firstCommitToSample + (i * sampleInterval))
-                             .Select(commitNo => _gitCommands.GetHashForNthCommit(repoPath, commitNo))
+            return Enumerable.Range(0, args.NumberOfSamples)
+                             .Select(i => args.FirstCommitToSample + (i * sampleInterval))
+                             .Select(commitNo => _gitCommands.GetHashForNthCommit(args.RepoPath, commitNo))
                              .ToList() // force eval
                              .Fold(repository,
                                    (repo, hash) =>
                                    {
-                                       _gitCommands.Checkout(hash, repoPath);
-                                       _executor.Execute(coverageCommand, string.Empty, repoPath);
+                                       _gitCommands.Checkout(hash, args.RepoPath);
+                                       _executor.Execute(args.CoverageCommand, string.Empty, args.RepoPath);
 
-                                       return args.With(initialSnapshotId + 1, hash)
-                                                  .Build()
-                                                  .Apply(EnrichWithCoverage)
-                                                  .Apply(EnrichWithGitStats)
-                                                  .Apply(repo.AddSnapshot);
+                                       return repoArgs.With(initialSnapshotId + 1, hash)
+                                                      .Build()
+                                                      .Apply(EnrichWithCoverage)
+                                                      .Apply(EnrichWithGitStats)
+                                                      .Apply(repo.AddSnapshot);
                                    });
         }
 
@@ -118,7 +110,7 @@ namespace Hestia.Model.Stats
 
             var enrichedContent =
                 _ioWrapper
-                    .ReadAllLinesFromFileAsSourceModel(Path.Join(file.Path, file.Filename))
+                    .ReadAllLinesFromFileAsSourceModel(file.FullPath)
                     .Select(l =>
                     {
                         var coveredLine =
