@@ -5,7 +5,7 @@ namespace Hestia.Model.Builders
 {
     public class RepositorySnapshotBuilderArguments
     {
-        public RepositorySnapshotBuilderArguments(long repoId,
+        public RepositorySnapshotBuilderArguments(long snapshotId,
                                                   string rootPath,
                                                   string sourceRoot,
                                                   string[] sourceExtensions,
@@ -14,7 +14,7 @@ namespace Hestia.Model.Builders
                                                   IDiskIOWrapper diskIoWrapper,
                                                   IPathValidator pathValidator)
         {
-            RepoId = repoId;
+            SnapshotId = snapshotId;
             RootPath = rootPath;
             SourceRoot = sourceRoot;
             SourceExtensions = sourceExtensions;
@@ -24,7 +24,7 @@ namespace Hestia.Model.Builders
             PathValidator = pathValidator;
         }
 
-        public long RepoId { get; }
+        public long SnapshotId { get; }
 
         public string RootPath { get; }
 
@@ -40,8 +40,8 @@ namespace Hestia.Model.Builders
 
         public IPathValidator PathValidator { get; }
 
-        public RepositorySnapshotBuilderArguments With(string hash) =>
-            new RepositorySnapshotBuilderArguments(RepoId,
+        public RepositorySnapshotBuilderArguments With(long? snapshotId = null, string hash = null) =>
+            new RepositorySnapshotBuilderArguments(snapshotId ?? SnapshotId,
                                                    RootPath,
                                                    SourceRoot,
                                                    SourceExtensions,

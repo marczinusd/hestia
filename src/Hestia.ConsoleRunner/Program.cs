@@ -34,7 +34,8 @@ namespace Hestia.ConsoleRunner
                                                        executor);
                       var repository = BuildRepositoryWithOptions(options);
 
-                      var enrichedRepository = enricher.EnrichWithCoverage(enricher.EnrichWithGitStats(repository));
+                      var enrichedRepository = repository.Apply(enricher.EnrichWithCoverage)
+                                                         .Apply(enricher.EnrichWithGitStats);
 
                       logger.LogInformation("Writing results to output...");
                       IOFile.WriteAllText(options.OutputPath,

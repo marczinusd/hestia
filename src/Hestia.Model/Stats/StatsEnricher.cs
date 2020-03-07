@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
 using Hestia.Model.Builders;
 using Hestia.Model.Wrappers;
 using LanguageExt;
@@ -13,17 +9,17 @@ using static LanguageExt.Prelude;
 namespace Hestia.Model.Stats
 {
     /// <summary>
-    /// Provides easy to use methods to enrich raw repos/directories/files with git/coverage stats.
+    ///     Provides easy to use methods to enrich raw repos/directories/files with git/coverage stats.
     /// </summary>
     /// <remarks>
-    /// Do note that all of these operations are **very** costly -- even more so if you're using Windows.
+    ///     Do note that all of these operations are **very** costly -- even more so if you're using Windows.
     /// </remarks>
     public class StatsEnricher
     {
-        private readonly IGitCommands _gitCommands;
-        private readonly ILogger<StatsEnricher> _logger;
         private readonly ICommandLineExecutor _executor;
+        private readonly IGitCommands _gitCommands;
         private readonly IDiskIOWrapper _ioWrapper;
+        private readonly ILogger<StatsEnricher> _logger;
 
         public StatsEnricher(IDiskIOWrapper ioWrapper,
                              IGitCommands gitCommands,
@@ -46,7 +42,8 @@ namespace Hestia.Model.Stats
                                  int lastCommitToSample,
                                  int numberOfSamples)
         {
-            var args = new RepositorySnapshotBuilderArguments(-1,
+            var initialSnapshotId = 1;
+            var args = new RepositorySnapshotBuilderArguments(initialSnapshotId,
                                                               repoPath,
                                                               sourceRoot,
                                                               sourceExtensions,
@@ -66,7 +63,7 @@ namespace Hestia.Model.Stats
                                        _gitCommands.Checkout(hash, repoPath);
                                        _executor.Execute(coverageCommand, string.Empty, repoPath);
 
-                                       return args.With(hash)
+                                       return args.With(initialSnapshotId + 1, hash)
                                                   .Build()
                                                   .Apply(EnrichWithCoverage)
                                                   .Apply(EnrichWithGitStats)
@@ -74,57 +71,46 @@ namespace Hestia.Model.Stats
                                    });
         }
 
-        public RepositorySnapshot Enrich(RepositorySnapshot repositorySnapshot,
-                                         IEnumerable<Func<RepositorySnapshot, RepositorySnapshot>> enrichers) =>
-            enrichers.Fold(repositorySnapshot,
-                           (enrichedRepo, enricher) => enricher(enrichedRepo));
-
         // ReSharper disable once UnusedMember.Global
         public RepositorySnapshot EnrichWithCoverage(RepositorySnapshot repositorySnapshot)
         {
-            _logger.LogDebug($"Enriching repository snapshot at {repositorySnapshot.AtHash} with git stats");
+            _logger.LogDebug($"Enriching repository snapshot at {repositorySnapshot.AtHash} with coverage stats");
             var pathToCoverageFile = match(repositorySnapshot.PathToCoverageResultFile,
                                            s => s,
                                            () =>
                                                throw new
                                                    OptionIsNoneException($"{nameof(repositorySnapshot.PathToCoverageResultFile)} cannot be None"));
 
-            return new RepositorySnapshot(1,
-                                          EnrichWithCoverage(repositorySnapshot.RootDirectory, pathToCoverageFile),
-                                          Some(pathToCoverageFile),
-                                          Option<string>.None);
+            return repositorySnapshot.With(repositorySnapshot.RootDirectory.Apply(dir => EnrichWithCoverage(dir,
+                                                                                                            pathToCoverageFile)),
+                                           pathToCoverageResultFile: pathToCoverageFile);
+        }
+
+        public RepositorySnapshot EnrichWithGitStats(RepositorySnapshot repositorySnapshot)
+        {
+            _logger.LogDebug($"Enriching repository snapshot with hash {repositorySnapshot.AtHash} with git stats");
+
+            return repositorySnapshot.With(repositorySnapshot.RootDirectory.Apply(EnrichWithGitStats));
         }
 
         // ReSharper disable once UnusedMember.Global
-        public Directory EnrichWithCoverage(Directory directory, string coveragePath) =>
-            new Directory(directory.Name,
-                          directory.Path,
-                          directory.Directories.Select(d => EnrichWithCoverage(d, coveragePath))
-                                   .ToList(),
-                          directory.Files.Select(f => EnrichWithCoverage(f,
-                                                                         ResolveCoverageProvider()
-                                                                             .ParseFileCoveragesFromFilePath(coveragePath)
-                                                                             .SingleOrDefault(cov => cov.FileName ==
-                                                                                                     Path.Join(f.Path,
-                                                                                                               f.Filename))))
-                                   .ToList());
+        private Directory EnrichWithCoverage(Directory directory, string coveragePath) =>
+            directory.With(directory.Files
+                                    .Select(f =>
+                                    {
+                                        var coverage = ResolveCoverageProvider()
+                                                       .ParseFileCoveragesFromFilePath(coveragePath)
+                                                       .SingleOrDefault(c => c.FileName == f.FullPath);
 
-        public IObservable<File> EnrichObservable(File file, IEnumerable<FileCoverage> fileCoverages) =>
-            EnrichWithGitStatsObservable(file)
-                .Merge(EnrichWithCoverageObservable(file, fileCoverages));
+                                        return EnrichWithCoverage(f, coverage);
+                                    })
+                                    .ToList(),
+                           directory.Directories
+                                    .Select(d => EnrichWithCoverage(d, coveragePath))
+                                    .ToList());
 
-        public IObservable<File> EnrichWithCoverageObservable(File file, IEnumerable<FileCoverage> fileCoverages) =>
-            Observable.Create<File>(s =>
-            {
-                s.OnNext(EnrichWithCoverage(file, fileCoverages.Single(f => f.FileName == file.Path)));
-                s.OnCompleted();
-
-                return Disposable.Empty;
-            });
-
-        public File EnrichWithCoverage(File file, FileCoverage coverage)
+        private File EnrichWithCoverage(File file, FileCoverage coverage)
         {
-            _logger.LogInformation($"Loading coverage information for {file.Filename}");
             if (coverage == null || coverage.Equals(default))
             {
                 return file;
@@ -140,31 +126,14 @@ namespace Hestia.Model.Stats
 
                         return coveredLine == null || coveredLine.Equals(default)
                                    ? l
-                                   : new SourceLine(l.LineNumber,
-                                                    l.Text,
-                                                    Some(new LineCoverageStats()),
-                                                    l.LineGitStats);
+                                   : l.With(new LineCoverageStats(isCovered: true));
                     });
 
-            return new File(0,
-                            file.Filename,
-                            file.Extension,
-                            file.Path,
-                            enrichedContent.ToList(),
-                            file.GitStats,
-                            Some(new FileCoverageStats(coverage)));
+            return file.With(enrichedContent.ToList(),
+                             coverageStats: new FileCoverageStats(coverage));
         }
 
-        public IObservable<File> EnrichWithGitStatsObservable(File file) =>
-            Observable.Create<File>(s =>
-            {
-                s.OnNext(EnrichWithGitStats(file));
-                s.OnCompleted();
-
-                return Disposable.Empty;
-            });
-
-        public File EnrichWithGitStats(File file)
+        private File EnrichWithGitStats(File file)
         {
             _logger.LogInformation($"Loading git stats for {file.Filename}");
             var gitStats = new FileGitStats(_gitCommands.NumberOfChangesForFile(file.FullPath),
@@ -182,28 +151,16 @@ namespace Hestia.Model.Stats
                                                            Some(lineStats.Single(stat => stat.LineNumber ==
                                                                                          line.LineNumber))));
 
-            return new File(file.Id,
-                            file.Filename,
-                            file.Extension,
-                            file.Path,
-                            enrichedContent.ToList(),
-                            gitStats,
-                            file.CoverageStats);
+            return file.With(enrichedContent.ToList(), gitStats);
         }
 
-        public RepositorySnapshot EnrichWithGitStats(RepositorySnapshot repositorySnapshot) =>
-            new RepositorySnapshot(repositorySnapshot.SnapshotId,
-                                   EnrichWithGitStats(repositorySnapshot.RootDirectory),
-                                   repositorySnapshot.PathToCoverageResultFile,
-                                   Option<string>.None);
-
-        public Directory EnrichWithGitStats(Directory directory) =>
-            new Directory(directory.Name,
-                          directory.Path,
-                          directory.Directories.Select(EnrichWithGitStats)
-                                   .ToList(),
-                          directory.Files.Select(EnrichWithGitStats)
-                                   .ToList());
+        private Directory EnrichWithGitStats(Directory directory) =>
+            directory.With(directory.Files
+                                    .Select(EnrichWithGitStats)
+                                    .ToList(),
+                           directory.Directories
+                                    .Select(EnrichWithGitStats)
+                                    .ToList());
 
         // TODO: actually implement this once multiple providers are added
         private ICoverageProvider ResolveCoverageProvider() => new JsonCovCoverageProvider(_ioWrapper);

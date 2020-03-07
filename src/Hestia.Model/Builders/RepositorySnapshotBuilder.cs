@@ -17,7 +17,7 @@ namespace Hestia.Model.Builders
                 throw new InvalidOperationException($"{args.RootPath} is not a git repository.");
             }
 
-            return new RepositorySnapshot(args.RepoId,
+            return new RepositorySnapshot(args.SnapshotId,
                                           DirectoryBuilder.BuildDirectoryFromDirectoryPath(args.SourceRoot,
                                                                                            args.SourceExtensions,
                                                                                            args.DiskIoWrapper,

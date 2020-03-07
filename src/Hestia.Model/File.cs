@@ -40,6 +40,17 @@ namespace Hestia.Model
 
         public Option<FileCoverageStats> CoverageStats { get; }
 
+        public File With(IList<SourceLine> content = null,
+                         FileGitStats gitStats = null,
+                         FileCoverageStats coverageStats = null) =>
+            new File(Id,
+                     Filename,
+                     Extension,
+                     Path,
+                     content ?? Content,
+                     gitStats ?? GitStats,
+                     coverageStats ?? CoverageStats);
+
         public FileDetails AsFileDetails()
         {
             var hardCopy = new File(0,

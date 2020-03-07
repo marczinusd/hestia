@@ -23,6 +23,14 @@ namespace Hestia.Model
 
         public long SnapshotId { get; }
 
+        public RepositorySnapshot With(Directory directory = null,
+                                       string atHash = null,
+                                       string pathToCoverageResultFile = null) =>
+            new RepositorySnapshot(SnapshotId,
+                                   directory ?? RootDirectory,
+                                   pathToCoverageResultFile ?? PathToCoverageResultFile,
+                                   atHash ?? AtHash);
+
         public RepositoryIdentifier AsRepositoryIdentifier()
         {
             throw new System.NotImplementedException();
