@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace Hestia.Controllers
+namespace Hestia.WebService.Controllers
 {
     [ApiController]
     [Route("[controller]")]

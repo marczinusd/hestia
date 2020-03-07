@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RootNamespace>Hestia</RootNamespace>
     <LangVersion>8</LangVersion>
     <Nullable>enable</Nullable>
     <CodeAnalysisRuleSet>..\Hestia.ruleset</CodeAnalysisRuleSet>

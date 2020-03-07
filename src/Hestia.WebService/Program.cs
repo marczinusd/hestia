@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace Hestia
+namespace Hestia.WebService
 {
     // ReSharper disable once ClassNeverInstantiated.Global
     public class Program
