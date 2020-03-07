@@ -16,8 +16,6 @@ namespace Hestia.Model
             _file = file;
         }
 
-        public long Id => _file.Id;
-
         public IList<SourceLine> Content => _file.Content;
 
         public string Filename => _file.Filename;
@@ -31,8 +29,7 @@ namespace Hestia.Model
         public Option<FileCoverageStats> CoverageStats => _file.CoverageStats;
 
         public File AsSlimFile() =>
-            new File(Id,
-                     Filename,
+            new File(Filename,
                      Extension,
                      Path,
                      Content,

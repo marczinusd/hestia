@@ -29,8 +29,6 @@ namespace Test.Hestia.Model.Builders
                   .Be(".ext");
             result.Filename.Should()
                   .Be("somefile.ext");
-            result.Id.Should()
-                  .Be(-1);
             result.Path.Should()
                   .Be(Path.Join("C:", "somedir", "somesubdir"));
             result.Content[0]

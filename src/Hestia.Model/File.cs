@@ -7,15 +7,13 @@ namespace Hestia.Model
 {
     public class File
     {
-        public File(long id,
-                    string filename,
+        public File(string filename,
                     string extension,
                     string path,
                     IList<SourceLine> content,
                     Option<FileGitStats> gitStats,
                     Option<FileCoverageStats> coverageStats)
         {
-            Id = id;
             Content = content;
             Path = path;
             Filename = filename;
@@ -23,8 +21,6 @@ namespace Hestia.Model
             GitStats = gitStats;
             CoverageStats = coverageStats;
         }
-
-        public long Id { get; }
 
         [JsonIgnore] public IList<SourceLine> Content { get; }
 
@@ -43,8 +39,7 @@ namespace Hestia.Model
         public File With(IList<SourceLine>? content = null,
                          FileGitStats? gitStats = null,
                          FileCoverageStats? coverageStats = null) =>
-            new File(Id,
-                     Filename,
+            new File(Filename,
                      Extension,
                      Path,
                      content ?? Content,
@@ -53,8 +48,7 @@ namespace Hestia.Model
 
         public FileDetails AsFileDetails()
         {
-            var hardCopy = new File(0,
-                                    this.Filename,
+            var hardCopy = new File(this.Filename,
                                     this.Extension,
                                     this.Path,
                                     Content,
