@@ -24,7 +24,7 @@ namespace Hestia.Model
 
         public Option<LineGitStats> LineGitStats { get; }
 
-        public SourceLine With(LineCoverageStats coverageStats = null, LineGitStats gitStats = null) =>
+        public SourceLine With(LineCoverageStats? coverageStats = null, LineGitStats? gitStats = null) =>
             new SourceLine(LineNumber,
                            Text,
                            coverageStats ?? LineCoverageStats,

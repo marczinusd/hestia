@@ -20,7 +20,7 @@ namespace Hestia.Model
 
         public IList<Directory> Directories { get; }
 
-        public Directory With(IList<File> files = null, IList<Directory> directories = null) =>
+        public Directory With(IList<File>? files = null, IList<Directory>? directories = null) =>
             new Directory(Name,
                           Path,
                           directories ?? Directories,

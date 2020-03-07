@@ -40,9 +40,9 @@ namespace Hestia.Model
 
         public Option<FileCoverageStats> CoverageStats { get; }
 
-        public File With(IList<SourceLine> content = null,
-                         FileGitStats gitStats = null,
-                         FileCoverageStats coverageStats = null) =>
+        public File With(IList<SourceLine>? content = null,
+                         FileGitStats? gitStats = null,
+                         FileCoverageStats? coverageStats = null) =>
             new File(Id,
                      Filename,
                      Extension,

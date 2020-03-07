@@ -23,9 +23,9 @@ namespace Hestia.Model
 
         public long SnapshotId { get; }
 
-        public RepositorySnapshot With(Directory directory = null,
-                                       string atHash = null,
-                                       string pathToCoverageResultFile = null) =>
+        public RepositorySnapshot With(Directory? directory = null,
+                                       string? atHash = null,
+                                       string? pathToCoverageResultFile = null) =>
             new RepositorySnapshot(SnapshotId,
                                    directory ?? RootDirectory,
                                    pathToCoverageResultFile ?? PathToCoverageResultFile,

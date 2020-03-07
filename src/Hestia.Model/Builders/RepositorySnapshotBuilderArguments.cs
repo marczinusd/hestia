@@ -40,7 +40,7 @@ namespace Hestia.Model.Builders
 
         public IPathValidator PathValidator { get; }
 
-        public RepositorySnapshotBuilderArguments With(long? snapshotId = null, string hash = null) =>
+        public RepositorySnapshotBuilderArguments With(long? snapshotId = null, string? hash = null) =>
             new RepositorySnapshotBuilderArguments(snapshotId ?? SnapshotId,
                                                    RootPath,
                                                    SourceRoot,
