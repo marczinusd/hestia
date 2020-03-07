@@ -27,6 +27,7 @@ namespace Test.Hestia.Model.Builders
                                                               Array.Empty<string>(),
                                                               string.Empty,
                                                               Option<string>.None,
+                                                              Option<DateTime>.None,
                                                               ioWrapper.Object,
                                                               validator.Object);
 

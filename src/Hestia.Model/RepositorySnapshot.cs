@@ -1,4 +1,5 @@
-﻿using LanguageExt;
+﻿using System;
+using LanguageExt;
 
 namespace Hestia.Model
 {
@@ -7,15 +8,19 @@ namespace Hestia.Model
         public RepositorySnapshot(long snapshotId,
                                   Directory rootDirectory,
                                   Option<string> pathToCoverageResultFile,
-                                  Option<string> atHash)
+                                  Option<string> atHash,
+                                  Option<DateTime> commitCreationDate)
         {
             RootDirectory = rootDirectory;
             PathToCoverageResultFile = pathToCoverageResultFile;
             AtHash = atHash;
+            CommitCreationDate = commitCreationDate;
             SnapshotId = snapshotId;
         }
 
         public Option<string> PathToCoverageResultFile { get; }
+
+        public Option<DateTime> CommitCreationDate { get; }
 
         public Option<string> AtHash { get; }
 
@@ -25,15 +30,17 @@ namespace Hestia.Model
 
         public RepositorySnapshot With(Directory? directory = null,
                                        string? atHash = null,
-                                       string? pathToCoverageResultFile = null) =>
+                                       string? pathToCoverageResultFile = null,
+                                       DateTime? commitCreationDate = null) =>
             new RepositorySnapshot(SnapshotId,
                                    directory ?? RootDirectory,
                                    pathToCoverageResultFile ?? PathToCoverageResultFile,
-                                   atHash ?? AtHash);
+                                   atHash ?? AtHash,
+                                   commitCreationDate ?? CommitCreationDate);
 
         public RepositoryIdentifier AsRepositoryIdentifier()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

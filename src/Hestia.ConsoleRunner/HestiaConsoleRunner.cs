@@ -59,6 +59,7 @@ namespace Hestia.ConsoleRunner
                                                           .ToArray(),
                                                    options.CoveragePath,
                                                    Option<string>.None,
+                                                   Option<DateTime>.None,
                                                    new DiskIOWrapper(),
                                                    new PathValidator()).Build();
 

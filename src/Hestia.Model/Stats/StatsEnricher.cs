@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Hestia.Model.Builders;
 using Hestia.Model.Wrappers;
 using LanguageExt;
@@ -41,6 +42,7 @@ namespace Hestia.Model.Stats
                                                                   args.SourceExtensions,
                                                                   args.CoverageOutputLocation,
                                                                   Option<string>.None,
+                                                                  Option<DateTime>.None,
                                                                   _ioWrapper,
                                                                   new PathValidator());
             var sampleInterval = (args.LastCommitToSample - args.FirstCommitToSample) / args.NumberOfSamples;
@@ -54,8 +56,9 @@ namespace Hestia.Model.Stats
                                    {
                                        _gitCommands.Checkout(hash, args.RepoPath);
                                        _executor.Execute(args.CoverageCommand, string.Empty, args.RepoPath);
+                                       var commitCreationDate = _gitCommands.DateOfLatestCommitOnBranch(args.RepoPath);
 
-                                       return repoArgs.With(initialSnapshotId + 1, hash)
+                                       return repoArgs.With(initialSnapshotId + 1, hash, commitCreationDate)
                                                       .Build()
                                                       .Apply(EnrichWithCoverage)
                                                       .Apply(EnrichWithGitStats)

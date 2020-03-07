@@ -1,3 +1,4 @@
+using System;
 using Hestia.Model.Wrappers;
 using LanguageExt;
 
@@ -11,6 +12,7 @@ namespace Hestia.Model.Builders
                                                   string[] sourceExtensions,
                                                   string coveragePath,
                                                   Option<string> atHash,
+                                                  Option<DateTime> commitCreationDate,
                                                   IDiskIOWrapper diskIoWrapper,
                                                   IPathValidator pathValidator)
         {
@@ -20,6 +22,7 @@ namespace Hestia.Model.Builders
             SourceExtensions = sourceExtensions;
             CoveragePath = coveragePath;
             AtHash = atHash;
+            CommitCreationDate = commitCreationDate;
             DiskIoWrapper = diskIoWrapper;
             PathValidator = pathValidator;
         }
@@ -36,17 +39,22 @@ namespace Hestia.Model.Builders
 
         public Option<string> AtHash { get; }
 
+        public Option<DateTime> CommitCreationDate { get; }
+
         public IDiskIOWrapper DiskIoWrapper { get; }
 
         public IPathValidator PathValidator { get; }
 
-        public RepositorySnapshotBuilderArguments With(long? snapshotId = null, string? hash = null) =>
+        public RepositorySnapshotBuilderArguments With(long? snapshotId = null,
+                                                       string? hash = null,
+                                                       DateTime? commitCreationDate = null) =>
             new RepositorySnapshotBuilderArguments(snapshotId ?? SnapshotId,
                                                    RootPath,
                                                    SourceRoot,
                                                    SourceExtensions,
                                                    CoveragePath,
                                                    hash ?? AtHash,
+                                                   commitCreationDate ?? CommitCreationDate,
                                                    DiskIoWrapper,
                                                    PathValidator);
     }

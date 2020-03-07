@@ -25,7 +25,8 @@ namespace Hestia.Model.Builders
                                           string.IsNullOrWhiteSpace(args.CoveragePath)
                                               ? Option<string>.None
                                               : Some(args.CoveragePath),
-                                          args.AtHash);
+                                          args.AtHash,
+                                          args.CommitCreationDate);
         }
 
         public static RepositorySnapshot Build(this RepositorySnapshotBuilderArguments args) =>
