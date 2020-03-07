@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -22,8 +23,8 @@ namespace Hestia.ConsoleRunner
         public HestiaConsoleRunner(ILoggerFactory loggerFactory,
                                    IStatsEnricher statsEnricher)
         {
-            _loggerFactory = loggerFactory;
-            _statsEnricher = statsEnricher;
+            _loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
+            _statsEnricher = statsEnricher ?? throw new ArgumentNullException(nameof(statsEnricher));
         }
 
         public void Run(string[] args)
