@@ -1,3 +1,5 @@
+[![codecov](https://codecov.io/gl/marczinusd/hestia/branch/master/graph/badge.svg?token=h6C3x4EsIe)](https://codecov.io/gl/marczinusd/hestia)
+
 # Hestia
 
 TODO: Add _meaningful_ description :)
