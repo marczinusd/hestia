@@ -1,10 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
 using CommandLine;
+using Hestia.ConsoleRunner.Configuration;
 using Hestia.Model;
 using Hestia.Model.Builders;
 using Hestia.Model.Stats;
@@ -19,45 +19,47 @@ namespace Hestia.ConsoleRunner
     {
         private readonly ILoggerFactory _loggerFactory;
         private readonly IStatsEnricher _statsEnricher;
+        private readonly IJsonConfigurationProvider _configurationProvider;
 
         public HestiaConsoleRunner(ILoggerFactory loggerFactory,
-                                   IStatsEnricher statsEnricher)
+                                   IStatsEnricher statsEnricher,
+                                   IJsonConfigurationProvider configurationProvider)
         {
             _loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
             _statsEnricher = statsEnricher ?? throw new ArgumentNullException(nameof(statsEnricher));
+            _configurationProvider =
+                configurationProvider ?? throw new ArgumentNullException(nameof(configurationProvider));
         }
 
         public void Run(string[] args)
         {
             Parser.Default
                   .ParseArguments<Options>(args)
-                  .WithParsed(options =>
+                  .WithParsed(async options =>
                   {
                       var logger = _loggerFactory.CreateLogger<HestiaConsoleRunner>();
-                      var repository = BuildRepositoryWithOptions(options);
+                      var config = await _configurationProvider.LoadConfiguration(options.JsonConfigPath);
+                      var repository = BuildRepositoryWithOptions(options, config);
 
                       var enrichedRepository = repository.Apply(_statsEnricher.EnrichWithCoverage)
                                                          .Apply(_statsEnricher.EnrichWithGitStats);
 
                       logger.LogInformation("Writing results to output...");
                       File.WriteAllText(options.OutputPath,
-                                          JsonSerializer.Serialize(enrichedRepository,
-                                                                   new JsonSerializerOptions
-                                                                   {
-                                                                       WriteIndented = true,
-                                                                   }));
+                                        JsonSerializer.Serialize(enrichedRepository,
+                                                                 new JsonSerializerOptions { WriteIndented = true, }));
                       logger.LogInformation($"Output created at {options.OutputPath}");
                   });
         }
 
-        private static RepositorySnapshot BuildRepositoryWithOptions(Options options) =>
+        private static RepositorySnapshot BuildRepositoryWithOptions(Options options, ConsoleRunnerConfig config) =>
             new RepositorySnapshotBuilderArguments(options.RepositoryId,
-                                                   options.RepositoryPath,
-                                                   Path.Join(options.RepositoryPath,
-                                                             options.SourcePath),
-                                                   options.SourceExtensions
+                                                   config.RepoPath,
+                                                   Path.Join(config.RepoPath,
+                                                             config.SourceRoot),
+                                                   config.SourceExtensions
                                                           .ToArray(),
-                                                   options.CoveragePath,
+                                                   config.CoverageOutputLocation,
                                                    Option<string>.None,
                                                    Option<DateTime>.None,
                                                    new DiskIOWrapper(),
@@ -67,34 +69,16 @@ namespace Hestia.ConsoleRunner
         [ExcludeFromCodeCoverage]
         private class Options
         {
-            public Options(string repositoryPath,
-                           string coveragePath,
-                           int repositoryId,
+            public Options(int repositoryId,
                            string repositoryName,
                            string outputPath,
-                           IEnumerable<string> sourceExtensions,
-                           string sourcePath)
+                           string jsonConfigPath)
             {
-                RepositoryPath = repositoryPath;
-                CoveragePath = coveragePath;
                 RepositoryId = repositoryId;
                 RepositoryName = repositoryName;
                 OutputPath = outputPath;
-                SourceExtensions = sourceExtensions;
-                SourcePath = sourcePath;
+                JsonConfigPath = jsonConfigPath;
             }
-
-            [Option('r',
-                    "repositoryPath",
-                    Required = true,
-                    HelpText = "Path to the repository to analyze")]
-            public string RepositoryPath { get; }
-
-            [Option('c',
-                    "coveragePath",
-                    Required = false,
-                    HelpText = "Path to the coverage result file for the selected repo")]
-            public string CoveragePath { get; }
 
             [Option('i',
                     "repositoryId",
@@ -121,20 +105,12 @@ namespace Hestia.ConsoleRunner
                     Default = "repository.json")]
             public string OutputPath { get; }
 
-            [Option('e',
-                    "extensions",
+            [Option('j',
+                    "jsonConfigPath",
                     Required = true,
-                    HelpText =
-                        "Array of valid source file extensions you want to parse, separated by a comma, e.g: '.js,.ts'",
-                    Separator = ',')]
-            public IEnumerable<string> SourceExtensions { get; }
-
-            [Option('s',
-                    "sourcePath",
-                    Required = false,
-                    HelpText = "Path **relative** to the rootpath, where the source code is located",
-                    Default = "src")]
-            public string SourcePath { get; }
+                    HelpText = "Path to the json configuration file",
+                    Default = "Repository.example.json")]
+            public string JsonConfigPath { get; }
         }
     }
 }

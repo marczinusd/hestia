@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Hestia.ConsoleRunner.Configuration;
 using Hestia.Model.Stats;
 using Hestia.Model.Wrappers;
 using Microsoft.Extensions.Logging;
@@ -22,7 +23,8 @@ namespace Hestia.ConsoleRunner
                                              factory.CreateLogger<IStatsEnricher>(),
                                              executor);
             var runner = new HestiaConsoleRunner(factory,
-                                                 enricher);
+                                                 enricher,
+                                                 new JsonConfigurationProvider());
 
             runner.Run(args);
         }

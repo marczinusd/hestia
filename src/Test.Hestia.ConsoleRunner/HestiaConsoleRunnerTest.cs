@@ -1,7 +1,9 @@
 using System;
 using FluentAssertions;
 using Hestia.ConsoleRunner;
+using Hestia.Model.Stats;
 using Microsoft.Extensions.Logging;
+using Moq;
 using Xunit;
 
 namespace Test.Hestia.ConsoleRunner
@@ -12,7 +14,7 @@ namespace Test.Hestia.ConsoleRunner
         public void LoggerFactoryCannotBeNull()
         {
             // ReSharper disable once ObjectCreationAsStatement
-            Action act = () => new HestiaConsoleRunner(null, null);
+            Action act = () => new HestiaConsoleRunner(null, null, null);
 
             act.Should()
                .Throw<ArgumentNullException>()
@@ -23,11 +25,22 @@ namespace Test.Hestia.ConsoleRunner
         public void StatsEnricherCannotBeNull()
         {
             // ReSharper disable once ObjectCreationAsStatement
-            Action act = () => new HestiaConsoleRunner(new LoggerFactory(), null);
+            Action act = () => new HestiaConsoleRunner(new LoggerFactory(), null, null);
 
             act.Should()
                .Throw<ArgumentNullException>()
                .WithMessage("*statsEnricher*");
+        }
+
+        [Fact]
+        public void JsonConfigProviderCannotBeNull()
+        {
+            // ReSharper disable once ObjectCreationAsStatement
+            Action act = () => new HestiaConsoleRunner(new LoggerFactory(), Mock.Of<IStatsEnricher>(), null);
+
+            act.Should()
+               .Throw<ArgumentNullException>()
+               .WithMessage("*configurationProvider*");
         }
     }
 }
