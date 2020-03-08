@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Hestia.Model.Stats;
 using LanguageExt;
 
 namespace Hestia.Model.Wrappers
 {
+    [ExcludeFromCodeCoverage]
     public class DiskIOWrapper : IDiskIOWrapper
     {
         public SourceLine[] ReadAllLinesFromFileAsSourceModel(string filePath)

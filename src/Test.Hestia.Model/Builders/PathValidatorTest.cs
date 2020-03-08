@@ -1,8 +1,8 @@
 using Xunit;
 
-namespace Test.Hestia.Model.Stats
+namespace Test.Hestia.Model.Builders
 {
-    public class StatsEnricherTest
+    public class PathValidatorTest
     {
         // TODO
         [Fact]

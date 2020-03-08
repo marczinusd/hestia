@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using SimpleExec;
 
 namespace Hestia.Model.Wrappers
 {
+    [ExcludeFromCodeCoverage]
     public class CommandLineExecutor : ICommandLineExecutor
     {
         private readonly bool _noEcho;

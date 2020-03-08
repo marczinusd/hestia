@@ -6,7 +6,7 @@ using Moq;
 using Test.Hestia.Model.Utils;
 using Xunit;
 
-namespace Test.Hestia.Model.Stats
+namespace Test.Hestia.Model.Wrappers
 {
     public class GitCommandsTest
     {
