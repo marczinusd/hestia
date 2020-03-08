@@ -21,6 +21,8 @@ namespace Hestia.Model.Extensions
                     observer.OnError(e);
                 }
 
+                observer.OnCompleted();
+
                 return Disposable.Empty;
             });
         }
