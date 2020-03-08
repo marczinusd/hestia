@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using FluentAssertions;
 using Hestia.Model;
@@ -13,9 +12,9 @@ namespace Test.Hestia.Model
         [Fact]
         public void FileDetailsShouldReflectUnderlyingFileProps()
         {
-            var file = new File(String.Empty,
-                                String.Empty,
-                                String.Empty,
+            var file = new File(string.Empty,
+                                string.Empty,
+                                string.Empty,
                                 new List<SourceLine>
                                 {
                                     new SourceLine(1,
