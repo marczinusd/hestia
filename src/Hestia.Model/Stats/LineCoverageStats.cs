@@ -15,6 +15,6 @@ namespace Hestia.Model.Stats
         public long Id { get; set; }
 
         // ReSharper disable once UnusedAutoPropertyAccessor.Local
-        private bool IsCovered { get; }
+        public bool IsCovered { get; }
     }
 }
