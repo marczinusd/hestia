@@ -12,10 +12,13 @@ namespace Hestia.DAL.Mongo
     {
         private readonly IMongoCollection<RepositoryEntity> _repositories;
 
-        public HestiaMongoClient(string connectionString, string databaseName, string collectionName)
+        public HestiaMongoClient(IMongoClientFactory factory,
+                                 string connectionString,
+                                 string databaseName,
+                                 string collectionName)
         {
-            var client = new MongoClient(connectionString);
-            var database = client.GetDatabase(databaseName);
+            var client = factory.CreateClient(connectionString);
+            var database = client.GetDatabase(databaseName, new MongoDatabaseSettings());
 
             _repositories = database.GetCollection<RepositoryEntity>(collectionName);
         }
