@@ -1,9 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
 namespace Hestia.WebService
 {
     // ReSharper disable once ClassNeverInstantiated.Global
+    [ExcludeFromCodeCoverage]
     public class Program
     {
         public static void Main(string[] args)
