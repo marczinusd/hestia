@@ -13,7 +13,6 @@ build_thesis:
 test:
 	dotnet test src/Hestia.sln
 cover:
-# for some reason this generates coverage per-assembly, which doesn't play well with literally ANYTHING
-# how to merge these reports together?
-	dotnet test src/Hestia.sln /p:CollectCoverage=true /p:Exclude="[xunit*]*" /p:CoverletOutput="../coverage.json" /p:MergeWith="../coverage.json" /maxcpucount:1
-
+	dotnet tool install --global dotnet-reportgenerator-globaltool
+	dotnet test src/Hestia.sln /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:Exclude="[xunit*]*" /p:CoverletOutput="coverage.json"
+	$(HOME)/.dotnet/tools/reportgenerator "-reports:**/coverage.json" "-targetdir:coveragereport" "-reporttypes:Html;HtmlSummary;Cobertura;lcov;XML"

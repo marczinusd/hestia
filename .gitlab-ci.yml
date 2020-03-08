@@ -39,7 +39,9 @@ test:
 cover:
   stage: test
   script:
-    - dotnet test src/Hestia.sln /p:CollectCoverage=true /p:Exclude="[xunit*]*" /p:CoverletOutput="../coverage.json" /p:MergeWith="../coverage.json" /maxcpucount:1
+    - dotnet tool install --global dotnet-reportgenerator-globaltool
     - dotnet tool install --global Codecov.Tool
     - export PATH="$PATH:/root/.dotnet/tools"
-    - codecov -f src/coverage.json
+    - dotnet test src/Hestia.sln /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:Exclude="[xunit*]*" /p:CoverletOutput="coverage.json"
+    - reportgenerator "-reports:**/coverage.json" "-targetdir:coveragereport" "-reporttypes:Html;HtmlSummary;Cobertura;lcov;XML"
+    - codecov -f coveragereport/lcov.info

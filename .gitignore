@@ -487,3 +487,5 @@ dist/
 **/.ionide/*
 
 **/coverage.*
+**/coveragereport/*
+**/lcov.info
