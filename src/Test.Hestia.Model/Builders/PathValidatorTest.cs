@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using FluentAssertions;
 using Hestia.Model.Builders;
 using Xunit;
@@ -12,7 +13,7 @@ namespace Test.Hestia.Model.Builders
         {
             var validator = new PathValidator();
 
-            Action act = () => validator.ValidateDirectoryPath(null);
+            Action act = () => validator.ValidateDirectoryPath(default);
 
             act.Should()
                .Throw<ArgumentException>();
@@ -39,5 +40,9 @@ namespace Test.Hestia.Model.Builders
             act.Should()
                .Throw<InvalidOperationException>();
         }
+
+        [Fact]
+        public void ValidatorShouldNotThrowExceptionWhenGivenADirectoryThatExists() =>
+            new PathValidator().ValidateDirectoryPath(Directory.GetCurrentDirectory());
     }
 }

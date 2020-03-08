@@ -38,7 +38,7 @@ namespace Test.Hestia.Model
                        .BeEquivalentTo(file.Path);
             fileDetails.CoverageStats
                        .Match(x => x.Coverage.FileName,
-                              () => null)
+                              () => default)
                        .Should()
                        .BeEmpty();
             fileDetails.GitStats

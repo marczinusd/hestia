@@ -38,9 +38,9 @@ namespace Hestia.Model
                            CoverageExecutionCommand,
                            CoverageOutputLocation);
 
-        public Repository With(RepositorySnapshot[] snapshots = null,
-                               string coverageExecutionCommand = null,
-                               string coverageOutputLocation = null) =>
+        public Repository With(RepositorySnapshot[]? snapshots = null,
+                               string? coverageExecutionCommand = null,
+                               string? coverageOutputLocation = null) =>
             new Repository(RepositoryId,
                            RepositoryName,
                            snapshots ?? Snapshots,

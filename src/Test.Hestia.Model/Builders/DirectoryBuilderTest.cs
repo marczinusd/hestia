@@ -94,5 +94,35 @@ namespace Test.Hestia.Model.Builders
 
             validator.Verify(mock => mock.ValidateDirectoryPath(It.IsAny<string>()), Times.Once);
         }
+
+        [Fact]
+        public void DirectoryBuilderShouldOnlyIncludeFilesWithProvidedExtensions()
+        {
+            var ioWrapper = new Mock<IDiskIOWrapper>();
+            ioWrapper.Setup(mock => mock.EnumerateAllDirectoriesForPath(DirPath))
+                     .Returns(RootDirs);
+            ioWrapper.Setup(mock => mock.EnumerateAllFilesForPath(DirPath))
+                     .Returns(RootFiles);
+            ioWrapper.Setup(mock => mock.EnumerateAllDirectoriesForPath(RootDirs[0]))
+                     .Returns(Array.Empty<string>());
+            ioWrapper.Setup(mock => mock.EnumerateAllDirectoriesForPath(RootDirs[1]))
+                     .Returns(Array.Empty<string>());
+            ioWrapper.Setup(mock => mock.EnumerateAllFilesForPath(RootDirs[0]))
+                     .Returns(new[] { Path.Join(DirPath, "bla.js") });
+            ioWrapper.Setup(mock => mock.EnumerateAllFilesForPath(RootDirs[1]))
+                     .Returns(new[] { Path.Join(DirPath, "bla2.cs") }); // changing this to bla2.js would fail this test
+
+            var result = DirectoryBuilder.BuildDirectoryFromDirectoryPath(DirPath,
+                                                                          new[] { ".js" },
+                                                                          ioWrapper.Object,
+                                                                          Mock.Of<IPathValidator>());
+            result.Directories
+                  .Should()
+                  .HaveCount(1);
+            result.Directories[0]
+                  .Files[0]
+                  .Filename.Should()
+                  .Be("bla.js");
+        }
     }
 }

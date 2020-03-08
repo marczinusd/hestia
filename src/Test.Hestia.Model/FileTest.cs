@@ -54,7 +54,7 @@ namespace Test.Hestia.Model
                    .Should()
                    .Be(1);
             newFile.CoverageStats.Match(x => x.Coverage,
-                                        () => null)
+                                        () => default)
                    .Should()
                    .NotBeNull();
         }
@@ -88,7 +88,7 @@ namespace Test.Hestia.Model
                        .BeEquivalentTo(file.Path);
             fileDetails.CoverageStats
                        .Match(x => x.Coverage.FileName,
-                              () => null)
+                              () => default)
                        .Should()
                        .BeEmpty();
             fileDetails.GitStats

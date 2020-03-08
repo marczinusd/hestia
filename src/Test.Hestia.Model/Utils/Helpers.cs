@@ -7,7 +7,7 @@ namespace Test.Hestia.Model.Utils
 {
     public static class Helpers
     {
-        public static string LoadResource(string name, Assembly? assembly = null)
+        public static string LoadResource(string name, Assembly assembly = null)
         {
             if (assembly == null)
             {
