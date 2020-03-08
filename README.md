@@ -1,4 +1,5 @@
 [![codecov](https://codecov.io/gl/marczinusd/hestia/branch/master/graph/badge.svg?token=h6C3x4EsIe)](https://codecov.io/gl/marczinusd/hestia)
+[![pipeline status](https://gitlab.com/marczinusd/hestia/badges/master/pipeline.svg)](https://gitlab.com/marczinusd/hestia/commits/master)
 
 # Hestia
 
