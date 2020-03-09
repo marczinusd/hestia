@@ -17,6 +17,7 @@ namespace Hestia.Model.Stats
     public class StatsEnricher : IStatsEnricher
     {
         private readonly ICommandLineExecutor _executor;
+        private readonly ICoverageProviderFactory _providerFactory;
         private readonly IGitCommands _gitCommands;
         private readonly IDiskIOWrapper _ioWrapper;
         private readonly ILogger<IStatsEnricher> _logger;
@@ -24,12 +25,14 @@ namespace Hestia.Model.Stats
         public StatsEnricher(IDiskIOWrapper ioWrapper,
                              IGitCommands gitCommands,
                              ILogger<IStatsEnricher> logger,
-                             ICommandLineExecutor executor)
+                             ICommandLineExecutor executor,
+                             ICoverageProviderFactory providerFactory)
         {
             _ioWrapper = ioWrapper;
             _gitCommands = gitCommands;
             _logger = logger;
             _executor = executor;
+            _providerFactory = providerFactory;
         }
 
         public Repository Enrich(Repository repository,
@@ -157,7 +160,6 @@ namespace Hestia.Model.Stats
                                     .Select(EnrichWithGitStats)
                                     .ToList());
 
-        // TODO: actually implement this once multiple providers are added
-        private ICoverageProvider ResolveCoverageProvider() => new JsonCovCoverageProvider(_ioWrapper);
+        private ICoverageProvider ResolveCoverageProvider() => _providerFactory.CreateProviderForFile();
     }
 }

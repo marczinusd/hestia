@@ -18,10 +18,12 @@ namespace Hestia.ConsoleRunner
                 builder.AddConsole();
             });
             var executor = new CommandLineExecutor();
-            var enricher = new StatsEnricher(new DiskIOWrapper(),
+            var ioWrapper = new DiskIOWrapper();
+            var enricher = new StatsEnricher(ioWrapper,
                                              new GitCommands(executor),
                                              factory.CreateLogger<IStatsEnricher>(),
-                                             executor);
+                                             executor,
+                                             new CoverageProviderFactory(ioWrapper));
             var runner = new HestiaConsoleRunner(factory,
                                                  enricher,
                                                  new JsonConfigurationProvider());
