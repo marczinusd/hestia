@@ -1,6 +1,4 @@
 using System;
-using System.Linq;
-using Hestia.Model.Wrappers;
 using LanguageExt;
 using static LanguageExt.Prelude;
 
@@ -12,10 +10,6 @@ namespace Hestia.Model.Builders
         {
             args.PathValidator.ValidateDirectoryPath(args.RootPath);
             args.PathValidator.ValidateDirectoryPath(args.SourceRoot);
-            if (!IsGitRepository(args.RootPath, args.DiskIoWrapper))
-            {
-                throw new InvalidOperationException($"{args.RootPath} is not a git repository.");
-            }
 
             return new RepositorySnapshot(args.SnapshotId,
                                           DirectoryBuilder.BuildDirectoryFromDirectoryPath(args.SourceRoot,
@@ -31,9 +25,5 @@ namespace Hestia.Model.Builders
 
         public static RepositorySnapshot Build(this RepositorySnapshotBuilderArguments args) =>
             BuildRepositoryFromDirectoryPath(args);
-
-        private static bool IsGitRepository(string path, IDiskIOWrapper diskIoWrapper) =>
-            diskIoWrapper.EnumerateAllDirectoriesForPath(path)
-                         .Any(dir => dir.Contains(".git"));
     }
 }
