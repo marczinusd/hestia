@@ -33,10 +33,15 @@ namespace Test.Hestia.Model
                    .Match(x => x.IsCovered, () => false)
                    .Should()
                    .BeTrue();
-
             newLine.LineGitStats.Match(x => x.LineNumber, () => -1)
                    .Should()
                    .Be(2);
+            newLine.LineGitStats.Match(x => x.ModifiedInNumberOfCommits, () => -1)
+                   .Should()
+                   .Be(3);
+            newLine.LineGitStats.Match(x => x.NumberOfLifetimeAuthors, () => -1)
+                   .Should()
+                   .Be(4);
         }
     }
 }

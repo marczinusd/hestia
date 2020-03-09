@@ -9,8 +9,6 @@ namespace Hestia.Model.Stats
             NumberOfLifetimeAuthors = numberOfLifetimeAuthors;
         }
 
-        public long Id { get; set; }
-
         public int LineNumber { get; }
 
         public int ModifiedInNumberOfCommits { get; }

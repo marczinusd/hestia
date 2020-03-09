@@ -18,6 +18,6 @@ namespace Hestia.Model.Stats
         public decimal PercentageOfLineCoverage =>
             !Coverage.LineCoverages.Any()
                 ? 0
-                : Coverage.LineCoverages.Count(l => l.HitCount > 0) / (decimal)Coverage.LineCoverages.Count();
+                : Coverage.LineCoverages.Count(l => l.HitCount > 0) / (decimal)Coverage.LineCoverages.Count() * 100;
     }
 }

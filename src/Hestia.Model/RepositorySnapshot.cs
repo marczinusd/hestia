@@ -37,10 +37,5 @@ namespace Hestia.Model
                                    pathToCoverageResultFile ?? PathToCoverageResultFile,
                                    atHash ?? AtHash,
                                    commitCreationDate ?? CommitCreationDate);
-
-        public RepositoryIdentifier AsRepositoryIdentifier()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

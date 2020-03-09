@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using FluentAssertions;
 using Hestia.Model.Builders;
@@ -37,6 +38,15 @@ namespace Test.Hestia.Model.Builders
             result.Content[1]
                   .Text.Should()
                   .Be("second line");
+        }
+
+        [Fact]
+        public void FileBuilderShouldThrowExceptionWhenGivenANullParameter()
+        {
+            Action act = () => FileBuilder.BuildFileFromPath(null, Mock.Of<IDiskIOWrapper>());
+
+            act.Should()
+               .Throw<FileBuilderException>();
         }
     }
 }

@@ -46,6 +46,42 @@ namespace Test.Hestia.Model
                               () => 0)
                        .Should()
                        .Be(1);
+            fileDetails.GitStats
+                       .Match(x => x.LifetimeChanges,
+                              () => 0)
+                       .Should()
+                       .Be(1);
+        }
+
+        [Fact]
+        public void AsSlimFileShouldReturnCorrectFileRepresentation()
+        {
+            var file = new File(string.Empty,
+                                string.Empty,
+                                string.Empty,
+                                new List<SourceLine>
+                                {
+                                    new SourceLine(1,
+                                                   string.Empty,
+                                                   Option<LineCoverageStats>.None,
+                                                   Option<LineGitStats>.None),
+                                },
+                                new FileGitStats(1, 1),
+                                new FileCoverageStats(new FileCoverage(string.Empty,
+                                                                       new List<(int lineNumber, int hitCount)
+                                                                       >())));
+            var fileDetails = new FileDetails(file);
+
+            var newFile = fileDetails.AsSlimFile();
+
+            newFile.Path.Should()
+                   .Be(file.Path);
+            newFile.Extension.Should()
+                   .Be(file.Extension);
+            newFile.Filename.Should()
+                   .Be(file.Filename);
+            newFile.FullPath.Should()
+                   .Be(file.FullPath);
         }
     }
 }
