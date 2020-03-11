@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using LanguageExt;
 
 namespace Hestia.Model
@@ -6,15 +8,15 @@ namespace Hestia.Model
     public class RepositorySnapshot
     {
         public RepositorySnapshot(long snapshotId,
-                                  Directory rootDirectory,
                                   Option<string> pathToCoverageResultFile,
                                   Option<string> atHash,
-                                  Option<DateTime> commitCreationDate)
+                                  Option<DateTime> commitCreationDate,
+                                  IList<File> files)
         {
-            RootDirectory = rootDirectory;
             PathToCoverageResultFile = pathToCoverageResultFile;
             AtHash = atHash;
             CommitCreationDate = commitCreationDate;
+            Files = files;
             SnapshotId = snapshotId;
         }
 
@@ -24,18 +26,18 @@ namespace Hestia.Model
 
         public Option<string> AtHash { get; }
 
-        public Directory RootDirectory { get; }
+        public IList<File> Files { get; }
 
         public long SnapshotId { get; }
 
-        public RepositorySnapshot With(Directory? directory = null,
+        public RepositorySnapshot With(IEnumerable<File>? files = null,
                                        string? atHash = null,
                                        string? pathToCoverageResultFile = null,
                                        DateTime? commitCreationDate = null) =>
             new RepositorySnapshot(SnapshotId,
-                                   directory ?? RootDirectory,
                                    pathToCoverageResultFile ?? PathToCoverageResultFile,
                                    atHash ?? AtHash,
-                                   commitCreationDate ?? CommitCreationDate);
+                                   commitCreationDate ?? CommitCreationDate,
+                                   files?.ToList() ?? Files);
     }
 }

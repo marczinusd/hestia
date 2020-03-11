@@ -12,13 +12,10 @@ namespace Test.Hestia.Model
         public void WithShouldReturnNewObject()
         {
             var snapshot = new RepositorySnapshot(1,
-                                                  new Directory(string.Empty,
-                                                                string.Empty,
-                                                                new List<Directory>(),
-                                                                new List<File>()),
                                                   string.Empty,
                                                   string.Empty,
-                                                  default(DateTime));
+                                                  default(DateTime),
+                                                  new List<File>());
 
             snapshot.Should()
                     .NotBeSameAs(snapshot.With());
@@ -28,24 +25,16 @@ namespace Test.Hestia.Model
         public void WithShouldCorrectlyOverridePropertiesWithProvidedValues()
         {
             var snapshot = new RepositorySnapshot(1,
-                                                  new Directory(string.Empty,
-                                                                string.Empty,
-                                                                new List<Directory>(),
-                                                                new List<File>()),
                                                   string.Empty,
                                                   string.Empty,
-                                                  default(DateTime));
+                                                  default(DateTime),
+                                                  new List<File>());
 
-            var newSnapshot = snapshot.With(new Directory("bla",
-                                                          "bla",
-                                                          new List<Directory>(),
-                                                          new List<File>()),
+            var newSnapshot = snapshot.With(new List<File>(),
                                             "hash",
                                             "path",
                                             DateTime.Today);
 
-            newSnapshot.RootDirectory.Name.Should()
-                       .Be("bla");
             newSnapshot.AtHash
                        .Match(x => x, () => string.Empty)
                        .Should()

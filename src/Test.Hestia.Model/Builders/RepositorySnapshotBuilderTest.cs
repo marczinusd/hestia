@@ -42,7 +42,7 @@ namespace Test.Hestia.Model.Builders
 
             var snapshot = args.Build();
 
-            snapshot.RootDirectory.Path
+            snapshot.Files
                     .Should()
                     .NotBeNull();
             snapshot.AtHash.Match(x => x, () => string.Empty)

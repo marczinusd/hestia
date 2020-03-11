@@ -12,6 +12,8 @@ namespace Hestia.Model.Wrappers
 
         IEnumerable<string> EnumerateAllFilesForPath(string path);
 
+        IEnumerable<string> EnumerateAllFilesForPathRecursively(string path);
+
         string ReadFileContent(string path);
     }
 }

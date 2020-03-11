@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using FluentAssertions;
 using Hestia.Model;
-using Hestia.Model.Builders;
 using Hestia.Model.Stats;
 using Hestia.Model.Wrappers;
 using LanguageExt;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
-using Directory = Hestia.Model.Directory;
 using File = Hestia.Model.File;
 
 namespace Test.Hestia.Model.Stats
@@ -41,10 +39,10 @@ namespace Test.Hestia.Model.Stats
                                              executorMock.Object,
                                              providerFactoryMock.Object);
             var snapshotToEnrich = new RepositorySnapshot(1,
-                                                          CreateRootDirectory(ioWrapperMock),
                                                           "coverage.json",
                                                           Option<string>.None,
-                                                          Option<DateTime>.None);
+                                                          Option<DateTime>.None,
+                                                          new List<File>());
 
             var enrichedSnapshot = enricher.EnrichWithCoverage(snapshotToEnrich);
 
@@ -56,13 +54,10 @@ namespace Test.Hestia.Model.Stats
         public void StatsEnricherThrowsExceptionOnCoverageEnrichIfCoveragePathIsNone()
         {
             var snapshot = new RepositorySnapshot(1,
-                                                  new Directory(string.Empty,
-                                                                string.Empty,
-                                                                new List<Directory>(),
-                                                                new List<File>()),
                                                   Option<string>.None,
                                                   "hash",
-                                                  Option<DateTime>.None);
+                                                  Option<DateTime>.None,
+                                                  new List<File>());
             var enricher = new StatsEnricher(Mock.Of<IDiskIOWrapper>(),
                                              Mock.Of<IGitCommands>(),
                                              Mock.Of<ILogger<IStatsEnricher>>(),
@@ -94,11 +89,5 @@ namespace Test.Hestia.Model.Stats
 
             return ioWrapper;
         }
-
-        private Directory CreateRootDirectory(IMock<IDiskIOWrapper> ioWrapper) =>
-            DirectoryBuilder.BuildDirectoryFromDirectoryPath(DirPath,
-                                                             Array.Empty<string>(),
-                                                             ioWrapper.Object,
-                                                             Mock.Of<IPathValidator>());
     }
 }

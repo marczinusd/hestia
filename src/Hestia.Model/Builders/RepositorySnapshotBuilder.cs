@@ -1,4 +1,4 @@
-using System;
+using System.Linq;
 using LanguageExt;
 using static LanguageExt.Prelude;
 
@@ -12,15 +12,17 @@ namespace Hestia.Model.Builders
             args.PathValidator.ValidateDirectoryPath(args.SourceRoot);
 
             return new RepositorySnapshot(args.SnapshotId,
-                                          DirectoryBuilder.BuildDirectoryFromDirectoryPath(args.SourceRoot,
-                                                                                           args.SourceExtensions,
-                                                                                           args.DiskIoWrapper,
-                                                                                           args.PathValidator),
                                           string.IsNullOrWhiteSpace(args.CoveragePath)
                                               ? Option<string>.None
                                               : Some(args.CoveragePath),
                                           args.AtHash,
-                                          args.CommitCreationDate);
+                                          args.CommitCreationDate,
+                                          args.DiskIoWrapper.EnumerateAllFilesForPathRecursively(args.RootPath)
+                                              .Select(filePath =>
+                                                          FileBuilder.BuildFileFromPath(filePath, args.DiskIoWrapper))
+                                              .Where(f => !args.SourceExtensions.Any() ||
+                                                          args.SourceExtensions.Contains(f.Extension))
+                                              .ToList());
         }
 
         public static RepositorySnapshot Build(this RepositorySnapshotBuilderArguments args) =>

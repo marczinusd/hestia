@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Hestia.Model.Builders;
 using Hestia.Model.Wrappers;
@@ -69,7 +70,6 @@ namespace Hestia.Model.Stats
                                    });
         }
 
-        // ReSharper disable once UnusedMember.Global
         public RepositorySnapshot EnrichWithCoverage(RepositorySnapshot repositorySnapshot)
         {
             _logger.LogDebug($"Enriching repository snapshot at {repositorySnapshot.AtHash} with coverage stats");
@@ -78,9 +78,10 @@ namespace Hestia.Model.Stats
                                            () =>
                                                throw new
                                                    OptionIsNoneException($"{nameof(repositorySnapshot.PathToCoverageResultFile)} cannot be None"));
+            var coverages = ResolveCoverageProvider()
+                .ParseFileCoveragesFromFilePath(pathToCoverageFile);
 
-            return repositorySnapshot.With(repositorySnapshot.RootDirectory.Apply(dir => EnrichWithCoverage(dir,
-                                                                                                            pathToCoverageFile)),
+            return repositorySnapshot.With(repositorySnapshot.Files.Apply(f => EnrichWithCoverage(f, coverages)),
                                            pathToCoverageResultFile: pathToCoverageFile);
         }
 
@@ -88,24 +89,12 @@ namespace Hestia.Model.Stats
         {
             _logger.LogDebug($"Enriching repository snapshot with hash {repositorySnapshot.AtHash} with git stats");
 
-            return repositorySnapshot.With(repositorySnapshot.RootDirectory.Apply(EnrichWithGitStats));
+            return repositorySnapshot.With(repositorySnapshot.Files.Apply(EnrichWithGitStats));
         }
 
-        // ReSharper disable once UnusedMember.Global
-        private Directory EnrichWithCoverage(Directory directory, string coveragePath) =>
-            directory.With(directory.Files
-                                    .Select(f =>
-                                    {
-                                        var coverage = ResolveCoverageProvider()
-                                                       .ParseFileCoveragesFromFilePath(coveragePath)
-                                                       .SingleOrDefault(c => c.FileName == f.FullPath);
-
-                                        return EnrichWithCoverage(f, coverage);
-                                    })
-                                    .ToList(),
-                           directory.Directories
-                                    .Select(d => EnrichWithCoverage(d, coveragePath))
-                                    .ToList());
+        private IEnumerable<File> EnrichWithCoverage(IEnumerable<File> files, IEnumerable<FileCoverage> coverages) =>
+            files.Select(f => EnrichWithCoverage(f,
+                                                 coverages.SingleOrDefault(cov => cov.FileName == f.Filename)));
 
         private File EnrichWithCoverage(File file, FileCoverage coverage)
         {
@@ -152,13 +141,8 @@ namespace Hestia.Model.Stats
             return file.With(enrichedContent.ToList(), gitStats);
         }
 
-        private Directory EnrichWithGitStats(Directory directory) =>
-            directory.With(directory.Files
-                                    .Select(EnrichWithGitStats)
-                                    .ToList(),
-                           directory.Directories
-                                    .Select(EnrichWithGitStats)
-                                    .ToList());
+        private IEnumerable<File> EnrichWithGitStats(IList<File> files) =>
+            files.Select(EnrichWithGitStats);
 
         private ICoverageProvider ResolveCoverageProvider() => _providerFactory.CreateProviderForFile();
     }
