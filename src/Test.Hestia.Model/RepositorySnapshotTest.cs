@@ -12,10 +12,10 @@ namespace Test.Hestia.Model
         public void WithShouldReturnNewObject()
         {
             var snapshot = new RepositorySnapshot(1,
+                                                  new List<File>(),
                                                   string.Empty,
                                                   string.Empty,
-                                                  default(DateTime),
-                                                  new List<File>());
+                                                  default(DateTime));
 
             snapshot.Should()
                     .NotBeSameAs(snapshot.With());
@@ -25,10 +25,10 @@ namespace Test.Hestia.Model
         public void WithShouldCorrectlyOverridePropertiesWithProvidedValues()
         {
             var snapshot = new RepositorySnapshot(1,
+                                                  new List<File>(),
                                                   string.Empty,
                                                   string.Empty,
-                                                  default(DateTime),
-                                                  new List<File>());
+                                                  default(DateTime));
 
             var newSnapshot = snapshot.With(new List<File>(),
                                             "hash",

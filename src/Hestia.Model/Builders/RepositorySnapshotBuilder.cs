@@ -12,17 +12,17 @@ namespace Hestia.Model.Builders
             args.PathValidator.ValidateDirectoryPath(args.SourceRoot);
 
             return new RepositorySnapshot(args.SnapshotId,
-                                          string.IsNullOrWhiteSpace(args.CoveragePath)
-                                              ? Option<string>.None
-                                              : Some(args.CoveragePath),
-                                          args.AtHash,
-                                          args.CommitCreationDate,
                                           args.DiskIoWrapper.EnumerateAllFilesForPathRecursively(args.RootPath)
                                               .Select(filePath =>
                                                           FileBuilder.BuildFileFromPath(filePath, args.DiskIoWrapper))
                                               .Where(f => !args.SourceExtensions.Any() ||
                                                           args.SourceExtensions.Contains(f.Extension))
-                                              .ToList());
+                                              .ToList(),
+                                          string.IsNullOrWhiteSpace(args.CoveragePath)
+                                              ? Option<string>.None
+                                              : Some(args.CoveragePath),
+                                          args.AtHash,
+                                          args.CommitCreationDate);
         }
 
         public static RepositorySnapshot Build(this RepositorySnapshotBuilderArguments args) =>

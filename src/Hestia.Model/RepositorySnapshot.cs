@@ -8,10 +8,10 @@ namespace Hestia.Model
     public class RepositorySnapshot
     {
         public RepositorySnapshot(long snapshotId,
+                                  IList<File> files,
                                   Option<string> pathToCoverageResultFile,
                                   Option<string> atHash,
-                                  Option<DateTime> commitCreationDate,
-                                  IList<File> files)
+                                  Option<DateTime> commitCreationDate)
         {
             PathToCoverageResultFile = pathToCoverageResultFile;
             AtHash = atHash;
@@ -35,9 +35,9 @@ namespace Hestia.Model
                                        string? pathToCoverageResultFile = null,
                                        DateTime? commitCreationDate = null) =>
             new RepositorySnapshot(SnapshotId,
+                                   files?.ToList() ?? Files,
                                    pathToCoverageResultFile ?? PathToCoverageResultFile,
                                    atHash ?? AtHash,
-                                   commitCreationDate ?? CommitCreationDate,
-                                   files?.ToList() ?? Files);
+                                   commitCreationDate ?? CommitCreationDate);
     }
 }

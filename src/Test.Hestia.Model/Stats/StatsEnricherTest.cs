@@ -39,10 +39,10 @@ namespace Test.Hestia.Model.Stats
                                              executorMock.Object,
                                              providerFactoryMock.Object);
             var snapshotToEnrich = new RepositorySnapshot(1,
+                                                          new List<File>(),
                                                           "coverage.json",
                                                           Option<string>.None,
-                                                          Option<DateTime>.None,
-                                                          new List<File>());
+                                                          Option<DateTime>.None);
 
             var enrichedSnapshot = enricher.EnrichWithCoverage(snapshotToEnrich);
 
@@ -54,10 +54,10 @@ namespace Test.Hestia.Model.Stats
         public void StatsEnricherThrowsExceptionOnCoverageEnrichIfCoveragePathIsNone()
         {
             var snapshot = new RepositorySnapshot(1,
+                                                  new List<File>(),
                                                   Option<string>.None,
                                                   "hash",
-                                                  Option<DateTime>.None,
-                                                  new List<File>());
+                                                  Option<DateTime>.None);
             var enricher = new StatsEnricher(Mock.Of<IDiskIOWrapper>(),
                                              Mock.Of<IGitCommands>(),
                                              Mock.Of<ILogger<IStatsEnricher>>(),
