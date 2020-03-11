@@ -8,10 +8,6 @@ namespace Hestia.Model.Wrappers
 
         IEnumerable<string> ReadAllLinesFromFile(string filePath);
 
-        IEnumerable<string> EnumerateAllDirectoriesForPath(string path);
-
-        IEnumerable<string> EnumerateAllFilesForPath(string path);
-
         IEnumerable<string> EnumerateAllFilesForPathRecursively(string path);
 
         string ReadFileContent(string path);

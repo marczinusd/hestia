@@ -22,12 +22,6 @@ namespace Hestia.Model.Wrappers
 
         public IEnumerable<string> ReadAllLinesFromFile(string filePath) => System.IO.File.ReadAllLines(filePath);
 
-        public IEnumerable<string> EnumerateAllDirectoriesForPath(string path) =>
-            Directory.GetDirectories(path);
-
-        public IEnumerable<string> EnumerateAllFilesForPath(string path) =>
-            Directory.GetFiles(path);
-
         public IEnumerable<string> EnumerateAllFilesForPathRecursively(string path) =>
             Directory.EnumerateFiles(path, ".*", SearchOption.AllDirectories);
 

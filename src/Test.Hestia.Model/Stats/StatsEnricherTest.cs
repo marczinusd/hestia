@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using AutoFixture;
+using AutoFixture.AutoMoq;
 using FluentAssertions;
 using Hestia.Model;
+using Hestia.Model.Builders;
 using Hestia.Model.Stats;
 using Hestia.Model.Wrappers;
 using LanguageExt;
@@ -65,6 +68,56 @@ namespace Test.Hestia.Model.Stats
             act.Should()
                .Throw<OptionIsNoneException>()
                .WithMessage("*PathToCoverageResultFile*");
+        }
+
+        // TODO
+        [Fact]
+        public void StatsEnricherEnrichesAllFilesInRepositorySnapshotWithGitStats()
+        {
+            var fixture = new Fixture();
+            var ioMock = MockRepo.CreateDiskIOWrapperMock();
+            fixture.Register(() => ioMock.Object);
+            fixture.Customize(new AutoMoqCustomization { ConfigureMembers = true });
+            var enricher = fixture.Create<StatsEnricher>();
+
+            var enrichedSnapshot = enricher.EnrichWithGitStats(MockRepo.CreateSnapshot(new[] { ".cs" },
+                                                                                       "lcov.info",
+                                                                                       ioMock.Object,
+                                                                                       Mock.Of<IPathValidator>()));
+
+            enrichedSnapshot.Files
+                            .Should()
+                            .HaveCount(2);
+        }
+
+        // TODO
+        [Fact]
+        public void StatsEnricherEnrichesAllFilesInRepositorySnapshotWithCoverageStats()
+        {
+            var fixture = new Fixture();
+            var ioMock = MockRepo.CreateDiskIOWrapperMock();
+            fixture.Register(() => ioMock.Object);
+            fixture.Customize(new AutoMoqCustomization { ConfigureMembers = true });
+            var enricher = fixture.Create<StatsEnricher>();
+
+            var enrichedSnapshot = enricher.EnrichWithGitStats(MockRepo.CreateSnapshot(new[] { ".cs" },
+                                                                                       "lcov.info",
+                                                                                       ioMock.Object,
+                                                                                       Mock.Of<IPathValidator>()));
+
+            enrichedSnapshot.Files
+                            .Should()
+                            .HaveCount(2);
+        }
+
+        [Fact]
+        public void EnrichOnStatsEnricherEnrichesAllFilesInRepositorySnapshotWithAllStats()
+        {
+        }
+
+        [Fact]
+        public void EnrichOnRepositoryCreatesEnrichedSnapshotsCorrectly()
+        {
         }
     }
 }
