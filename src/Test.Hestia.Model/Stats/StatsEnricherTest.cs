@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using FluentAssertions;
 using Hestia.Model;
 using Hestia.Model.Stats;
@@ -8,6 +7,7 @@ using Hestia.Model.Wrappers;
 using LanguageExt;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Test.Hestia.Model.TestData;
 using Xunit;
 using File = Hestia.Model.File;
 
@@ -15,16 +15,12 @@ namespace Test.Hestia.Model.Stats
 {
     public class StatsEnricherTest
     {
-        private static readonly string DirPath = Path.Join("C:", "temp");
-        private static readonly string[] RootDirs = { Path.Join(DirPath, "firstDir"), Path.Join(DirPath, "secondDir") };
-        private static readonly string[] RootFiles = { Path.Join(DirPath, "package.json"), };
-
         private readonly IEnumerable<FileCoverage> _coverages = new[] { new FileCoverage("bla.js", new[] { (1, 1) }) };
 
         [Fact]
         public void StatsEnricherEnrichesSnapshotWithCoverageCorrectlyTest()
         {
-            var ioWrapperMock = CreateDiskIOWrapperMock();
+            var ioWrapperMock = MockRepo.CreateDiskIOWrapperMock();
             var gitMock = new Mock<IGitCommands>();
             var executorMock = new Mock<ICommandLineExecutor>();
             var providerFactoryMock = new Mock<ICoverageProviderFactory>();
@@ -69,25 +65,6 @@ namespace Test.Hestia.Model.Stats
             act.Should()
                .Throw<OptionIsNoneException>()
                .WithMessage("*PathToCoverageResultFile*");
-        }
-
-        private Mock<IDiskIOWrapper> CreateDiskIOWrapperMock()
-        {
-            var ioWrapper = new Mock<IDiskIOWrapper>();
-            ioWrapper.Setup(mock => mock.EnumerateAllDirectoriesForPath(DirPath))
-                     .Returns(RootDirs);
-            ioWrapper.Setup(mock => mock.EnumerateAllFilesForPath(DirPath))
-                     .Returns(RootFiles);
-            ioWrapper.Setup(mock => mock.EnumerateAllDirectoriesForPath(RootDirs[0]))
-                     .Returns(Array.Empty<string>());
-            ioWrapper.Setup(mock => mock.EnumerateAllDirectoriesForPath(RootDirs[1]))
-                     .Returns(Array.Empty<string>());
-            ioWrapper.Setup(mock => mock.EnumerateAllFilesForPath(RootDirs[0]))
-                     .Returns(new[] { Path.Join(DirPath, "bla.js") });
-            ioWrapper.Setup(mock => mock.EnumerateAllFilesForPath(RootDirs[1]))
-                     .Returns(new[] { Path.Join(DirPath, "bla2.js") });
-
-            return ioWrapper;
         }
     }
 }
