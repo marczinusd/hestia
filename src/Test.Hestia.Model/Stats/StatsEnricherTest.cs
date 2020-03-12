@@ -9,7 +9,6 @@ using Hestia.Model.Builders;
 using Hestia.Model.Stats;
 using Hestia.Model.Wrappers;
 using LanguageExt;
-using Microsoft.Extensions.Logging;
 using Moq;
 using Test.Hestia.Model.TestData;
 using Xunit;
@@ -24,20 +23,19 @@ namespace Test.Hestia.Model.Stats
         [Fact]
         public void StatsEnricherEnrichesSnapshotWithCoverageCorrectlyTest()
         {
-            var ioWrapperMock = MockRepo.CreateDiskIOWrapperMock();
-            var gitMock = new Mock<IGitCommands>();
-            var executorMock = new Mock<ICommandLineExecutor>();
+            var fixture = new Fixture();
             var providerFactoryMock = new Mock<ICoverageProviderFactory>();
             var coverageProviderMock = new Mock<ICoverageProvider>();
+            fixture.Customize(new AutoMoqCustomization { ConfigureMembers = true });
+            fixture.Register(() => MockRepo.CreateDiskIOWrapperMock()
+                                           .Object);
+            fixture.Register(() => providerFactoryMock.Object);
+            fixture.Register(() => coverageProviderMock.Object);
             coverageProviderMock.Setup(mock => mock.ParseFileCoveragesFromFilePath(It.IsAny<string>()))
                                 .Returns(_coverages);
             providerFactoryMock.Setup(mock => mock.CreateProviderForFile())
                                .Returns(coverageProviderMock.Object);
-            var enricher = new StatsEnricher(ioWrapperMock.Object,
-                                             gitMock.Object,
-                                             Mock.Of<ILogger<IStatsEnricher>>(),
-                                             executorMock.Object,
-                                             providerFactoryMock.Object);
+            var enricher = fixture.Create<StatsEnricher>();
             var snapshotToEnrich = new RepositorySnapshot(1,
                                                           new List<File>(),
                                                           "coverage.json",
@@ -53,16 +51,14 @@ namespace Test.Hestia.Model.Stats
         [Fact]
         public void StatsEnricherThrowsExceptionOnCoverageEnrichIfCoveragePathIsNone()
         {
+            var fixture = new Fixture();
+            fixture.Customize(new AutoMoqCustomization { ConfigureMembers = true });
             var snapshot = new RepositorySnapshot(1,
                                                   new List<File>(),
                                                   Option<string>.None,
                                                   "hash",
                                                   Option<DateTime>.None);
-            var enricher = new StatsEnricher(Mock.Of<IDiskIOWrapper>(),
-                                             Mock.Of<IGitCommands>(),
-                                             Mock.Of<ILogger<IStatsEnricher>>(),
-                                             Mock.Of<ICommandLineExecutor>(),
-                                             Mock.Of<ICoverageProviderFactory>());
+            var enricher = fixture.Create<StatsEnricher>();
 
             Action act = () => enricher.EnrichWithCoverage(snapshot);
 
@@ -149,6 +145,52 @@ namespace Test.Hestia.Model.Stats
         [Fact]
         public void EnrichOnRepositoryCreatesEnrichedSnapshotsCorrectly()
         {
+            var args = new RepositoryStatsEnricherArguments("bla",
+                                                            "src",
+                                                            new[] { ".cs" },
+                                                            "dotnet cover",
+                                                            "lcov.info",
+                                                            1,
+                                                            50,
+                                                            5);
+            var fixture = new Fixture();
+            var ioMock = MockRepo.CreateDiskIOWrapperMock();
+            var gitCommandsMock = MockRepo.CreateGitCommandsMock();
+            var executorMock = new Mock<ICommandLineExecutor>();
+            gitCommandsMock.Setup(mock => mock.GetHashForNthCommit(It.IsAny<string>(), It.IsAny<int>()))
+                           .Returns<string, int>((_, i) => i.ToString());
+            fixture.Register(() => ioMock.Object);
+            fixture.Register(() => gitCommandsMock.Object);
+            fixture.Register(() => executorMock.Object);
+            fixture.Customize(new AutoMoqCustomization { ConfigureMembers = true });
+            var enricher = fixture.Create<StatsEnricher>();
+
+            var repo = enricher.Enrich(new Repository(0,
+                                                      "bla",
+                                                      Option<RepositorySnapshot[]>.None,
+                                                      Option<string>.None,
+                                                      Option<string>.None),
+                                       args);
+
+            var snapshots = repo.Snapshots.Match(x => x, Array.Empty<RepositorySnapshot>());
+
+            // verify behavior
+            gitCommandsMock.Verify(mock => mock.Checkout(It.IsAny<string>(), It.IsAny<string>()), Times.Exactly(5));
+            gitCommandsMock.Verify(mock => mock.DateOfLatestCommitOnBranch(It.IsAny<string>()), Times.Exactly(5));
+            gitCommandsMock.Verify(mock => mock.GetHashForNthCommit(It.IsAny<string>(), It.IsAny<int>()),
+                                   Times.Exactly(5));
+            executorMock.Verify(mock => mock.Execute("dotnet cover", It.IsAny<string>(), It.IsAny<string>()),
+                                Times.Exactly(5));
+
+            // verify results
+            snapshots.Should()
+                     .HaveCount(5);
+            snapshots.Select(s => s.SnapshotId)
+                     .Should()
+                     .BeEquivalentTo(new[] { 1, 2, 3, 4, 5 });
+            snapshots.Select(s => s.AtHash.Match(x => x, string.Empty))
+                     .Should()
+                     .BeEquivalentTo(new[] { "1", "13", "25", "37", "50" });
         }
     }
 }

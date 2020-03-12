@@ -19,6 +19,7 @@ namespace Hestia.Model.Stats
     {
         private readonly ICommandLineExecutor _executor;
         private readonly ICoverageProviderFactory _providerFactory;
+        private readonly IPathValidator _pathValidator;
         private readonly IGitCommands _gitCommands;
         private readonly IDiskIOWrapper _ioWrapper;
         private readonly ILogger<IStatsEnricher> _logger;
@@ -27,13 +28,15 @@ namespace Hestia.Model.Stats
                              IGitCommands gitCommands,
                              ILogger<IStatsEnricher> logger,
                              ICommandLineExecutor executor,
-                             ICoverageProviderFactory providerFactory)
+                             ICoverageProviderFactory providerFactory,
+                             IPathValidator pathValidator)
         {
             _ioWrapper = ioWrapper;
             _gitCommands = gitCommands;
             _logger = logger;
             _executor = executor;
             _providerFactory = providerFactory;
+            _pathValidator = pathValidator;
         }
 
         public Repository Enrich(Repository repository,
@@ -48,26 +51,28 @@ namespace Hestia.Model.Stats
                                                                   Option<string>.None,
                                                                   Option<DateTime>.None,
                                                                   _ioWrapper,
-                                                                  new PathValidator());
-            var sampleInterval = (args.LastCommitToSample - args.FirstCommitToSample) / args.NumberOfSamples;
+                                                                  _pathValidator);
+            var sampleInterval = (args.LastCommitToSample - args.FirstCommitToSample) / (args.NumberOfSamples - 1);
 
-            return Enumerable.Range(0, args.NumberOfSamples)
-                             .Select(i => args.FirstCommitToSample + (i * sampleInterval))
-                             .Select(commitNo => _gitCommands.GetHashForNthCommit(args.RepoPath, commitNo))
-                             .ToList() // force eval
-                             .Fold(repository,
-                                   (repo, hash) =>
-                                   {
-                                       _gitCommands.Checkout(hash, args.RepoPath);
-                                       _executor.Execute(args.CoverageCommand, string.Empty, args.RepoPath);
-                                       var commitCreationDate = _gitCommands.DateOfLatestCommitOnBranch(args.RepoPath);
+            return Enumerable
+                   .Range(0, args.NumberOfSamples - 1) // -1 so last sample should come from args.LastCommitToSample
+                   .Select(i => args.FirstCommitToSample + (i * sampleInterval))
+                   .Append(args.LastCommitToSample)
+                   .Select(commitNo => _gitCommands.GetHashForNthCommit(args.RepoPath, commitNo))
+                   .ToList() // force eval
+                   .Fold(repository,
+                         (repo, hash) =>
+                         {
+                             _gitCommands.Checkout(hash, args.RepoPath);
+                             _executor.Execute(args.CoverageCommand, string.Empty, args.RepoPath);
+                             var commitCreationDate = _gitCommands.DateOfLatestCommitOnBranch(args.RepoPath);
 
-                                       return repoArgs.With(initialSnapshotId + 1, hash, commitCreationDate)
-                                                      .Build()
-                                                      .Apply(EnrichWithCoverage)
-                                                      .Apply(EnrichWithGitStats)
-                                                      .Apply(repo.AddSnapshot);
-                                   });
+                             return repoArgs.With(initialSnapshotId++, hash, commitCreationDate)
+                                            .Build()
+                                            .Apply(EnrichWithCoverage)
+                                            .Apply(EnrichWithGitStats)
+                                            .Apply(repo.AddSnapshot);
+                         });
         }
 
         public RepositorySnapshot EnrichWithCoverage(RepositorySnapshot repositorySnapshot)

@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using LanguageExt;
 
@@ -6,7 +5,7 @@ namespace Hestia.Model
 {
     public class Repository
     {
-        public Repository(long repositoryId,
+        public Repository(int repositoryId,
                           string repositoryName,
                           Option<RepositorySnapshot[]> snapshots,
                           Option<string> coverageExecutionCommand,
@@ -19,7 +18,7 @@ namespace Hestia.Model
             CoverageOutputLocation = coverageOutputLocation;
         }
 
-        public long RepositoryId { get; }
+        public int RepositoryId { get; }
 
         public string RepositoryName { get; }
 
@@ -34,7 +33,7 @@ namespace Hestia.Model
                            RepositoryName,
                            Snapshots.Match(s => s.Concat(new[] { snapshot })
                                                  .ToArray(),
-                                           Array.Empty<RepositorySnapshot>),
+                                           new[] { snapshot }),
                            CoverageExecutionCommand,
                            CoverageOutputLocation);
 

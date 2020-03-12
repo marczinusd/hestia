@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Hestia.ConsoleRunner.Configuration;
+using Hestia.Model.Builders;
 using Hestia.Model.Stats;
 using Hestia.Model.Wrappers;
 using Microsoft.Extensions.Logging;
@@ -23,7 +24,8 @@ namespace Hestia.ConsoleRunner
                                              new GitCommands(executor),
                                              factory.CreateLogger<IStatsEnricher>(),
                                              executor,
-                                             new CoverageProviderFactory(ioWrapper));
+                                             new CoverageProviderFactory(ioWrapper),
+                                             new PathValidator());
             var runner = new HestiaConsoleRunner(factory,
                                                  enricher,
                                                  new JsonConfigurationProvider());
