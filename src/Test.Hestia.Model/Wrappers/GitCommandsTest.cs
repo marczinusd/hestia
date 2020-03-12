@@ -199,7 +199,7 @@ namespace Test.Hestia.Model.Wrappers
                                                      repoPath),
                                 Times.Once);
         }
-        
+
         [Fact]
         public void CheckoutNthCommitOnBranchThrowsExceptionWhenCommitNumberIsGreaterThanAllCommitNumber()
         {
