@@ -138,11 +138,6 @@ namespace Test.Hestia.Model.Stats
         }
 
         [Fact]
-        public void EnrichOnStatsEnricherEnrichesAllFilesInRepositorySnapshotWithAllStats()
-        {
-        }
-
-        [Fact]
         public void EnrichOnRepositoryCreatesEnrichedSnapshotsCorrectly()
         {
             var args = new RepositoryStatsEnricherArguments("bla",

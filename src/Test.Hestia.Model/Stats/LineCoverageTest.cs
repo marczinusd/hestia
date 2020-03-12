@@ -14,11 +14,13 @@ namespace Test.Hestia.Model.Stats
             var lineCoverage2 = new LineCoverage(1, 1);
 
             lineCoverage1.Should()
-                         .BeEquivalentTo(lineCoverage1Again);
-            lineCoverage1.Should()
                          .BeEquivalentTo(lineCoverage2);
-            lineCoverage1.Should()
-                         .NotBeEquivalentTo(null as LineCoverage);
+            lineCoverage1.Equals(null)
+                         .Should()
+                         .BeFalse();
+            lineCoverage1.Equals(lineCoverage1Again)
+                         .Should()
+                         .BeTrue();
             lineCoverage1.Should()
                          .NotBe("bla");
             lineCoverage1.GetHashCode()

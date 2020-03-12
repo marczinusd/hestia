@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -12,6 +13,7 @@ namespace Hestia.Model.Wrappers
         private const string AuthorPattern = "\\s*Author:\\s*(.*)";
         private const string ShortLogAuthorPattern = "\\s*\\d+\\s*(.*)";
         private const string CommitHeaderPattern = "^commit\\s+(.*)";
+        private const string GitDateFormat = "ddd MMM d HH:mm:ss yyyy K";
         private readonly ICommandLineExecutor _commandLineExecutor;
 
         public GitCommands(ICommandLineExecutor commandLineExecutor)
@@ -39,13 +41,16 @@ namespace Hestia.Model.Wrappers
                                                           Path.GetDirectoryName(filePath) ?? string.Empty));
 
         public DateTime DateOfLatestCommitOnBranch(string repoPath) =>
-            DateTime.Parse(Exec(LatestCommitDateCommand(), repoPath)
-                               .First());
+            DateTime.ParseExact(Exec(LatestCommitDateCommand(), repoPath)
+                                    .First(),
+                                GitDateFormat,
+                                CultureInfo.InvariantCulture,
+                                DateTimeStyles.None);
 
         public int NumberOfCommitsOnCurrentBranch(string repoPath) =>
             int.Parse(Exec(CommitCountOnCurrentBranchCommand(), repoPath)
-                       .First()
-                       .Trim());
+                      .First()
+                      .Trim());
 
         /// <summary>
         /// Checks out the nth commit (where 1 is the initial commit) of a git repository.
@@ -63,7 +68,7 @@ namespace Hestia.Model.Wrappers
                     ArgumentOutOfRangeException($"{nameof(commitNumber)} with {commitNumber} was out of range: this branch only has {numberOfCommits} commits");
             }
 
-            var hash = GetHashForNthCommit(repoPath, numberOfCommits + 1 - commitNumber);
+            var hash = GetHashForNthCommit(repoPath, commitNumber);
             Exec(CheckoutCommand(hash), repoPath);
 
             return hash;
@@ -84,10 +89,12 @@ namespace Hestia.Model.Wrappers
 
         public string GetHashForNthCommit(string repoPath, int commitNumber)
         {
-            return Exec(HashForNthCommitCommand(commitNumber), repoPath)
+            var numberOfCommitsOnBranch = NumberOfCommitsOnCurrentBranch(repoPath);
+
+            return Exec(HashForNthCommitCommand(numberOfCommitsOnBranch - commitNumber + 1), repoPath)
                    .Single(l => Regex.IsMatch(l, CommitHeaderPattern))
                    .Apply(x => Regex.Match(x, CommitHeaderPattern)
-                                    .Captures.First()
+                                    .Groups[1]
                                     .Value);
         }
 
@@ -104,16 +111,16 @@ namespace Hestia.Model.Wrappers
             $"shortlog -c -s {filepath}";
 
         private string LatestCommitDateCommand() =>
-            "git log -1 --format=%cd";
+            "log -1 --format=%cd";
 
         private string CommitCountOnCurrentBranchCommand() =>
-            "git rev-list --count HEAD";
+            "rev-list --count HEAD";
 
         private string HashForNthCommitCommand(int commitNumber) =>
-            $"git log -1 HEAD~{commitNumber}";
+            $"log -1 HEAD~{commitNumber}";
 
         private string CheckoutCommand(string hash) =>
-            $"git checkout {hash}";
+            $"checkout {hash}";
 
         private int ParseLineHistoryForNumberOfChanges(string[] commandOutput) =>
             commandOutput.Count(line => Regex.IsMatch(line, CommitHeaderPattern));

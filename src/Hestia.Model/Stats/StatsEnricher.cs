@@ -83,8 +83,8 @@ namespace Hestia.Model.Stats
                                            () =>
                                                throw new
                                                    OptionIsNoneException($"{nameof(repositorySnapshot.PathToCoverageResultFile)} cannot be None"));
-            var coverages = ResolveCoverageProvider()
-                .ParseFileCoveragesFromFilePath(pathToCoverageFile);
+            var coverages = _providerFactory.CreateProviderForFile()
+                                            .ParseFileCoveragesFromFilePath(pathToCoverageFile);
 
             return repositorySnapshot.With(repositorySnapshot.Files.Apply(f => EnrichWithCoverage(f, coverages)),
                                            pathToCoverageResultFile: pathToCoverageFile);
@@ -148,7 +148,5 @@ namespace Hestia.Model.Stats
 
         private IEnumerable<File> EnrichWithGitStats(IList<File> files) =>
             files.Select(EnrichWithGitStats);
-
-        private ICoverageProvider ResolveCoverageProvider() => _providerFactory.CreateProviderForFile();
     }
 }

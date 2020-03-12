@@ -42,6 +42,8 @@
     <None Remove="Resources\GitShortlogOutput" />
     <None Remove="Resources\coverage.json" />
     <EmbeddedResource Include="Resources\coverage.json" />
+    <None Remove="Resources\GitSingleCommitOutput" />
+    <EmbeddedResource Include="Resources\GitSingleCommitOutput" />
   </ItemGroup>
 
 </Project>

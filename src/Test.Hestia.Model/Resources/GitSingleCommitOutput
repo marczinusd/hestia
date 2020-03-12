@@ -1,0 +1,5 @@
+﻿commit abb3cc3d7e405c39eae91b22c41d1281b9075cd4
+Author: David Marczinus <marczinus.david@gmail.com>
+Date:   Wed Mar 11 22:50:31 2020 +0100
+
+[model] remove directory abstraction layer entirely

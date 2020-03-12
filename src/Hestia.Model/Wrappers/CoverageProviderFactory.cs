@@ -1,7 +1,9 @@
-﻿using Hestia.Model.Stats;
+﻿using System.Diagnostics.CodeAnalysis;
+using Hestia.Model.Stats;
 
 namespace Hestia.Model.Wrappers
 {
+    [ExcludeFromCodeCoverage]
     public class CoverageProviderFactory : ICoverageProviderFactory
     {
         private readonly IDiskIOWrapper _ioWrapper;
