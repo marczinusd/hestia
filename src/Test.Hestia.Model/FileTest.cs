@@ -4,6 +4,7 @@ using FluentAssertions;
 using Hestia.Model;
 using Hestia.Model.Stats;
 using LanguageExt;
+using Test.Hestia.Model.TestData;
 using Xunit;
 using File = Hestia.Model.File;
 
@@ -14,12 +15,7 @@ namespace Test.Hestia.Model
         [Fact]
         public void WhenCreatesANewFileObject()
         {
-            var file = new File(string.Empty,
-                                string.Empty,
-                                string.Empty,
-                                new List<SourceLine>(),
-                                Option<FileGitStats>.None,
-                                Option<FileCoverageStats>.None);
+            var file = MockRepo.CreateFile();
 
             file.Should()
                 .NotBeSameAs(file.With());
@@ -28,12 +24,7 @@ namespace Test.Hestia.Model
         [Fact]
         public void WhenShouldCreateInstanceWithProvidedParams()
         {
-            var file = new File(string.Empty,
-                                string.Empty,
-                                string.Empty,
-                                new List<SourceLine>(),
-                                Option<FileGitStats>.None,
-                                Option<FileCoverageStats>.None);
+            var file = MockRepo.CreateFile();
 
             var newFile = file.With(new List<SourceLine>
                                     {
@@ -62,20 +53,7 @@ namespace Test.Hestia.Model
         [Fact]
         public void AsFileDetailsCreatesEquivalentFileDetailsObject()
         {
-            var file = new File(string.Empty,
-                                string.Empty,
-                                string.Empty,
-                                new List<SourceLine>
-                                {
-                                    new SourceLine(1,
-                                                   string.Empty,
-                                                   Option<LineCoverageStats>.None,
-                                                   Option<LineGitStats>.None),
-                                },
-                                new FileGitStats(1, 1),
-                                new FileCoverageStats(new FileCoverage(string.Empty,
-                                                                       new List<(int lineNumber, int hitCount)
-                                                                       >())));
+            var file = MockRepo.CreateFile();
             var fileDetails = file.AsFileDetails();
 
             fileDetails.Content.Should()

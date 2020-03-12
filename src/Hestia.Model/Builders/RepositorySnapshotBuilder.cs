@@ -1,3 +1,4 @@
+using System.IO;
 using System.Linq;
 using LanguageExt;
 using static LanguageExt.Prelude;
@@ -12,7 +13,7 @@ namespace Hestia.Model.Builders
             args.PathValidator.ValidateDirectoryPath(args.SourceRoot);
 
             return new RepositorySnapshot(args.SnapshotId,
-                                          args.DiskIoWrapper.EnumerateAllFilesForPathRecursively(args.RootPath)
+                                          args.DiskIoWrapper.EnumerateAllFilesForPathRecursively(Path.Join(args.RootPath, args.SourceRoot))
                                               .Select(filePath =>
                                                           FileBuilder.BuildFileFromPath(filePath, args.DiskIoWrapper))
                                               .Where(f => !args.SourceExtensions.Any() ||

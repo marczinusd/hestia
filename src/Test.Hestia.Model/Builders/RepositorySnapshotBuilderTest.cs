@@ -17,7 +17,7 @@ namespace Test.Hestia.Model.Builders
         {
             var args = new RepositorySnapshotBuilderArguments(1,
                                                               DirPath,
-                                                              string.Empty,
+                                                              "src",
                                                               new[] { ".cs" },
                                                               "lcov.info",
                                                               "hash",

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using FluentAssertions;
 using Hestia.Model;
+using Test.Hestia.Model.TestData;
 using Xunit;
 
 namespace Test.Hestia.Model
@@ -30,7 +31,7 @@ namespace Test.Hestia.Model
                                                   string.Empty,
                                                   default(DateTime));
 
-            var newSnapshot = snapshot.With(new List<File>(),
+            var newSnapshot = snapshot.With(MockRepo.CreateFiles(3),
                                             "hash",
                                             "path",
                                             DateTime.Today);
@@ -47,6 +48,9 @@ namespace Test.Hestia.Model
                        .Match(x => x, () => default)
                        .Should()
                        .NotBe(default);
+            newSnapshot.Files
+                       .Should()
+                       .HaveCount(3);
         }
     }
 }
