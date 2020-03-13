@@ -20,26 +20,32 @@ namespace Hestia.ConsoleRunner
         private readonly ILoggerFactory _loggerFactory;
         private readonly IStatsEnricher _statsEnricher;
         private readonly IJsonConfigurationProvider _configurationProvider;
+        private readonly IDiskIOWrapper _ioWrapper;
+        private readonly IPathValidator _validator;
 
         public HestiaConsoleRunner(ILoggerFactory loggerFactory,
                                    IStatsEnricher statsEnricher,
-                                   IJsonConfigurationProvider configurationProvider)
+                                   IJsonConfigurationProvider configurationProvider,
+                                   IDiskIOWrapper ioWrapper,
+                                   IPathValidator validator)
         {
             _loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
             _statsEnricher = statsEnricher ?? throw new ArgumentNullException(nameof(statsEnricher));
             _configurationProvider =
                 configurationProvider ?? throw new ArgumentNullException(nameof(configurationProvider));
+            _ioWrapper = ioWrapper;
+            _validator = validator;
         }
 
         public void Run(string[] args)
         {
             Parser.Default
                   .ParseArguments<Options>(args)
-                  .WithParsed(async options =>
+                  .WithParsed(options =>
                   {
                       var logger = _loggerFactory.CreateLogger<HestiaConsoleRunner>();
-                      var config = await _configurationProvider.LoadConfiguration(options.JsonConfigPath);
-                      var repository = BuildRepositoryWithOptions(options, config);
+                      var config = _configurationProvider.LoadConfiguration(options.JsonConfigPath).Result;
+                      var repository = BuildRepositoryWithOptions(options, config, _ioWrapper, _validator);
 
                       var enrichedRepository = repository.Apply(_statsEnricher.EnrichWithCoverage)
                                                          .Apply(_statsEnricher.EnrichWithGitStats);
@@ -52,7 +58,10 @@ namespace Hestia.ConsoleRunner
                   });
         }
 
-        private static RepositorySnapshot BuildRepositoryWithOptions(Options options, ConsoleRunnerConfig config) =>
+        private static RepositorySnapshot BuildRepositoryWithOptions(Options options,
+                                                                     ConsoleRunnerConfig config,
+                                                                     IDiskIOWrapper ioWrapper,
+                                                                     IPathValidator validator) =>
             new RepositorySnapshotBuilderArguments(options.RepositoryId,
                                                    config.RepoPath,
                                                    Path.Join(config.RepoPath,
@@ -62,8 +71,8 @@ namespace Hestia.ConsoleRunner
                                                    config.CoverageOutputLocation,
                                                    Option<string>.None,
                                                    Option<DateTime>.None,
-                                                   new DiskIOWrapper(),
-                                                   new PathValidator()).Build();
+                                                   ioWrapper,
+                                                   validator).Build();
 
         // ReSharper disable once ClassNeverInstantiated.Local
         [ExcludeFromCodeCoverage]

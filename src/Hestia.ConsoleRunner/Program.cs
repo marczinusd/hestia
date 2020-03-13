@@ -28,7 +28,9 @@ namespace Hestia.ConsoleRunner
                                              new PathValidator());
             var runner = new HestiaConsoleRunner(factory,
                                                  enricher,
-                                                 new JsonConfigurationProvider());
+                                                 new JsonConfigurationProvider(),
+                                                 ioWrapper,
+                                                 new PathValidator());
 
             runner.Run(args);
         }
