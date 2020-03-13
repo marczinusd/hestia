@@ -1,28 +1,35 @@
+using System;
+using FluentAssertions;
 using Hestia.WebService;
+using Hestia.WebService.Controllers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Logging;
+using Moq;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Test.Hestia.WebService
 {
     public class HestiaServiceTest
     {
-        private readonly ITestOutputHelper _output;
-
-        public HestiaServiceTest(ITestOutputHelper output)
-        {
-            _output = output;
-        }
-
-        // For now just test whether this setup is correct -- implement later
+        // TODO: For now just test whether this setup is correct -- implement later
         [Fact]
         public void SmokeTest()
         {
             var server = new TestServer(new WebHostBuilder().UseStartup<Startup>());
-            var client = server.CreateClient();
+            server.CreateClient();
+            var controller = new RepositoriesController(Mock.Of<ILogger<RepositoriesController>>());
 
-            _output.WriteLine(client.ToString());
+            Action act1 = () => controller.GetAllRepositories();
+            Action act2 = () => controller.GetRepositoryById(1);
+            Action act3 = () => controller.GetFileById(1, 2);
+
+            act1.Should()
+                .Throw<NotImplementedException>();
+            act2.Should()
+                .Throw<NotImplementedException>();
+            act3.Should()
+                .Throw<NotImplementedException>();
         }
     }
 }
