@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reactive.Linq;
 using Hestia.DAL.Mongo.Model;
+using Hestia.DAL.Mongo.Wrappers;
 using Hestia.Model;
 using Hestia.Model.Extensions;
 using MongoDB.Driver;
@@ -10,9 +12,11 @@ namespace Hestia.DAL.Mongo
 {
     public class HestiaMongoClient
     {
-        private readonly IMongoCollection<RepositoryEntity> _repositories;
+        private readonly IMongoCollectionWrapper<RepositoryEntity> _repositories;
 
         public HestiaMongoClient(IMongoClientFactory factory,
+                                 Func<IMongoCollection<RepositoryEntity>,
+                                     IMongoCollectionWrapper<RepositoryEntity>> wrapperFactory,
                                  string connectionString,
                                  string databaseName,
                                  string collectionName)
@@ -20,12 +24,11 @@ namespace Hestia.DAL.Mongo
             var client = factory.CreateClient(connectionString);
             var database = client.GetDatabase(databaseName, new MongoDatabaseSettings());
 
-            _repositories = database.GetCollection<RepositoryEntity>(collectionName);
+            _repositories = wrapperFactory(database.GetCollection<RepositoryEntity>(collectionName));
         }
 
         public IObservable<IEnumerable<RepositoryEntity>> GetAllRepos() =>
-            Observable.FromAsync(() => _repositories.Find(r => true)
-                                                    .ToListAsync());
+            ObservableExt.CreateSingle(() => _repositories.Find(r => true));
 
         public IObservable<RepositoryEntity> GetRepoById(string id) =>
             ObservableExt.CreateSingle(() => _repositories.Find(r => r.Id == id)
