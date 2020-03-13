@@ -86,7 +86,9 @@ namespace Hestia.Model.Stats
             var coverages = _providerFactory.CreateProviderForFile()
                                             .ParseFileCoveragesFromFilePath(pathToCoverageFile);
 
-            return repositorySnapshot.With(repositorySnapshot.Files.Apply(f => EnrichWithCoverage(f, coverages)),
+            return repositorySnapshot.With(repositorySnapshot.Files
+                                                             .Apply(f => EnrichWithCoverage(f, coverages))
+                                                             .ToArray(),
                                            pathToCoverageResultFile: pathToCoverageFile);
         }
 

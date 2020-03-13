@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using AutoFixture;
 using AutoFixture.AutoMoq;
@@ -117,13 +118,24 @@ namespace Test.Hestia.Model.Stats
                             .BeTrue();
         }
 
-        // TODO
         [Fact]
         public void StatsEnricherEnrichesAllFilesInRepositorySnapshotWithCoverageStats()
         {
+            var lineCoverages = new List<(int lineNumber, int hitCount)> { (1, 1), (5, 1) };
             var fixture = new Fixture();
+            var coverageFactory = new Mock<ICoverageProviderFactory>();
+            var coverageProvider = new Mock<ICoverageProvider>();
+            coverageFactory.Setup(mock => mock.CreateProviderForFile())
+                           .Returns(coverageProvider.Object);
+            coverageProvider.Setup(mock => mock.ParseFileCoveragesFromFilePath(It.IsAny<string>()))
+                            .Returns(new[]
+                            {
+                                new FileCoverage(Path.GetFileName(MockRepo.FirstIncludedFilePath),
+                                                 lineCoverages),
+                            });
             var ioMock = MockRepo.CreateDiskIOWrapperMock();
             fixture.Register(() => ioMock.Object);
+            fixture.Register(() => coverageFactory.Object);
             fixture.Customize(new AutoMoqCustomization { ConfigureMembers = true });
             var enricher = fixture.Create<StatsEnricher>();
 
@@ -135,6 +147,29 @@ namespace Test.Hestia.Model.Stats
             enrichedSnapshot.Files
                             .Should()
                             .HaveCount(2);
+            var firstCovStats = enrichedSnapshot.Files[0]
+                                                .CoverageStats
+                                                .Match(x => x,
+                                                       () => MockRepo.DefaultCoverage);
+            var secondCovStats = enrichedSnapshot.Files[1]
+                                                 .CoverageStats.Match(x => x, () => MockRepo.DefaultCoverage);
+            enrichedSnapshot.Files[0]
+                            .Content.Should()
+                            .HaveCount(5);
+            enrichedSnapshot.Files[0]
+                            .Content
+                            .Where(x => x.LineCoverageStats.IsSome)
+                            .Should()
+                            .HaveCount(2);
+            enrichedSnapshot.Files[1]
+                            .Content.Should()
+                            .HaveCount(3);
+            firstCovStats.Coverage.LineCoverages
+                         .Should()
+                         .BeEquivalentTo(lineCoverages.Select(l => new LineCoverage(l.lineNumber, l.hitCount)));
+            secondCovStats.Coverage.LineCoverages
+                          .Should()
+                          .BeEmpty();
         }
 
         [Fact]

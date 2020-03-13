@@ -32,6 +32,9 @@ namespace Test.Hestia.Model.TestData
 
         public static int SecondIncludedFileGitStats { get; } = 3;
 
+        public static FileCoverageStats DefaultCoverage { get; } =
+            new FileCoverageStats(new FileCoverage(string.Empty, new (int lineNumber, int hitCount)[0]));
+
         public static Mock<IDiskIOWrapper> CreateDiskIOWrapperMock()
         {
             var ioWrapper = new Mock<IDiskIOWrapper>();
@@ -46,6 +49,30 @@ namespace Test.Hestia.Model.TestData
                      });
             ioWrapper.Setup(mock => mock.ReadAllLinesFromFile(It.IsAny<string>()))
                      .Returns(new List<string> { "bla", "bla", "bla" });
+            ioWrapper.Setup(mock => mock.ReadAllLinesFromFileAsSourceModel(It.IsAny<string>()))
+                     .Returns(new[]
+                     {
+                         new SourceLine(1,
+                                        "bla",
+                                        Option<LineCoverageStats>.None,
+                                        Option<LineGitStats>.None),
+                         new SourceLine(2,
+                                        "bla",
+                                        Option<LineCoverageStats>.None,
+                                        Option<LineGitStats>.None),
+                         new SourceLine(3,
+                                        "bla",
+                                        Option<LineCoverageStats>.None,
+                                        Option<LineGitStats>.None),
+                         new SourceLine(4,
+                                        "bla",
+                                        Option<LineCoverageStats>.None,
+                                        Option<LineGitStats>.None),
+                         new SourceLine(5,
+                                        "bla",
+                                        Option<LineCoverageStats>.None,
+                                        Option<LineGitStats>.None),
+                     });
 
             return ioWrapper;
         }
