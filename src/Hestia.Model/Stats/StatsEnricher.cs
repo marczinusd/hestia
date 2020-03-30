@@ -120,14 +120,16 @@ namespace Hestia.Model.Stats
             var finalPath = coverageReportPath;
             if (!coverageReportPath.Contains("coverage.json"))
             {
-                finalPath = _converter.Convert(coverageReportPath, Path.GetDirectoryName(coverageReportPath))
+                finalPath = _converter.Convert(coverageReportPath, Path.GetDirectoryName(coverageReportPath) ?? coverageReportPath)
                                       .Some(x => x)
                                       .None(() => coverageReportPath);
             }
 
+            // ReSharper disable once UnusedVariable
             var coverage = _providerFactory.CreateProviderForFile()
                                            .ParseFileCoveragesFromFilePath(finalPath)
                                            .Single(f => f.FileName.Equals(file.Filename));
+
             // enrich with coverage stats
             // enrich with git stats
             return file;
