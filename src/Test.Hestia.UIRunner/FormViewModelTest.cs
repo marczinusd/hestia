@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Test.Hestia.UIRunner
 {
-    public class RepositoryFormVIewModelTest
+    public class FormViewModelTest
     {
         private const string RepoPath = "somePath";
 
