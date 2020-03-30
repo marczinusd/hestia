@@ -12,7 +12,7 @@
     <!-- ReSharper disable Xaml.ConstructorWarning -->
 
     <Design.DataContext>
-        <vm:RepositoryFormViewModel />
+        <vm:FormViewModel />
     </Design.DataContext>
 
     <Grid RowDefinitions="1*,1*,1*,1*,1*,20">
@@ -22,25 +22,21 @@
                 <TextBox Grid.Column="0" Text="{Binding RepositoryPath}" />
                 <Button Grid.Column="1">Browse...</Button>
             </Grid>
-            <TextBlock Name="RepositoryTextValidation" Foreground="Red" />
         </StackPanel>
         <StackPanel Grid.Row="1">
             <TextBlock Text="Coverage Command" Margin="0,0,0,2" />
             <TextBox BorderBrush="Red" Text="{Binding CoverageCommand}" />
-            <TextBlock Text="Validation text" Foreground="Red" IsVisible="false" />
         </StackPanel>
         <StackPanel Grid.Row="2">
             <TextBlock Text="Coverage Output Location" Margin="0,0,0,2" />
             <TextBox BorderBrush="Red" Text="{Binding CoverageOutputLocation}" />
-            <TextBlock Text="Validation text" Foreground="Red" IsVisible="false" />
         </StackPanel>
         <StackPanel Grid.Row="3">
             <TextBlock Text="Source Extensions (separated by semicolon)" Margin="0,0,0,2" />
             <TextBox BorderBrush="Red" Text="{Binding SourceExtensions}" />
-            <TextBlock Text="Validation text" Foreground="Red" IsVisible="false" />
         </StackPanel>
         <Grid Grid.Row="4" ColumnDefinitions="1*,1*,1*">
-            <Button Grid.Column="0" IsEnabled="{Binding !HasErrors}" Margin="0,0,2,0">Button 1</Button>
+            <Button Grid.Column="0" IsEnabled="{Binding HasErrors}" Margin="0,0,2,0">Button 1</Button>
             <Button Grid.Column="1">Button 2</Button>
             <Button Grid.Column="2" Margin="2,0,0,0">Button 3</Button>
         </Grid>

@@ -1,16 +1,13 @@
 using System.Diagnostics.CodeAnalysis;
-using System.Reactive.Disposables;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using Hestia.UIRunner.ViewModels;
-using ReactiveUI;
-using ReactiveUI.Validation.Extensions;
 
 namespace Hestia.UIRunner.Views
 {
     [ExcludeFromCodeCoverage]
-    public class FormView : ReactiveUserControl<RepositoryFormViewModel>
+    public class FormView : ReactiveUserControl<FormViewModel>
     {
         public FormView()
         {
@@ -23,12 +20,7 @@ namespace Hestia.UIRunner.Views
 
         private void SetupValidation()
         {
-            this.WhenActivated(disposables =>
-            {
-                // Bind the 'ExampleCommand' to 'ExampleButton' defined above.
-                this.BindValidation(ViewModel, x => x.RepositoryPath, x => x.RepositoryPathValidation)
-                    .DisposeWith(disposables);
-            });
+            this.DataContext = this;
         }
 
         private void InitializeComponent()

@@ -19,7 +19,7 @@ namespace Test.Hestia.UIRunner
             ioMock.Setup(mock => mock.DirectoryExists(RepoPath))
                   .Returns(false);
 
-            var vm = new RepositoryFormViewModel(ioMock.Object) { RepositoryPath = RepoPath };
+            var vm = new FormViewModel(ioMock.Object) { RepositoryPath = RepoPath };
 
             vm.ValidationContext.Text
               .First()
@@ -36,7 +36,7 @@ namespace Test.Hestia.UIRunner
             ioMock.Setup(mock => mock.DirectoryExists(Path.Join(RepoPath, ".git")))
                   .Returns(false);
 
-            var vm = new RepositoryFormViewModel(ioMock.Object) { RepositoryPath = RepoPath };
+            var vm = new FormViewModel(ioMock.Object) { RepositoryPath = RepoPath };
 
             vm.ValidationContext.Text
               .First()
@@ -47,7 +47,7 @@ namespace Test.Hestia.UIRunner
         [Fact]
         public void RepositoryPathEmptyFieldValidation()
         {
-            var vm = new RepositoryFormViewModel(new DiskIOWrapper())
+            var vm = new FormViewModel(new DiskIOWrapper())
             {
                 CoverageCommand = "bla",
                 SourceExtensions = "bla",
@@ -63,7 +63,7 @@ namespace Test.Hestia.UIRunner
         [Fact]
         public void CoverageCommandEmptyFieldValidation()
         {
-            var vm = new RepositoryFormViewModel(new DiskIOWrapper())
+            var vm = new FormViewModel(new DiskIOWrapper())
             {
                 RepositoryPath = "bla",
                 SourceExtensions = "bla",
@@ -79,7 +79,7 @@ namespace Test.Hestia.UIRunner
         [Fact]
         public void CoverageOutputLocationEmptyFieldValidation()
         {
-            var vm = new RepositoryFormViewModel(new DiskIOWrapper())
+            var vm = new FormViewModel(new DiskIOWrapper())
             {
                 RepositoryPath = "bla",
                 CoverageCommand = "bla",
@@ -95,7 +95,7 @@ namespace Test.Hestia.UIRunner
         [Fact]
         public void SourceExtensionsEmptyFieldValidation()
         {
-            var vm = new RepositoryFormViewModel(new DiskIOWrapper())
+            var vm = new FormViewModel(new DiskIOWrapper())
             {
                 RepositoryPath = "bla",
                 CoverageCommand = "bla",

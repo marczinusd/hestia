@@ -8,9 +8,9 @@ using ReactiveUI.Validation.Helpers;
 
 namespace Hestia.UIRunner.ViewModels
 {
-    public class RepositoryFormViewModel : ReactiveValidationObject<RepositoryFormViewModel>
+    public class FormViewModel : ReactiveValidationObject<FormViewModel>
     {
-        public RepositoryFormViewModel(IDiskIOWrapper ioWrapper)
+        public FormViewModel(IDiskIOWrapper ioWrapper)
         {
             this.ValidationRule(vm => vm.RepositoryPath,
                                 ioWrapper.DirectoryExists,
@@ -33,9 +33,9 @@ namespace Hestia.UIRunner.ViewModels
         [Reactive] public string CoverageCommand { get; set; }
 
         [Reactive] public string CoverageOutputLocation { get; set; }
-        
+
         // ReSharper disable once UnusedMethodReturnValue.Local
-        private ValidationHelper EmptyFieldValidation(Expression<Func<RepositoryFormViewModel, string>> func,
+        private ValidationHelper EmptyFieldValidation(Expression<Func<FormViewModel, string>> func,
                                                       string fieldName) =>
             this.ValidationRule(func, s => !string.IsNullOrEmpty(s), $"{fieldName} should not be empty");
     }

@@ -6,6 +6,6 @@ namespace Hestia.UIRunner.ViewModels
     {
         public string Greeting => "Hello World!";
 
-        public RepositoryFormViewModel FormViewModel { get; } = new RepositoryFormViewModel(new DiskIOWrapper());
+        public FormViewModel FormViewModel { get; } = new FormViewModel(new DiskIOWrapper());
     }
 }
