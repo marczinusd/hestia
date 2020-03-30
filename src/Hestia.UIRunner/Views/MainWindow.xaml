@@ -3,6 +3,7 @@
         xmlns:vm="clr-namespace:Hestia.UIRunner.ViewModels;assembly=Hestia.UIRunner"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:views="clr-namespace:Hestia.UIRunner.Views"
         mc:Ignorable="d"
         d:DesignWidth="800"
         d:DesignHeight="450"
@@ -23,37 +24,7 @@
 
     <TabControl>
         <TabItem Header="Process Repository" VerticalContentAlignment="Center">
-            <Grid RowDefinitions="1*,1*,1*,1*,1*,20" DataContext="{Binding FormViewModel}">
-                <StackPanel Grid.Row="0">
-                    <TextBlock Text="Repository Path" Margin="0,0,0,2" />
-                    <Grid ColumnDefinitions="4*,1*">
-                        <TextBox Grid.Column="0" BorderBrush="Red" />
-                        <Button Grid.Column="1">Browse...</Button>
-                    </Grid>
-                    <TextBlock Text="Validation text" Foreground="Red" IsVisible="false" />
-                </StackPanel>
-                <StackPanel Grid.Row="1">
-                    <TextBlock Text="Coverage Command" Margin="0,0,0,2" />
-                    <TextBox BorderBrush="Red" />
-                    <TextBlock Text="Validation text" Foreground="Red" IsVisible="false" />
-                </StackPanel>
-                <StackPanel Grid.Row="2">
-                    <TextBlock Text="Coverage Output Location" Margin="0,0,0,2" />
-                    <TextBox BorderBrush="Red" />
-                    <TextBlock Text="Validation text" Foreground="Red" IsVisible="false" />
-                </StackPanel>
-                <StackPanel Grid.Row="3">
-                    <TextBlock Text="Source Extensions" Margin="0,0,0,2" />
-                    <TextBox BorderBrush="Red" />
-                    <TextBlock Text="Validation text" Foreground="Red" IsVisible="false" />
-                </StackPanel>
-                <Grid Grid.Row="4" ColumnDefinitions="1*,1*,1*">
-                    <Button Grid.Column="0" Margin="0,0,2,0">Button 1</Button>
-                    <Button Grid.Column="1">Button 2</Button>
-                    <Button Grid.Column="2" Margin="2,0,0,0">Button 3</Button>
-                </Grid>
-                <ProgressBar Grid.Row="5" IsIndeterminate="True" />
-            </Grid>
+            <views:FormView DataContext="{Binding FormViewModel}" />
         </TabItem>
         <TabItem IsEnabled="False">
             <TabItem.Header>

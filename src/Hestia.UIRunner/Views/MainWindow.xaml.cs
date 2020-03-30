@@ -1,12 +1,13 @@
 using System.Diagnostics.CodeAnalysis;
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using Avalonia.ReactiveUI;
+using Hestia.UIRunner.ViewModels;
 
 namespace Hestia.UIRunner.Views
 {
     [ExcludeFromCodeCoverage]
-    public class MainWindow : Window
+    public class MainWindow : ReactiveWindow<MainWindowViewModel>
     {
         public MainWindow()
         {

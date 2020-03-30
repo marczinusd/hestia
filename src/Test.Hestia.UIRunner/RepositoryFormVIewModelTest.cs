@@ -43,5 +43,69 @@ namespace Test.Hestia.UIRunner
               .Should()
               .Contain("Directory is not a git repository");
         }
+
+        [Fact]
+        public void RepositoryPathEmptyFieldValidation()
+        {
+            var vm = new RepositoryFormViewModel(new DiskIOWrapper())
+            {
+                CoverageCommand = "bla",
+                SourceExtensions = "bla",
+                CoverageOutputLocation = "bla",
+            };
+
+            vm.ValidationContext.Text
+              .Any(s => s.Contains("RepositoryPath should not be empty"))
+              .Should()
+              .BeTrue();
+        }
+
+        [Fact]
+        public void CoverageCommandEmptyFieldValidation()
+        {
+            var vm = new RepositoryFormViewModel(new DiskIOWrapper())
+            {
+                RepositoryPath = "bla",
+                SourceExtensions = "bla",
+                CoverageOutputLocation = "bla",
+            };
+
+            vm.ValidationContext.Text
+              .Any(s => s.Contains("CoverageCommand should not be empty"))
+              .Should()
+              .BeTrue();
+        }
+
+        [Fact]
+        public void CoverageOutputLocationEmptyFieldValidation()
+        {
+            var vm = new RepositoryFormViewModel(new DiskIOWrapper())
+            {
+                RepositoryPath = "bla",
+                CoverageCommand = "bla",
+                SourceExtensions = "bla",
+            };
+
+            vm.ValidationContext.Text
+              .Any(s => s.Contains("CoverageOutputLocation should not be empty"))
+              .Should()
+              .BeTrue();
+        }
+
+        [Fact]
+        public void SourceExtensionsEmptyFieldValidation()
+        {
+            var vm = new RepositoryFormViewModel(new DiskIOWrapper())
+            {
+                RepositoryPath = "bla",
+                CoverageCommand = "bla",
+                CoverageOutputLocation = "bla",
+            };
+
+            vm.ValidationContext.Text
+              .Any(s => s.Contains("SourceExtensions should not be empty"))
+              .Should()
+              .BeTrue();
+        }
     }
 }
