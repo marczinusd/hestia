@@ -1,3 +1,4 @@
+using System.IO;
 using Hestia.Model.Wrappers;
 using ReactiveUI.Fody.Helpers;
 using ReactiveUI.Validation.Abstractions;
@@ -13,6 +14,10 @@ namespace Hestia.UIRunner.ViewModels
             this.ValidationRule(vm => vm.RepositoryPath,
                                 ioWrapper.DirectoryExists,
                                 "Directory does not exist.");
+
+            this.ValidationRule(vm => vm.RepositoryPath,
+                                path => ioWrapper.DirectoryExists(Path.Join(path, ".git")),
+                                "Directory is not a git repository");
         }
 
         public ValidationContext ValidationContext { get; } = new ValidationContext();
