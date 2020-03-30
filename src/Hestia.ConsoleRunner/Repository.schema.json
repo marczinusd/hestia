@@ -69,6 +69,16 @@
       "examples": [
         "C:/temp/coverage.json"
       ]
+    },
+    "coverageReportLocation": {
+      "$id": "#/properties/coverageReportLocation",
+      "type": "string",
+      "title": "Coverage Report Location",
+      "description": "Optional parameter to explicitly specify where a pre-generated coverage report is located.",
+      "default": "",
+      "examples": [
+        "C:/temp/coverage.json"
+      ]
     }
   }
 }

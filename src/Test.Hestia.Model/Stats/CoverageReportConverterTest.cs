@@ -3,7 +3,6 @@ using System.IO;
 using FluentAssertions;
 using Hestia.Model.Stats;
 using Hestia.Model.Wrappers;
-using LanguageExt;
 using Moq;
 using Xunit;
 

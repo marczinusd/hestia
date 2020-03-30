@@ -8,5 +8,7 @@ namespace Hestia.Model.Stats
         RepositorySnapshot EnrichWithCoverage(RepositorySnapshot repositorySnapshot);
 
         RepositorySnapshot EnrichWithGitStats(RepositorySnapshot repositorySnapshot);
+
+        File Enrich(File file, string coverageReportPath, string coverageCommand);
     }
 }

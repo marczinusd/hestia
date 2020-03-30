@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
@@ -22,12 +23,14 @@ namespace Hestia.ConsoleRunner
         private readonly IJsonConfigurationProvider _configurationProvider;
         private readonly IDiskIOWrapper _ioWrapper;
         private readonly IPathValidator _validator;
+        private readonly ICoverageReportConverter _converter;
 
         public HestiaConsoleRunner(ILoggerFactory loggerFactory,
                                    IStatsEnricher statsEnricher,
                                    IJsonConfigurationProvider configurationProvider,
                                    IDiskIOWrapper ioWrapper,
-                                   IPathValidator validator)
+                                   IPathValidator validator,
+                                   ICoverageReportConverter converter)
         {
             _loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
             _statsEnricher = statsEnricher ?? throw new ArgumentNullException(nameof(statsEnricher));
@@ -35,27 +38,14 @@ namespace Hestia.ConsoleRunner
                 configurationProvider ?? throw new ArgumentNullException(nameof(configurationProvider));
             _ioWrapper = ioWrapper;
             _validator = validator;
+            _converter = converter;
         }
 
-        public void Run(string[] args)
+        public void Run(IEnumerable<string> args)
         {
             Parser.Default
                   .ParseArguments<Options>(args)
-                  .WithParsed(options =>
-                  {
-                      var logger = _loggerFactory.CreateLogger<HestiaConsoleRunner>();
-                      var config = _configurationProvider.LoadConfiguration(options.JsonConfigPath).Result;
-                      var repository = BuildRepositoryWithOptions(options, config, _ioWrapper, _validator);
-
-                      var enrichedRepository = repository.Apply(_statsEnricher.EnrichWithCoverage)
-                                                         .Apply(_statsEnricher.EnrichWithGitStats);
-
-                      logger.LogInformation("Writing results to output...");
-                      File.WriteAllText(options.OutputPath,
-                                        JsonSerializer.Serialize(enrichedRepository,
-                                                                 new JsonSerializerOptions { WriteIndented = true, }));
-                      logger.LogInformation($"Output created at {options.OutputPath}");
-                  });
+                  .WithParsed(Execute);
         }
 
         private static RepositorySnapshot BuildRepositoryWithOptions(Options options,
@@ -67,12 +57,44 @@ namespace Hestia.ConsoleRunner
                                                    Path.Join(config.RepoPath,
                                                              config.SourceRoot),
                                                    config.SourceExtensions
-                                                          .ToArray(),
+                                                         .ToArray(),
                                                    config.CoverageOutputLocation,
                                                    Option<string>.None,
                                                    Option<DateTime>.None,
                                                    ioWrapper,
                                                    validator).Build();
+
+        private void Execute(Options options)
+        {
+            var logger = _loggerFactory.CreateLogger<HestiaConsoleRunner>();
+            var config = _configurationProvider.LoadConfiguration(options.JsonConfigPath)
+                                               .Result;
+            if (!string.IsNullOrWhiteSpace(config.CoverageReportLocation) && !Path
+                                                                              .GetFileName(config
+                                                                                               .CoverageReportLocation)
+                                                                              .ToLower()
+                                                                              .Contains("coverage.json"))
+            {
+                var result = _converter.Convert(config.CoverageReportLocation,
+                                                Path.GetDirectoryName(config.CoverageReportLocation))
+                                       .Match(res => res, () => string.Empty);
+                config = config.With(string.IsNullOrWhiteSpace(result) ? null : result);
+            }
+
+            var repository = BuildRepositoryWithOptions(options,
+                                                        config,
+                                                        _ioWrapper,
+                                                        _validator);
+
+            var enrichedRepository = repository.Apply(_statsEnricher.EnrichWithCoverage)
+                                               .Apply(_statsEnricher.EnrichWithGitStats);
+
+            logger.LogInformation("Writing results to output...");
+            File.WriteAllText(options.OutputPath,
+                              JsonSerializer.Serialize(enrichedRepository,
+                                                       new JsonSerializerOptions { WriteIndented = true, }));
+            logger.LogInformation($"Output created at {options.OutputPath}");
+        }
 
         // ReSharper disable once ClassNeverInstantiated.Local
         [ExcludeFromCodeCoverage]

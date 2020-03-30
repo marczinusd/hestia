@@ -21,6 +21,12 @@ namespace Test.Hestia.Model.Stats
     {
         private readonly IEnumerable<FileCoverage> _coverages = new[] { new FileCoverage("bla.js", new[] { (1, 1) }) };
 
+        public static TheoryData<string, string> FileEnricherInvalidInput =>
+            new TheoryData<string, string>
+            {
+                { string.Empty, string.Empty }, { string.Empty, null }, { null, string.Empty }, { null, null },
+            };
+
         [Fact]
         public void StatsEnricherEnrichesSnapshotWithCoverageCorrectlyTest()
         {
@@ -221,6 +227,22 @@ namespace Test.Hestia.Model.Stats
             snapshots.Select(s => s.AtHash.Match(x => x, string.Empty))
                      .Should()
                      .BeEquivalentTo(new[] { "1", "13", "25", "37", "50" });
+        }
+
+        [Theory]
+        [MemberData(nameof(FileEnricherInvalidInput))]
+        public void FileEnricherThrowsExceptionIfBothCoverageArgumentsAreInvalid(
+            string reportPath,
+            string coverageCommand)
+        {
+            var fixture = new Fixture();
+            fixture.Customize(new AutoMoqCustomization { ConfigureMembers = true });
+            var enricher = fixture.Create<StatsEnricher>();
+
+            Action act = () => enricher.Enrich(MockRepo.CreateFile(), reportPath, coverageCommand);
+
+            act.Should()
+               .Throw<ArgumentOutOfRangeException>();
         }
     }
 }

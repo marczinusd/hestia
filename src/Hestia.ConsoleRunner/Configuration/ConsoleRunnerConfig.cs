@@ -39,7 +39,23 @@ namespace Hestia.ConsoleRunner.Configuration
         [Newtonsoft.Json.JsonProperty("coverageOutputLocation", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public string CoverageOutputLocation { get; set; } = "";
-    
+        
+        /// <summary>Location where the coverage file will be generated</summary>
+        [Newtonsoft.Json.JsonProperty("coverageOutputLocation", Required = Newtonsoft.Json.Required.Default)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public string CoverageReportLocation { get; set; } = "";
+
+        public ConsoleRunnerConfig With(string coverageReportLocation = null) =>
+            new ConsoleRunnerConfig
+            {
+                RepoPath = RepoPath,
+                SourceRoot = SourceRoot,
+                SourceExtensions = SourceExtensions,
+                CoverageCommand = CoverageCommand,
+                CoverageOutputLocation = CoverageOutputLocation,
+                CoverageReportLocation = coverageReportLocation ?? CoverageReportLocation
+            };
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
     
         [Newtonsoft.Json.JsonExtensionData]

@@ -20,6 +20,7 @@ namespace Test.Hestia.ConsoleRunner
                                                        null,
                                                        null,
                                                        null,
+                                                       null,
                                                        null);
 
             act.Should()
@@ -31,7 +32,12 @@ namespace Test.Hestia.ConsoleRunner
         public void StatsEnricherCannotBeNull()
         {
             // ReSharper disable once ObjectCreationAsStatement
-            Action act = () => new HestiaConsoleRunner(new LoggerFactory(), null, null, null, null);
+            Action act = () => new HestiaConsoleRunner(new LoggerFactory(),
+                                                       null,
+                                                       null,
+                                                       null,
+                                                       null,
+                                                       null);
 
             act.Should()
                .Throw<ArgumentNullException>()
@@ -42,7 +48,12 @@ namespace Test.Hestia.ConsoleRunner
         public void JsonConfigProviderCannotBeNull()
         {
             // ReSharper disable once ObjectCreationAsStatement
-            Action act = () => new HestiaConsoleRunner(new LoggerFactory(), Mock.Of<IStatsEnricher>(), null, null, null);
+            Action act = () => new HestiaConsoleRunner(new LoggerFactory(),
+                                                       Mock.Of<IStatsEnricher>(),
+                                                       null,
+                                                       null,
+                                                       null,
+                                                       null);
 
             act.Should()
                .Throw<ArgumentNullException>()

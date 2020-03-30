@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Hestia.Model.Builders;
 using Hestia.Model.Wrappers;
@@ -20,6 +21,7 @@ namespace Hestia.Model.Stats
         private readonly ICommandLineExecutor _executor;
         private readonly ICoverageProviderFactory _providerFactory;
         private readonly IPathValidator _pathValidator;
+        private readonly ICoverageReportConverter _converter;
         private readonly IGitCommands _gitCommands;
         private readonly IDiskIOWrapper _ioWrapper;
         private readonly ILogger<IStatsEnricher> _logger;
@@ -29,7 +31,8 @@ namespace Hestia.Model.Stats
                              ILogger<IStatsEnricher> logger,
                              ICommandLineExecutor executor,
                              ICoverageProviderFactory providerFactory,
-                             IPathValidator pathValidator)
+                             IPathValidator pathValidator,
+                             ICoverageReportConverter converter)
         {
             _ioWrapper = ioWrapper;
             _gitCommands = gitCommands;
@@ -37,6 +40,7 @@ namespace Hestia.Model.Stats
             _executor = executor;
             _providerFactory = providerFactory;
             _pathValidator = pathValidator;
+            _converter = converter;
         }
 
         public Repository Enrich(Repository repository,
@@ -69,6 +73,7 @@ namespace Hestia.Model.Stats
 
                              return repoArgs.With(initialSnapshotId++, hash, commitCreationDate)
                                             .Build()
+                                            .Apply(ConvertCoverageResults)
                                             .Apply(EnrichWithCoverage)
                                             .Apply(EnrichWithGitStats)
                                             .Apply(repo.AddSnapshot);
@@ -97,6 +102,57 @@ namespace Hestia.Model.Stats
             _logger.LogDebug($"Enriching repository snapshot with hash {repositorySnapshot.AtHash} with git stats");
 
             return repositorySnapshot.With(repositorySnapshot.Files.Apply(EnrichWithGitStats));
+        }
+
+        public File Enrich(File file, string coverageReportPath, string coverageCommand)
+        {
+            if (string.IsNullOrWhiteSpace(coverageReportPath) || string.IsNullOrWhiteSpace(coverageCommand))
+            {
+                throw new
+                    ArgumentOutOfRangeException($"Either {nameof(coverageReportPath)} or {nameof(coverageReportPath)} have to be non-null and non-empty.");
+            }
+
+            if (!string.IsNullOrWhiteSpace(coverageCommand))
+            {
+                _executor.Execute(coverageCommand, string.Empty, string.Empty);
+            }
+
+            var finalPath = coverageReportPath;
+            if (!coverageReportPath.Contains("coverage.json"))
+            {
+                finalPath = _converter.Convert(coverageReportPath, Path.GetDirectoryName(coverageReportPath))
+                                      .Some(x => x)
+                                      .None(() => coverageReportPath);
+            }
+
+            var coverage = _providerFactory.CreateProviderForFile()
+                                           .ParseFileCoveragesFromFilePath(finalPath)
+                                           .Single(f => f.FileName.Equals(file.Filename));
+            // enrich with coverage stats
+            // enrich with git stats
+            return file;
+        }
+
+        private RepositorySnapshot ConvertCoverageResults(RepositorySnapshot repositorySnapshot)
+        {
+            var path = repositorySnapshot.PathToCoverageResultFile.Some(x => x)
+                                         .None(() => string.Empty);
+            if (path.ToLower()
+                    .Contains("coverage.json"))
+            {
+                return repositorySnapshot;
+            }
+
+            var result = _converter.Convert(path,
+                                            Path.GetDirectoryName(path) ??
+                                            throw new DirectoryNotFoundException($"Invalid path provided: {path}"));
+            if (result.IsSome)
+            {
+                return repositorySnapshot.With(pathToCoverageResultFile: result.Some(x => x)
+                                                                               .None(string.Empty));
+            }
+
+            return repositorySnapshot;
         }
 
         private IEnumerable<File> EnrichWithCoverage(IEnumerable<File> files, IEnumerable<FileCoverage> coverages) =>

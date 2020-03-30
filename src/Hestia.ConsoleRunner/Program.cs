@@ -20,17 +20,20 @@ namespace Hestia.ConsoleRunner
             });
             var executor = new CommandLineExecutor();
             var ioWrapper = new DiskIOWrapper();
+            var reportConverter = new CoverageReportConverter(ioWrapper, new ReportGeneratorWrapper());
             var enricher = new StatsEnricher(ioWrapper,
                                              new GitCommands(executor),
                                              factory.CreateLogger<IStatsEnricher>(),
                                              executor,
                                              new CoverageProviderFactory(ioWrapper),
-                                             new PathValidator());
+                                             new PathValidator(),
+                                             reportConverter);
             var runner = new HestiaConsoleRunner(factory,
                                                  enricher,
                                                  new JsonConfigurationProvider(),
                                                  ioWrapper,
-                                                 new PathValidator());
+                                                 new PathValidator(),
+                                                 reportConverter);
 
             runner.Run(args);
         }
