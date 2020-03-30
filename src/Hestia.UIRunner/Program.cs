@@ -1,4 +1,5 @@
-﻿using Avalonia;
+﻿using System.Diagnostics.CodeAnalysis;
+using Avalonia;
 using Avalonia.Logging.Serilog;
 using Avalonia.ReactiveUI;
 using JetBrains.Annotations;
@@ -6,6 +7,7 @@ using JetBrains.Annotations;
 namespace Hestia.UIRunner
 {
     [UsedImplicitly]
+    [ExcludeFromCodeCoverage]
     public class Program
     {
         // Initialization code. Don't use any Avalonia, third-party APIs or any
