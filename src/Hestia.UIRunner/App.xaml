@@ -10,9 +10,6 @@
         <!-- ReSharper disable Xaml.ConstructorWarning -->
         <StyleInclude Source="avares://Avalonia.Themes.Default/DefaultTheme.xaml"></StyleInclude>
         <StyleInclude Source="avares://Avalonia.Themes.Default/Accents/BaseDark.xaml"></StyleInclude>
-        <!-- ReSharper disable Xaml.PathError -->
-        <StyleInclude Source="resm:AvaloniaEdit.AvaloniaEdit.xaml?assembly=AvaloniaEdit" />
-        <!-- ReSharper restore Xaml.PathError -->
         <!-- ReSharper restore Xaml.ConstructorWarning -->
     </Application.Styles>
 </Application>

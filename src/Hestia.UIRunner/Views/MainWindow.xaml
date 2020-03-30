@@ -3,7 +3,6 @@
         xmlns:vm="clr-namespace:Hestia.UIRunner.ViewModels;assembly=Hestia.UIRunner"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:avaloniaEdit="https://github.com/avaloniaui/avaloniaedit"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Hestia.UIRunner.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
@@ -18,12 +17,12 @@
     </Design.DataContext>
 
     <TabControl>
-        <TabItem Header="Open Repository" VerticalContentAlignment="Center">
+        <TabItem Header="Circle" VerticalContentAlignment="Center">
             <DataGrid AutoGenerateColumns="True" />
         </TabItem>
         <TabItem>
             <TabItem.Header>
-                <TextBlock VerticalAlignment="Center">Repository View</TextBlock>
+                <TextBlock VerticalAlignment="Center">Triangle</TextBlock>
             </TabItem.Header>
             <StackPanel>
                 <TextBlock
@@ -34,9 +33,12 @@
         </TabItem>
         <TabItem>
             <TabItem.Header>
-                <TextBlock VerticalAlignment="Center">File view</TextBlock>
+                <TextBlock VerticalAlignment="Center">Square</TextBlock>
             </TabItem.Header>
-            <avaloniaEdit:TextEditor SyntaxHighlighting="C#" IsReadOnly="True" />
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Square : " HorizontalAlignment="Left" VerticalAlignment="Center" />
+                <Rectangle Fill="Blue" Width="63" Height="41" />
+            </StackPanel>
         </TabItem>
     </TabControl>
     <!-- ReSharper restore Xaml.ConstructorWarning -->
