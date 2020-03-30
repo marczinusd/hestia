@@ -7,12 +7,40 @@
         x:Class="Hestia.UIRunner.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
         Title="Hestia.UIRunner">
+    <!-- Disable so that texts in elements don't come up as resharper errors -->
+    <!-- ReSharper disable Xaml.UnexpectedTextToken -->
 
+    <!-- Disable so bindings don't show resharper warnings -->
+    <!-- ReSharper disable Xaml.ConstructorWarning -->
     <Design.DataContext>
-        <vm:MainWindowViewModel/>
+        <vm:MainWindowViewModel />
     </Design.DataContext>
 
-    <!-- ReSharper disable once Xaml.ConstructorWarning -->
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
+    <TabControl>
+        <TabItem Header="Circle" VerticalContentAlignment="Center">
+            <DataGrid AutoGenerateColumns="True" />
+        </TabItem>
+        <TabItem>
+            <TabItem.Header>
+                <TextBlock VerticalAlignment="Center">Triangle</TextBlock>
+            </TabItem.Header>
+            <StackPanel>
+                <TextBlock
+                    Text="I am in the triangle page ! I'll put a button to show you that each page contains what you want."
+                    HorizontalAlignment="Left" VerticalAlignment="Center" />
+                <Button>A button in the triangle page !</Button>
+            </StackPanel>
+        </TabItem>
+        <TabItem>
+            <TabItem.Header>
+                <TextBlock VerticalAlignment="Center">Square</TextBlock>
+            </TabItem.Header>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Square : " HorizontalAlignment="Left" VerticalAlignment="Center" />
+                <Rectangle Fill="Blue" Width="63" Height="41" />
+            </StackPanel>
+        </TabItem>
+    </TabControl>
+    <!-- ReSharper restore Xaml.ConstructorWarning -->
+    <!-- ReSharper restore Xaml.UnexpectedTextToken -->
 </Window>
