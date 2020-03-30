@@ -12,6 +12,8 @@ namespace Test.Hestia.UIRunner
     {
         private const string RepoPath = "somePath";
 
+        public static TheoryData<string> EmptyInputData => new TheoryData<string> { string.Empty, null, "     " };
+
         [Fact]
         public void RepositoryPathShouldPointToDirectoryThatExists()
         {
@@ -44,14 +46,16 @@ namespace Test.Hestia.UIRunner
               .Contain("Directory is not a git repository");
         }
 
-        [Fact]
-        public void RepositoryPathEmptyFieldValidation()
+        [Theory]
+        [MemberData(nameof(EmptyInputData))]
+        public void RepositoryPathEmptyFieldValidation(string input)
         {
             var vm = new FormViewModel(new DiskIOWrapper())
             {
                 CoverageCommand = "bla",
                 SourceExtensions = "bla",
                 CoverageOutputLocation = "bla",
+                RepositoryPath = input,
             };
 
             vm.ValidationContext.Text
@@ -60,14 +64,16 @@ namespace Test.Hestia.UIRunner
               .BeTrue();
         }
 
-        [Fact]
-        public void CoverageCommandEmptyFieldValidation()
+        [Theory]
+        [MemberData(nameof(EmptyInputData))]
+        public void CoverageCommandEmptyFieldValidation(string input)
         {
             var vm = new FormViewModel(new DiskIOWrapper())
             {
                 RepositoryPath = "bla",
                 SourceExtensions = "bla",
                 CoverageOutputLocation = "bla",
+                CoverageCommand = input,
             };
 
             vm.ValidationContext.Text
@@ -76,14 +82,16 @@ namespace Test.Hestia.UIRunner
               .BeTrue();
         }
 
-        [Fact]
-        public void CoverageOutputLocationEmptyFieldValidation()
+        [Theory]
+        [MemberData(nameof(EmptyInputData))]
+        public void CoverageOutputLocationEmptyFieldValidation(string input)
         {
             var vm = new FormViewModel(new DiskIOWrapper())
             {
                 RepositoryPath = "bla",
                 CoverageCommand = "bla",
                 SourceExtensions = "bla",
+                CoverageOutputLocation = input,
             };
 
             vm.ValidationContext.Text
@@ -92,14 +100,16 @@ namespace Test.Hestia.UIRunner
               .BeTrue();
         }
 
-        [Fact]
-        public void SourceExtensionsEmptyFieldValidation()
+        [Theory]
+        [MemberData(nameof(EmptyInputData))]
+        public void SourceExtensionsEmptyFieldValidation(string input)
         {
             var vm = new FormViewModel(new DiskIOWrapper())
             {
                 RepositoryPath = "bla",
                 CoverageCommand = "bla",
                 CoverageOutputLocation = "bla",
+                SourceExtensions = input,
             };
 
             vm.ValidationContext.Text

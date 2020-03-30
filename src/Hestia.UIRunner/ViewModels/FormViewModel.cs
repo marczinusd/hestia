@@ -37,6 +37,6 @@ namespace Hestia.UIRunner.ViewModels
         // ReSharper disable once UnusedMethodReturnValue.Local
         private ValidationHelper EmptyFieldValidation(Expression<Func<FormViewModel, string>> func,
                                                       string fieldName) =>
-            this.ValidationRule(func, s => !string.IsNullOrEmpty(s), $"{fieldName} should not be empty");
+            this.ValidationRule(func, s => !string.IsNullOrWhiteSpace(s), $"{fieldName} should not be empty");
     }
 }
