@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
@@ -6,6 +7,7 @@ using Hestia.UIRunner.Views;
 
 namespace Hestia.UIRunner
 {
+    [ExcludeFromCodeCoverage]
     public class App : Application
     {
         public override void Initialize()

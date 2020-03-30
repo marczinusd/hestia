@@ -14,6 +14,7 @@ namespace Hestia.UIRunner
 
         public IControl Build(object data)
         {
+            // ReSharper disable once PossibleNullReferenceException
             var name = data.GetType().FullName.Replace("ViewModel", "View");
             var type = Type.GetType(name);
 

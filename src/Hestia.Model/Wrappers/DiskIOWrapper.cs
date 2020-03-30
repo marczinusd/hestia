@@ -28,5 +28,7 @@ namespace Hestia.Model.Wrappers
         public string ReadFileContent(string path) => System.IO.File.ReadAllText(path);
 
         public bool FileExists(string path) => System.IO.File.Exists(path);
+
+        public bool DirectoryExists(string path) => Directory.Exists(path);
     }
 }

@@ -13,5 +13,7 @@ namespace Hestia.Model.Wrappers
         string ReadFileContent(string path);
 
         bool FileExists(string path);
+
+        bool DirectoryExists(string path);
     }
 }
