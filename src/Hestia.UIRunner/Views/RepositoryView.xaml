@@ -15,7 +15,10 @@
         <vm:RepositoryViewModel />
     </Design.DataContext>
 
-    <TextBlock Text="{Binding Text}" />
+    <StackPanel>
+        <TextBlock Text="{Binding Text}" />
+        <DataGrid AutoGenerateColumns="True" Items="{Binding Files}" />        
+    </StackPanel>
     <!-- ReSharper restore Xaml.ConstructorWarning -->
     <!-- ReSharper restore Xaml.UnexpectedTextToken -->
 </UserControl>
