@@ -1,7 +1,12 @@
 using System;
 using System.IO;
 using System.Linq.Expressions;
+using System.Reactive.Linq;
+using Hestia.Model;
+using Hestia.Model.Stats;
 using Hestia.Model.Wrappers;
+using LanguageExt;
+using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using ReactiveUI.Validation.Extensions;
 using ReactiveUI.Validation.Helpers;
@@ -10,8 +15,11 @@ namespace Hestia.UIRunner.ViewModels
 {
     public class FormViewModel : ReactiveValidationObject<FormViewModel>
     {
-        public FormViewModel(IDiskIOWrapper ioWrapper)
+        private readonly IStatsEnricher _statsEnricher;
+
+        public FormViewModel(IDiskIOWrapper ioWrapper, IStatsEnricher statsEnricher)
         {
+            _statsEnricher = statsEnricher;
             this.ValidationRule(vm => vm.RepositoryPath,
                                 ioWrapper.DirectoryExists,
                                 "Directory does not exist.");
@@ -24,6 +32,15 @@ namespace Hestia.UIRunner.ViewModels
             EmptyFieldValidation(vm => vm.RepositoryPath, nameof(RepositoryPath));
             EmptyFieldValidation(vm => vm.SourceExtensions, nameof(SourceExtensions));
             EmptyFieldValidation(vm => vm.CoverageOutputLocation, nameof(CoverageOutputLocation));
+
+            ProcessRepositoryCommand =
+                ReactiveCommand.Create<Unit, RepositorySnapshot>(_ => new RepositorySnapshot(1,
+                                                                                             null,
+                                                                                             Option<string>.None,
+                                                                                             Option<string>.None,
+                                                                                             Option<DateTime>.None),
+                                                                 this.WhenAnyValue(vm => vm.HasErrors,
+                                                                                   hasErrors => !hasErrors));
         }
 
         [Reactive] public string RepositoryPath { get; set; }
@@ -34,9 +51,12 @@ namespace Hestia.UIRunner.ViewModels
 
         [Reactive] public string CoverageOutputLocation { get; set; }
 
-        // ReSharper disable once UnusedMethodReturnValue.Local
-        private ValidationHelper EmptyFieldValidation(Expression<Func<FormViewModel, string>> func,
-                                                      string fieldName) =>
+        public ReactiveCommand<Unit, RepositorySnapshot> ProcessRepositoryCommand { get; set; }
+
+        public IObservable<RepositorySnapshot> RepositoryCreationObservable => ProcessRepositoryCommand.AsObservable();
+
+        private void EmptyFieldValidation(Expression<Func<FormViewModel, string>> func,
+                                          string fieldName) =>
             this.ValidationRule(func, s => !string.IsNullOrWhiteSpace(s), $"{fieldName} should not be empty");
     }
 }

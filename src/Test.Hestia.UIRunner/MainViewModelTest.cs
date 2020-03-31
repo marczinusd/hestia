@@ -1,5 +1,8 @@
 using FluentAssertions;
+using Hestia.Model.Stats;
+using Hestia.Model.Wrappers;
 using Hestia.UIRunner.ViewModels;
+using Moq;
 using Xunit;
 
 namespace Test.Hestia.UIRunner
@@ -9,9 +12,9 @@ namespace Test.Hestia.UIRunner
         [Fact]
         public void MainViewModelShowHaveExpectedGreeting()
         {
-            new MainWindowViewModel().Greeting
-                                     .Should()
-                                     .Be("Hello World!");
+            new MainWindowViewModel(new DiskIOWrapper(), Mock.Of<IStatsEnricher>()).Greeting
+                                                        .Should()
+                                                        .Be("Hello World!");
         }
     }
 }

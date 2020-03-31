@@ -1,37 +1,20 @@
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System;
 using Hestia.Model;
-using Hestia.Model.Stats;
-using LanguageExt;
+using ReactiveUI;
 
 namespace Hestia.UIRunner.ViewModels
 {
     public class RepositoryViewModel : ViewModelBase
     {
-        public RepositoryViewModel()
+        private readonly ObservableAsPropertyHelper<RepositorySnapshot> selectedRepository;
+
+        public RepositoryViewModel(IObservable<RepositorySnapshot> selectedRepositoryObservable)
         {
-            Files = new ObservableCollection<File>(GenerateMockPeopleTable());
+            selectedRepository = selectedRepositoryObservable.ToProperty(this, nameof(Repository));
         }
 
         public string Text => "Repository view works";
 
-        public ObservableCollection<File> Files { get; set; }
-
-        private IEnumerable<File> GenerateMockPeopleTable()
-        {
-            var defaultPeople = new List<File>()
-            {
-                new File("bla", "cs", "cs", new List<SourceLine>(), Option<FileGitStats>.None, Option<FileCoverageStats>.None),
-                new File("bla", "cs", "cs", new List<SourceLine>(), Option<FileGitStats>.None, Option<FileCoverageStats>.None),
-                new File("bla", "cs", "cs", new List<SourceLine>(), Option<FileGitStats>.None, Option<FileCoverageStats>.None),
-                new File("bla", "cs", "cs", new List<SourceLine>(), Option<FileGitStats>.None, Option<FileCoverageStats>.None),
-                new File("bla", "cs", "cs", new List<SourceLine>(), Option<FileGitStats>.None, Option<FileCoverageStats>.None),
-                new File("bla", "cs", "cs", new List<SourceLine>(), Option<FileGitStats>.None, Option<FileCoverageStats>.None),
-                new File("bla", "cs", "cs", new List<SourceLine>(), Option<FileGitStats>.None, Option<FileCoverageStats>.None),
-                new File("bla", "cs", "cs", new List<SourceLine>(), Option<FileGitStats>.None, Option<FileCoverageStats>.None),
-            };
-
-            return defaultPeople;
-        }
+        public RepositorySnapshot Repository => selectedRepository.Value;
     }
 }

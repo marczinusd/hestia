@@ -1,6 +1,7 @@
 using System.IO;
 using System.Linq;
 using FluentAssertions;
+using Hestia.Model.Stats;
 using Hestia.Model.Wrappers;
 using Hestia.UIRunner.ViewModels;
 using Moq;
@@ -21,7 +22,7 @@ namespace Test.Hestia.UIRunner
             ioMock.Setup(mock => mock.DirectoryExists(RepoPath))
                   .Returns(false);
 
-            var vm = new FormViewModel(ioMock.Object) { RepositoryPath = RepoPath };
+            var vm = new FormViewModel(ioMock.Object, Mock.Of<IStatsEnricher>()) { RepositoryPath = RepoPath };
 
             vm.ValidationContext.Text
               .First()
@@ -38,7 +39,7 @@ namespace Test.Hestia.UIRunner
             ioMock.Setup(mock => mock.DirectoryExists(Path.Join(RepoPath, ".git")))
                   .Returns(false);
 
-            var vm = new FormViewModel(ioMock.Object) { RepositoryPath = RepoPath };
+            var vm = new FormViewModel(ioMock.Object, Mock.Of<IStatsEnricher>()) { RepositoryPath = RepoPath };
 
             vm.ValidationContext.Text
               .First()
@@ -50,7 +51,7 @@ namespace Test.Hestia.UIRunner
         [MemberData(nameof(EmptyInputData))]
         public void RepositoryPathEmptyFieldValidation(string input)
         {
-            var vm = new FormViewModel(new DiskIOWrapper())
+            var vm = new FormViewModel(new DiskIOWrapper(), Mock.Of<IStatsEnricher>())
             {
                 CoverageCommand = "bla",
                 SourceExtensions = "bla",
@@ -68,7 +69,7 @@ namespace Test.Hestia.UIRunner
         [MemberData(nameof(EmptyInputData))]
         public void CoverageCommandEmptyFieldValidation(string input)
         {
-            var vm = new FormViewModel(new DiskIOWrapper())
+            var vm = new FormViewModel(new DiskIOWrapper(), Mock.Of<IStatsEnricher>())
             {
                 RepositoryPath = "bla",
                 SourceExtensions = "bla",
@@ -86,7 +87,7 @@ namespace Test.Hestia.UIRunner
         [MemberData(nameof(EmptyInputData))]
         public void CoverageOutputLocationEmptyFieldValidation(string input)
         {
-            var vm = new FormViewModel(new DiskIOWrapper())
+            var vm = new FormViewModel(new DiskIOWrapper(), Mock.Of<IStatsEnricher>())
             {
                 RepositoryPath = "bla",
                 CoverageCommand = "bla",
@@ -104,7 +105,7 @@ namespace Test.Hestia.UIRunner
         [MemberData(nameof(EmptyInputData))]
         public void SourceExtensionsEmptyFieldValidation(string input)
         {
-            var vm = new FormViewModel(new DiskIOWrapper())
+            var vm = new FormViewModel(new DiskIOWrapper(), Mock.Of<IStatsEnricher>())
             {
                 RepositoryPath = "bla",
                 CoverageCommand = "bla",

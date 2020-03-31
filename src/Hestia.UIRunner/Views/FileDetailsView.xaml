@@ -15,7 +15,10 @@
         <vm:FileDetailsViewModel />
     </Design.DataContext>
     
-    <TextBlock Text="{Binding Text}" />    
+    <DockPanel>
+        <TextBlock DockPanel.Dock="Top" Text="{Binding Text}" />
+        <DataGrid AutoGenerateColumns="True" Items="{Binding Lines}"></DataGrid>
+    </DockPanel>
     <!-- ReSharper restore Xaml.ConstructorWarning -->
     <!-- ReSharper restore Xaml.UnexpectedTextToken -->
 </UserControl>
