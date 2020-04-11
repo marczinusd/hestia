@@ -16,7 +16,6 @@
     </Design.DataContext>
 
     <StackPanel>
-        <TextBlock Text="{Binding Text}" />
         <DataGrid AutoGenerateColumns="True" Items="{Binding Repository.Files}" SelectedItem="{Binding SelectedItem}">
         </DataGrid>        
     </StackPanel>

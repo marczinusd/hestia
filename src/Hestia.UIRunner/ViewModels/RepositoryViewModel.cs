@@ -1,9 +1,6 @@
 using System;
-using System.Collections.Generic;
 using Hestia.Model;
-using JetBrains.Annotations;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
 
 namespace Hestia.UIRunner.ViewModels
 {
