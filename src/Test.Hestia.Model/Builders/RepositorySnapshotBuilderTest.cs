@@ -3,7 +3,7 @@ using System.IO;
 using FluentAssertions;
 using Hestia.Model.Builders;
 using Moq;
-using Test.Hestia.Model.TestData;
+using Test.Hestia.Utils.TestData;
 using Xunit;
 
 namespace Test.Hestia.Model.Builders

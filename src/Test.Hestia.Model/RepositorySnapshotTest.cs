@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using FluentAssertions;
 using Hestia.Model;
-using Test.Hestia.Model.TestData;
+using Test.Hestia.Utils.TestData;
 using Xunit;
 
 namespace Test.Hestia.Model

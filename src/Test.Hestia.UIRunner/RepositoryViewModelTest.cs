@@ -1,5 +1,12 @@
+using System;
+using System.Collections.Generic;
 using FluentAssertions;
+using Hestia.Model;
 using Hestia.UIRunner.ViewModels;
+using LanguageExt;
+using Microsoft.Reactive.Testing;
+using Test.Hestia.Utils;
+using Test.Hestia.Utils.TestData;
 using Xunit;
 
 namespace Test.Hestia.UIRunner
@@ -7,13 +14,22 @@ namespace Test.Hestia.UIRunner
     public class RepositoryViewModelTest
     {
         [Fact]
-        public void SmokeTest()
+        public void FilesShouldChangeBasedOnSnapshotPublishedOnObservable()
         {
-            var vm = new FileDetailsViewModel();
+            var scheduler = new TestScheduler();
+            var snapshot = new RepositorySnapshot(-1,
+                                                  new List<File> { MockRepo.CreateFile(), MockRepo.CreateFile() },
+                                                  Option<string>.None,
+                                                  Option<string>.None,
+                                                  Option<DateTime>.None);
+            var vm = new RepositoryViewModel(scheduler.CreateColdObservable(snapshot.AsNotification()));
 
-            vm.Text
+            scheduler.Start();
+
+            vm.Repository
+              .Files
               .Should()
-              .Contain("works");
+              .BeEquivalentTo(snapshot.Files);
         }
     }
 }

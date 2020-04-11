@@ -17,7 +17,8 @@
 
     <StackPanel>
         <TextBlock Text="{Binding Text}" />
-        <DataGrid AutoGenerateColumns="True" Items="{Binding Repository.Files}" />        
+        <DataGrid AutoGenerateColumns="True" Items="{Binding Repository.Files}" SelectedItem="{Binding SelectedItem}">
+        </DataGrid>        
     </StackPanel>
     <!-- ReSharper restore Xaml.ConstructorWarning -->
     <!-- ReSharper restore Xaml.UnexpectedTextToken -->

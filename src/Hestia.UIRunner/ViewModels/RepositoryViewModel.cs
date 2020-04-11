@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
 using Hestia.Model;
+using JetBrains.Annotations;
 using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 
 namespace Hestia.UIRunner.ViewModels
 {
@@ -13,8 +16,12 @@ namespace Hestia.UIRunner.ViewModels
             selectedRepository = selectedRepositoryObservable.ToProperty(this, nameof(Repository));
         }
 
-        public string Text => "Repository view works";
-
         public RepositorySnapshot Repository => selectedRepository.Value;
+
+        public File SelectedItem
+        {
+            get;
+            set;
+        }
     }
 }

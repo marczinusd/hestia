@@ -11,7 +11,7 @@ using Hestia.Model.Stats;
 using Hestia.Model.Wrappers;
 using LanguageExt;
 using Moq;
-using Test.Hestia.Model.TestData;
+using Test.Hestia.Utils.TestData;
 using Xunit;
 using File = Hestia.Model.File;
 

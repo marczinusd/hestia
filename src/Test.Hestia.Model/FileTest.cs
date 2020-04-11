@@ -4,7 +4,7 @@ using FluentAssertions;
 using Hestia.Model;
 using Hestia.Model.Stats;
 using LanguageExt;
-using Test.Hestia.Model.TestData;
+using Test.Hestia.Utils.TestData;
 using Xunit;
 using File = Hestia.Model.File;
 

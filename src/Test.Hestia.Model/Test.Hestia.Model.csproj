@@ -29,6 +29,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Hestia.Model\Hestia.Model.csproj" />
+    <ProjectReference Include="..\Test.Hestia.Utils\Test.Hestia.Utils.csproj" />
   </ItemGroup>
 
   <ItemGroup>
