@@ -30,6 +30,8 @@ namespace Hestia.UIRunner
             builder.RegisterInstance<ILogger<IStatsEnricher>>(new NullLogger<IStatsEnricher>());
             builder.RegisterType<StatsEnricher>()
                    .As<IStatsEnricher>();
+            builder.RegisterType<RepositorySnapshotBuilderWrapper>()
+                   .As<IRepositorySnapshotBuilderWrapper>();
 
             return builder;
         }

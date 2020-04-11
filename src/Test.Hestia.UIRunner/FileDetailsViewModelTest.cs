@@ -1,5 +1,8 @@
 using FluentAssertions;
 using Hestia.UIRunner.ViewModels;
+using Microsoft.Reactive.Testing;
+using Test.Hestia.Utils;
+using Test.Hestia.Utils.TestData;
 using Xunit;
 
 namespace Test.Hestia.UIRunner
@@ -7,13 +10,17 @@ namespace Test.Hestia.UIRunner
     public class FileDetailsViewModelTest
     {
         [Fact]
-        public void SmokeTest()
+        public void FileOnViewModelShouldReflectLatestFilePublishedOnObservable()
         {
-            var vm = new FileDetailsViewModel();
+            var scheduler = new TestScheduler();
+            var file = MockRepo.CreateFile();
+            var vm = new FileDetailsViewModel(scheduler.CreateColdObservable(file.AsNotification()));
 
-            vm.Text
-             .Should()
-             .Contain("works");
+            scheduler.Start();
+
+            vm.File
+              .Should()
+              .BeSameAs(file);
         }
     }
 }

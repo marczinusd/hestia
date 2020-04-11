@@ -16,8 +16,7 @@
     </Design.DataContext>
     
     <DockPanel>
-        <TextBlock DockPanel.Dock="Top" Text="{Binding Text}" />
-        <DataGrid AutoGenerateColumns="True" Items="{Binding Lines}"></DataGrid>
+        <DataGrid AutoGenerateColumns="True" Items="{Binding File.Content}"></DataGrid>
     </DockPanel>
     <!-- ReSharper restore Xaml.ConstructorWarning -->
     <!-- ReSharper restore Xaml.UnexpectedTextToken -->

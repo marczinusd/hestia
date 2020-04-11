@@ -16,7 +16,7 @@ namespace Hestia.UIRunner.ViewModels
                                               pathValidator,
                                               builderWrapper);
             RepositoryViewModel = new RepositoryViewModel(FormViewModel.RepositoryCreationObservable);
-            FileDetailsViewModel = new FileDetailsViewModel();
+            FileDetailsViewModel = new FileDetailsViewModel(RepositoryViewModel.SelectedItemObservable);
         }
 
         public string Greeting => "Hello World!";
