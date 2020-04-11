@@ -15,7 +15,7 @@
         <vm:FormViewModel />
     </Design.DataContext>
 
-    <Grid RowDefinitions="1*,1*,1*,1*,1*,20">
+    <Grid RowDefinitions="1*,1*,1*,1*,1*,1*,20">
         <StackPanel Grid.Row="0">
             <TextBlock Text="Repository Path" Margin="0,0,0,2" />
             <Grid ColumnDefinitions="4*,1*">
@@ -32,11 +32,15 @@
             <TextBox Text="{Binding CoverageOutputLocation}" />
         </StackPanel>
         <StackPanel Grid.Row="3">
+            <TextBlock Text="Source root relative to repository root" Margin="0,0,0,2" />
+            <TextBox Text="{Binding SourceRoot}" />
+        </StackPanel>
+        <StackPanel Grid.Row="4">
             <TextBlock Text="Source Extensions (separated by semicolon)" Margin="0,0,0,2" />
             <TextBox Text="{Binding SourceExtensions}" />
         </StackPanel>
-        <Button Grid.Row="4" Command="{Binding ProcessRepositoryCommand}">Process Repository</Button>
-        <ProgressBar Grid.Row="5" IsIndeterminate="True" />
+        <Button Grid.Row="5" Command="{Binding ProcessRepositoryCommand}">Process Repository</Button>
+        <ProgressBar Grid.Row="6" IsIndeterminate="True" />
     </Grid>
 
     <!-- ReSharper restore Xaml.ConstructorWarning -->

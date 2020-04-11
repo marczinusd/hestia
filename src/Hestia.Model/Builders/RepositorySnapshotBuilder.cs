@@ -7,7 +7,7 @@ namespace Hestia.Model.Builders
 {
     public static class RepositorySnapshotBuilder
     {
-        public static RepositorySnapshot BuildRepositoryFromDirectoryPath(RepositorySnapshotBuilderArguments args)
+        public static RepositorySnapshot Build(this RepositorySnapshotBuilderArguments args)
         {
             args.PathValidator.ValidateDirectoryPath(args.RootPath);
             args.PathValidator.ValidateDirectoryPath(args.SourceRoot);
@@ -25,8 +25,5 @@ namespace Hestia.Model.Builders
                                           args.AtHash,
                                           args.CommitCreationDate);
         }
-
-        public static RepositorySnapshot Build(this RepositorySnapshotBuilderArguments args) =>
-            BuildRepositoryFromDirectoryPath(args);
     }
 }

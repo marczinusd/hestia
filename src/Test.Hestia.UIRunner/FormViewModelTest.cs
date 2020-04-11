@@ -1,17 +1,28 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using FluentAssertions;
+using Hestia.Model;
+using Hestia.Model.Builders;
 using Hestia.Model.Stats;
 using Hestia.Model.Wrappers;
 using Hestia.UIRunner.ViewModels;
+using LanguageExt;
+using Microsoft.Reactive.Testing;
 using Moq;
 using Xunit;
+using File = Hestia.Model.File;
 
 namespace Test.Hestia.UIRunner
 {
     public class FormViewModelTest
     {
         private const string RepoPath = "somePath";
+        private const string CoverageOutputLocation = "coverageOutputLocation";
+        private const string SourceRoot = "sourceRoot";
+        private const string CoverageCommand = "coverageCommand";
+        private const string SourceExtensions = ".cs";
 
         public static TheoryData<string> EmptyInputData => new TheoryData<string> { string.Empty, null, "     " };
 
@@ -22,7 +33,10 @@ namespace Test.Hestia.UIRunner
             ioMock.Setup(mock => mock.DirectoryExists(RepoPath))
                   .Returns(false);
 
-            var vm = new FormViewModel(ioMock.Object, Mock.Of<IStatsEnricher>()) { RepositoryPath = RepoPath };
+            var vm = new FormViewModel(ioMock.Object,
+                                       Mock.Of<IStatsEnricher>(),
+                                       Mock.Of<IPathValidator>(),
+                                       Mock.Of<IRepositorySnapshotBuilderWrapper>()) { RepositoryPath = RepoPath, };
 
             vm.ValidationContext.Text
               .First()
@@ -39,7 +53,10 @@ namespace Test.Hestia.UIRunner
             ioMock.Setup(mock => mock.DirectoryExists(Path.Join(RepoPath, ".git")))
                   .Returns(false);
 
-            var vm = new FormViewModel(ioMock.Object, Mock.Of<IStatsEnricher>()) { RepositoryPath = RepoPath };
+            var vm = new FormViewModel(ioMock.Object,
+                                       Mock.Of<IStatsEnricher>(),
+                                       Mock.Of<IPathValidator>(),
+                                       Mock.Of<IRepositorySnapshotBuilderWrapper>()) { RepositoryPath = RepoPath, };
 
             vm.ValidationContext.Text
               .First()
@@ -51,7 +68,10 @@ namespace Test.Hestia.UIRunner
         [MemberData(nameof(EmptyInputData))]
         public void RepositoryPathEmptyFieldValidation(string input)
         {
-            var vm = new FormViewModel(new DiskIOWrapper(), Mock.Of<IStatsEnricher>())
+            var vm = new FormViewModel(new DiskIOWrapper(),
+                                       Mock.Of<IStatsEnricher>(),
+                                       Mock.Of<IPathValidator>(),
+                                       Mock.Of<IRepositorySnapshotBuilderWrapper>())
             {
                 CoverageCommand = "bla",
                 SourceExtensions = "bla",
@@ -69,7 +89,10 @@ namespace Test.Hestia.UIRunner
         [MemberData(nameof(EmptyInputData))]
         public void CoverageCommandEmptyFieldValidation(string input)
         {
-            var vm = new FormViewModel(new DiskIOWrapper(), Mock.Of<IStatsEnricher>())
+            var vm = new FormViewModel(new DiskIOWrapper(),
+                                       Mock.Of<IStatsEnricher>(),
+                                       Mock.Of<IPathValidator>(),
+                                       Mock.Of<IRepositorySnapshotBuilderWrapper>())
             {
                 RepositoryPath = "bla",
                 SourceExtensions = "bla",
@@ -87,7 +110,10 @@ namespace Test.Hestia.UIRunner
         [MemberData(nameof(EmptyInputData))]
         public void CoverageOutputLocationEmptyFieldValidation(string input)
         {
-            var vm = new FormViewModel(new DiskIOWrapper(), Mock.Of<IStatsEnricher>())
+            var vm = new FormViewModel(new DiskIOWrapper(),
+                                       Mock.Of<IStatsEnricher>(),
+                                       Mock.Of<IPathValidator>(),
+                                       Mock.Of<IRepositorySnapshotBuilderWrapper>())
             {
                 RepositoryPath = "bla",
                 CoverageCommand = "bla",
@@ -105,7 +131,10 @@ namespace Test.Hestia.UIRunner
         [MemberData(nameof(EmptyInputData))]
         public void SourceExtensionsEmptyFieldValidation(string input)
         {
-            var vm = new FormViewModel(new DiskIOWrapper(), Mock.Of<IStatsEnricher>())
+            var vm = new FormViewModel(new DiskIOWrapper(),
+                                       Mock.Of<IStatsEnricher>(),
+                                       Mock.Of<IPathValidator>(),
+                                       Mock.Of<IRepositorySnapshotBuilderWrapper>())
             {
                 RepositoryPath = "bla",
                 CoverageCommand = "bla",
@@ -118,5 +147,69 @@ namespace Test.Hestia.UIRunner
               .Should()
               .BeTrue();
         }
+
+        [Fact]
+        public void PressingProcessButtonInvokesSnapshotBuilderWithExpectedArguments()
+        {
+            var scheduler = new TestScheduler();
+            var builderMock = new Mock<IRepositorySnapshotBuilderWrapper>();
+            var vm = new FormViewModel(new DiskIOWrapper(),
+                                       Mock.Of<IStatsEnricher>(),
+                                       Mock.Of<IPathValidator>(),
+                                       builderMock.Object)
+            {
+                RepositoryPath = RepoPath,
+                CoverageCommand = CoverageCommand,
+                SourceExtensions = SourceExtensions,
+                SourceRoot = SourceRoot,
+                CoverageOutputLocation = CoverageOutputLocation,
+            };
+
+            scheduler.Start(() => vm.ProcessRepositoryCommand
+                                    .Execute());
+
+            builderMock.Verify(mock =>
+                                   mock.Build(It.Is<RepositorySnapshotBuilderArguments>(x =>
+                                                                                            MatchingRepositoryBuilderArgs(x))),
+                               Times.Once);
+        }
+
+        [Fact]
+        public void PressingProcessButtonShouldInvokeStatsEnricherWithExpectedRepositorySnapshot()
+        {
+            var scheduler = new TestScheduler();
+            var statsEnricherMock = new Mock<IStatsEnricher>();
+            var builderMock = new Mock<IRepositorySnapshotBuilderWrapper>();
+            var repositorySnapshot = new RepositorySnapshot(-1,
+                                                            new List<File>(),
+                                                            Option<string>.None,
+                                                            Option<string>.None,
+                                                            Option<DateTime>.None);
+            builderMock.Setup(mock => mock.Build(It.IsAny<RepositorySnapshotBuilderArguments>()))
+                       .Returns(repositorySnapshot);
+            var vm = new FormViewModel(new DiskIOWrapper(),
+                                       statsEnricherMock.Object,
+                                       Mock.Of<IPathValidator>(),
+                                       builderMock.Object)
+            {
+                RepositoryPath = "bla",
+                CoverageCommand = "bla",
+                SourceExtensions = "bla",
+                SourceRoot = "src",
+                CoverageOutputLocation = "bla",
+            };
+
+            scheduler.Start(() => vm.ProcessRepositoryCommand
+                                    .Execute());
+
+            statsEnricherMock.Verify(mock => mock.EnrichWithCoverage(It.IsAny<RepositorySnapshot>()), Times.Once);
+            statsEnricherMock.Verify(mock => mock.EnrichWithGitStats(It.IsAny<RepositorySnapshot>()), Times.Once);
+        }
+
+        private bool MatchingRepositoryBuilderArgs(RepositorySnapshotBuilderArguments args) =>
+            args.CoveragePath == CoverageOutputLocation &&
+            args.RootPath == RepoPath &&
+            args.SourceExtensions.First() == ".cs" &&
+            args.SourceRoot == SourceRoot;
     }
 }
