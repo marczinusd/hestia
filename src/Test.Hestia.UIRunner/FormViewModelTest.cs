@@ -17,6 +17,7 @@ using File = Hestia.Model.File;
 
 namespace Test.Hestia.UIRunner
 {
+    // Note: some tests require a very small wait due to some timing inconsistencies with ReactiveUI's validation specifically when running in CI
     public class FormViewModelTest
     {
         private const string RepoPath = "somePath";
@@ -38,7 +39,7 @@ namespace Test.Hestia.UIRunner
                                        Mock.Of<IStatsEnricher>(),
                                        Mock.Of<IPathValidator>(),
                                        Mock.Of<IRepositorySnapshotBuilderWrapper>()) { RepositoryPath = RepoPath, };
-            Helpers.After(TimeSpan.FromMilliseconds(50),
+            Helpers.After(TimeSpan.FromMilliseconds(25),
                           () =>
                           {
                               vm.ValidationContext.Text
@@ -61,7 +62,7 @@ namespace Test.Hestia.UIRunner
                                        Mock.Of<IStatsEnricher>(),
                                        Mock.Of<IPathValidator>(),
                                        Mock.Of<IRepositorySnapshotBuilderWrapper>()) { RepositoryPath = RepoPath, };
-            Helpers.After(TimeSpan.FromMilliseconds(50),
+            Helpers.After(TimeSpan.FromMilliseconds(25),
                           () =>
                           {
                               vm.ValidationContext.Text
@@ -85,11 +86,14 @@ namespace Test.Hestia.UIRunner
                 CoverageOutputLocation = "bla",
                 RepositoryPath = input,
             };
-
-            vm.ValidationContext.Text
-              .Any(s => s.Contains("RepositoryPath should not be empty"))
-              .Should()
-              .BeTrue();
+            Helpers.After(TimeSpan.FromMilliseconds(25),
+                          () =>
+                          {
+                              vm.ValidationContext.Text
+                                .Any(s => s.Contains("RepositoryPath should not be empty"))
+                                .Should()
+                                .BeTrue();
+                          });
         }
 
         [Theory]
@@ -106,7 +110,7 @@ namespace Test.Hestia.UIRunner
                 CoverageOutputLocation = "bla",
                 CoverageCommand = input,
             };
-            Helpers.After(TimeSpan.FromMilliseconds(50),
+            Helpers.After(TimeSpan.FromMilliseconds(25),
                           () =>
                           {
                               vm.ValidationContext.Text
@@ -130,7 +134,7 @@ namespace Test.Hestia.UIRunner
                 SourceExtensions = "bla",
                 CoverageOutputLocation = input,
             };
-            Helpers.After(TimeSpan.FromMilliseconds(50),
+            Helpers.After(TimeSpan.FromMilliseconds(25),
                           () =>
                           {
                               vm.ValidationContext.Text
@@ -155,7 +159,7 @@ namespace Test.Hestia.UIRunner
                 SourceExtensions = input,
             };
 
-            Helpers.After(TimeSpan.FromMilliseconds(50),
+            Helpers.After(TimeSpan.FromMilliseconds(25),
                           () =>
                           {
                               vm.ValidationContext.Text
