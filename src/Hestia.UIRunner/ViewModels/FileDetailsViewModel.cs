@@ -4,7 +4,7 @@ using ReactiveUI;
 
 namespace Hestia.UIRunner.ViewModels
 {
-    public class FileDetailsViewModel : ViewModelBase
+    public class FileDetailsViewModel : ReactiveObject
     {
         private readonly ObservableAsPropertyHelper<File> _fileObservableAsPropertyHelper;
 

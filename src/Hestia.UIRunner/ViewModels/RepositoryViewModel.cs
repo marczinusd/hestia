@@ -5,7 +5,7 @@ using ReactiveUI.Fody.Helpers;
 
 namespace Hestia.UIRunner.ViewModels
 {
-    public class RepositoryViewModel : ViewModelBase
+    public class RepositoryViewModel : ReactiveObject
     {
         private readonly ObservableAsPropertyHelper<RepositorySnapshot> selectedRepository;
 

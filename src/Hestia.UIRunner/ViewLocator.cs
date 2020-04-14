@@ -5,7 +5,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using Hestia.UIRunner.ViewModels;
+using ReactiveUI;
 
 namespace Hestia.UIRunner
 {
@@ -32,7 +32,7 @@ namespace Hestia.UIRunner
 
         public bool Match(object data)
         {
-            return data is ViewModelBase;
+            return data is ReactiveObject;
         }
     }
 }

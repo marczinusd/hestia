@@ -2,10 +2,11 @@
 using Hestia.Model.Stats;
 using Hestia.Model.Wrappers;
 using Hestia.UIRunner.Services;
+using ReactiveUI;
 
 namespace Hestia.UIRunner.ViewModels
 {
-    public class MainWindowViewModel : ViewModelBase
+    public class MainWindowViewModel : ReactiveObject
     {
         public MainWindowViewModel(IDiskIOWrapper diskIOWrapper,
                                    IStatsEnricher statsEnricher,
