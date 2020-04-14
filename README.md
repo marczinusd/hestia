@@ -3,7 +3,18 @@
 [![codecov](https://codecov.io/gl/marczinusd/hestia/branch/master/graph/badge.svg?token=h6C3x4EsIe)](https://codecov.io/gl/marczinusd/hestia)
 [![pipeline status](https://gitlab.com/marczinusd/hestia/badges/master/pipeline.svg)](https://gitlab.com/marczinusd/hestia/commits/master)
 
-TODO: Add _meaningful_ description :)
+WIP application that can analyze a project's code quality by looking at statistics from git and code coverage.
+
+Features working currently:
+
+* Shared model for git / coverage statistics
+* Simple UI runner to create repository snapshots to analyze
+* Console runner
+
+Planned / partially working:
+
+* MongoDB store for project statistics
+* Simple web API to serve statistics stored in Mongo store
 
 ## Build
 
