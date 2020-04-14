@@ -2,6 +2,7 @@ using FluentAssertions;
 using Hestia.Model.Builders;
 using Hestia.Model.Stats;
 using Hestia.Model.Wrappers;
+using Hestia.UIRunner.Services;
 using Hestia.UIRunner.ViewModels;
 using Moq;
 using Xunit;
@@ -16,7 +17,8 @@ namespace Test.Hestia.UIRunner
             new MainWindowViewModel(new DiskIOWrapper(),
                                     Mock.Of<IStatsEnricher>(),
                                     Mock.Of<IPathValidator>(),
-                                    Mock.Of<IRepositorySnapshotBuilderWrapper>())
+                                    Mock.Of<IRepositorySnapshotBuilderWrapper>(),
+                                    Mock.Of<IOpenFileDialogService>())
                 .Greeting
                 .Should()
                 .Be("Hello World!");

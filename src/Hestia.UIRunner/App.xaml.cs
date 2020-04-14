@@ -3,6 +3,7 @@ using Autofac;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Hestia.UIRunner.Services;
 using Hestia.UIRunner.ViewModels;
 using Hestia.UIRunner.Views;
 
@@ -20,16 +21,18 @@ namespace Hestia.UIRunner
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                var container = BuildContainer();
-                desktop.MainWindow = new MainWindow { DataContext = container.Resolve<MainWindowViewModel>(), };
+                var builder = BuildContainer();
+                desktop.MainWindow = new MainWindow();
+                builder.RegisterInstance<IOpenFileDialogService>(new OpenFileDialogService(() => desktop.MainWindow));
+                desktop.MainWindow.DataContext = builder.Build()
+                                                        .Resolve<MainWindowViewModel>();
             }
 
             base.OnFrameworkInitializationCompleted();
         }
 
-        private static IContainer BuildContainer() =>
+        private static ContainerBuilder BuildContainer() =>
             new ContainerBuilder()
-                .RegisterMainWindowViewModelDependencies()
-                .Build();
+                .RegisterMainWindowViewModelDependencies();
     }
 }

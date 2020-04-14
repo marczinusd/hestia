@@ -6,6 +6,7 @@ using Hestia.Model;
 using Hestia.Model.Builders;
 using Hestia.Model.Stats;
 using Hestia.Model.Wrappers;
+using Hestia.UIRunner.Services;
 using LanguageExt;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -21,11 +22,13 @@ namespace Hestia.UIRunner.ViewModels
         private readonly IPathValidator _pathValidator;
         private readonly IRepositorySnapshotBuilderWrapper _builder;
         private readonly IDiskIOWrapper _ioWrapper;
+        private readonly ObservableAsPropertyHelper<bool> _isExecuting;
 
         public FormViewModel(IDiskIOWrapper ioWrapper,
                              IStatsEnricher statsEnricher,
                              IPathValidator pathValidator,
-                             IRepositorySnapshotBuilderWrapper builder)
+                             IRepositorySnapshotBuilderWrapper builder,
+                             IOpenFileDialogService fileDialogService)
         {
             _ioWrapper = ioWrapper;
             _statsEnricher = statsEnricher;
@@ -48,6 +51,15 @@ namespace Hestia.UIRunner.ViewModels
                 ReactiveCommand.Create<Unit, RepositorySnapshot>(_ => BuildSnapshotFromViewModelState(),
                                                                  this.WhenAnyValue(vm => vm.HasErrors,
                                                                                    hasErrors => !hasErrors));
+
+            _isExecuting = ProcessRepositoryCommand.IsExecuting.ToProperty(this, nameof(IsExecuting));
+
+            OpenFolderDialogCommand =
+                ReactiveCommand.CreateFromTask<Unit, string>(_ => fileDialogService.OpenFolderDialog());
+
+            OpenFolderDialogCommand.AsObservable()
+                                   .Subscribe(result => RepositoryPath =
+                                                            string.IsNullOrEmpty(result) ? RepositoryPath : result);
         }
 
         [Reactive] public string RepositoryPath { get; set; }
@@ -60,7 +72,11 @@ namespace Hestia.UIRunner.ViewModels
 
         [Reactive] public string CoverageOutputLocation { get; set; }
 
+        public bool IsExecuting => _isExecuting.Value;
+
         public ReactiveCommand<Unit, RepositorySnapshot> ProcessRepositoryCommand { get; set; }
+
+        public ReactiveCommand<Unit, string> OpenFolderDialogCommand { get; set; }
 
         public IObservable<RepositorySnapshot> RepositoryCreationObservable => ProcessRepositoryCommand.AsObservable();
 

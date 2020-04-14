@@ -1,6 +1,7 @@
 ﻿using Hestia.Model.Builders;
 using Hestia.Model.Stats;
 using Hestia.Model.Wrappers;
+using Hestia.UIRunner.Services;
 
 namespace Hestia.UIRunner.ViewModels
 {
@@ -9,12 +10,14 @@ namespace Hestia.UIRunner.ViewModels
         public MainWindowViewModel(IDiskIOWrapper diskIOWrapper,
                                    IStatsEnricher statsEnricher,
                                    IPathValidator pathValidator,
-                                   IRepositorySnapshotBuilderWrapper builderWrapper)
+                                   IRepositorySnapshotBuilderWrapper builderWrapper,
+                                   IOpenFileDialogService fileDialogService)
         {
             FormViewModel = new FormViewModel(diskIOWrapper,
                                               statsEnricher,
                                               pathValidator,
-                                              builderWrapper);
+                                              builderWrapper,
+                                              fileDialogService);
             RepositoryViewModel = new RepositoryViewModel(FormViewModel.RepositoryCreationObservable);
             FileDetailsViewModel = new FileDetailsViewModel(RepositoryViewModel.SelectedItemObservable);
         }

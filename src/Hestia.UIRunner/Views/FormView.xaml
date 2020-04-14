@@ -19,8 +19,8 @@
         <StackPanel Grid.Row="0">
             <TextBlock Text="Repository Path" Margin="0,0,0,2" />
             <Grid ColumnDefinitions="4*,1*">
-                <TextBox Grid.Column="0" Text="{Binding RepositoryPath}" />
-                <Button Grid.Column="1">Browse...</Button>
+                <TextBox Grid.Column="0" Text="{Binding RepositoryPath}" IsEnabled="{Binding !IsExecuting}" />
+                <Button Grid.Column="1" Command="{Binding OpenFolderDialogCommand}">Browse...</Button>
             </Grid>
         </StackPanel>
         <StackPanel Grid.Row="1">
@@ -29,20 +29,20 @@
         </StackPanel>
         <StackPanel Grid.Row="2">
             <TextBlock Text="Coverage Output Location" Margin="0,0,0,2" />
-            <TextBox Text="{Binding CoverageOutputLocation}" />
+            <TextBox Text="{Binding CoverageOutputLocation}" IsEnabled="{Binding !IsExecuting}" />
         </StackPanel>
         <StackPanel Grid.Row="3">
             <TextBlock Text="Source root relative to repository root" Margin="0,0,0,2" />
-            <TextBox Text="{Binding SourceRoot}" />
+            <TextBox Text="{Binding SourceRoot}" IsEnabled="{Binding !IsExecuting}" />
         </StackPanel>
         <StackPanel Grid.Row="4">
             <TextBlock Text="Source Extensions (separated by semicolon)" Margin="0,0,0,2" />
-            <TextBox Text="{Binding SourceExtensions}" />
+            <TextBox Text="{Binding SourceExtensions}" IsEnabled="{Binding !IsExecuting}" />
         </StackPanel>
         <Button Grid.Row="5" Command="{Binding ProcessRepositoryCommand}">Process Repository</Button>
-        <ProgressBar Grid.Row="6" IsIndeterminate="True" />
+        <ProgressBar Grid.Row="6" IsIndeterminate="True" IsVisible="{Binding IsExecuting}" />
     </Grid>
-
+    
     <!-- ReSharper restore Xaml.ConstructorWarning -->
     <!-- ReSharper restore Xaml.UnexpectedTextToken -->
 </UserControl>

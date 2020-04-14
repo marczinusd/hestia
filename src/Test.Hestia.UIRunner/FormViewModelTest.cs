@@ -2,11 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Hestia.Model;
 using Hestia.Model.Builders;
 using Hestia.Model.Stats;
 using Hestia.Model.Wrappers;
+using Hestia.UIRunner.Services;
 using Hestia.UIRunner.ViewModels;
 using LanguageExt;
 using Microsoft.Reactive.Testing;
@@ -39,7 +41,8 @@ namespace Test.Hestia.UIRunner
             var vm = new FormViewModel(ioMock.Object,
                                        Mock.Of<IStatsEnricher>(),
                                        Mock.Of<IPathValidator>(),
-                                       Mock.Of<IRepositorySnapshotBuilderWrapper>()) { RepositoryPath = RepoPath, };
+                                       Mock.Of<IRepositorySnapshotBuilderWrapper>(),
+                                       Mock.Of<IOpenFileDialogService>()) { RepositoryPath = RepoPath, };
             Helpers.After(TimeSpan.FromMilliseconds(WaitMs),
                           () => vm.ValidationContext.Text
                                   .First()
@@ -59,7 +62,8 @@ namespace Test.Hestia.UIRunner
             var vm = new FormViewModel(ioMock.Object,
                                        Mock.Of<IStatsEnricher>(),
                                        Mock.Of<IPathValidator>(),
-                                       Mock.Of<IRepositorySnapshotBuilderWrapper>()) { RepositoryPath = RepoPath, };
+                                       Mock.Of<IRepositorySnapshotBuilderWrapper>(),
+                                       Mock.Of<IOpenFileDialogService>()) { RepositoryPath = RepoPath, };
             Helpers.After(TimeSpan.FromMilliseconds(WaitMs),
                           () => vm.ValidationContext.Text
                                   .First()
@@ -74,7 +78,8 @@ namespace Test.Hestia.UIRunner
             var vm = new FormViewModel(new DiskIOWrapper(),
                                        Mock.Of<IStatsEnricher>(),
                                        Mock.Of<IPathValidator>(),
-                                       Mock.Of<IRepositorySnapshotBuilderWrapper>())
+                                       Mock.Of<IRepositorySnapshotBuilderWrapper>(),
+                                       Mock.Of<IOpenFileDialogService>())
             {
                 CoverageCommand = "bla",
                 SourceExtensions = "bla",
@@ -95,7 +100,8 @@ namespace Test.Hestia.UIRunner
             var vm = new FormViewModel(new DiskIOWrapper(),
                                        Mock.Of<IStatsEnricher>(),
                                        Mock.Of<IPathValidator>(),
-                                       Mock.Of<IRepositorySnapshotBuilderWrapper>())
+                                       Mock.Of<IRepositorySnapshotBuilderWrapper>(),
+                                       Mock.Of<IOpenFileDialogService>())
             {
                 RepositoryPath = "bla",
                 SourceExtensions = "bla",
@@ -116,7 +122,8 @@ namespace Test.Hestia.UIRunner
             var vm = new FormViewModel(new DiskIOWrapper(),
                                        Mock.Of<IStatsEnricher>(),
                                        Mock.Of<IPathValidator>(),
-                                       Mock.Of<IRepositorySnapshotBuilderWrapper>())
+                                       Mock.Of<IRepositorySnapshotBuilderWrapper>(),
+                                       Mock.Of<IOpenFileDialogService>())
             {
                 RepositoryPath = "bla",
                 CoverageCommand = "bla",
@@ -137,7 +144,8 @@ namespace Test.Hestia.UIRunner
             var vm = new FormViewModel(new DiskIOWrapper(),
                                        Mock.Of<IStatsEnricher>(),
                                        Mock.Of<IPathValidator>(),
-                                       Mock.Of<IRepositorySnapshotBuilderWrapper>())
+                                       Mock.Of<IRepositorySnapshotBuilderWrapper>(),
+                                       Mock.Of<IOpenFileDialogService>())
             {
                 RepositoryPath = "bla",
                 CoverageCommand = "bla",
@@ -160,7 +168,8 @@ namespace Test.Hestia.UIRunner
             var vm = new FormViewModel(new DiskIOWrapper(),
                                        Mock.Of<IStatsEnricher>(),
                                        Mock.Of<IPathValidator>(),
-                                       builderMock.Object)
+                                       builderMock.Object,
+                                       Mock.Of<IOpenFileDialogService>())
             {
                 RepositoryPath = RepoPath,
                 CoverageCommand = CoverageCommand,
@@ -194,7 +203,8 @@ namespace Test.Hestia.UIRunner
             var vm = new FormViewModel(new DiskIOWrapper(),
                                        statsEnricherMock.Object,
                                        Mock.Of<IPathValidator>(),
-                                       builderMock.Object)
+                                       builderMock.Object,
+                                       Mock.Of<IOpenFileDialogService>())
             {
                 RepositoryPath = "bla",
                 CoverageCommand = "bla",
@@ -208,6 +218,34 @@ namespace Test.Hestia.UIRunner
 
             statsEnricherMock.Verify(mock => mock.EnrichWithCoverage(It.IsAny<RepositorySnapshot>()), Times.Once);
             statsEnricherMock.Verify(mock => mock.EnrichWithGitStats(It.IsAny<RepositorySnapshot>()), Times.Once);
+        }
+
+        [Fact]
+        public void ExecutingOpenFileDialogCommandInvokesFileDialogServiceAndPublishesResultOnRepositoryPath()
+        {
+            var scheduler = new TestScheduler();
+            var fileDialogServiceMock = new Mock<IOpenFileDialogService>();
+            fileDialogServiceMock.Setup(mock => mock.OpenFolderDialog())
+                                 .Returns(Task.FromResult("path"));
+            var vm = new FormViewModel(new DiskIOWrapper(),
+                                       Mock.Of<IStatsEnricher>(),
+                                       Mock.Of<IPathValidator>(),
+                                       Mock.Of<IRepositorySnapshotBuilderWrapper>(),
+                                       fileDialogServiceMock.Object)
+            {
+                RepositoryPath = "bla",
+                CoverageCommand = "bla",
+                SourceExtensions = "bla",
+                SourceRoot = "src",
+                CoverageOutputLocation = "bla",
+            };
+
+            scheduler.Start(() => vm.OpenFolderDialogCommand
+                                    .Execute());
+
+            vm.RepositoryPath
+              .Should()
+              .Be("path");
         }
 
         private bool MatchingRepositoryBuilderArgs(RepositorySnapshotBuilderArguments args) =>
