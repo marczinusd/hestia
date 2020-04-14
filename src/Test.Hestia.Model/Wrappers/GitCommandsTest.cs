@@ -3,7 +3,7 @@ using System.Linq;
 using FluentAssertions;
 using Hestia.Model.Wrappers;
 using Moq;
-using Test.Hestia.Model.Utils;
+using Test.Hestia.Utils;
 using Xunit;
 
 namespace Test.Hestia.Model.Wrappers

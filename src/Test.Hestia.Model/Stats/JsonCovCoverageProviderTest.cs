@@ -3,7 +3,7 @@ using FluentAssertions;
 using Hestia.Model.Stats;
 using Hestia.Model.Wrappers;
 using Moq;
-using Test.Hestia.Model.Utils;
+using Test.Hestia.Utils;
 using Xunit;
 
 namespace Test.Hestia.Model.Stats
