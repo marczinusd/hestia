@@ -25,6 +25,7 @@ namespace Test.Hestia.UIRunner
         private const string SourceRoot = "sourceRoot";
         private const string CoverageCommand = "coverageCommand";
         private const string SourceExtensions = ".cs";
+        private const int WaitMs = 25;
 
         public static TheoryData<string> EmptyInputData => new TheoryData<string> { string.Empty, null, "     " };
 
@@ -39,14 +40,11 @@ namespace Test.Hestia.UIRunner
                                        Mock.Of<IStatsEnricher>(),
                                        Mock.Of<IPathValidator>(),
                                        Mock.Of<IRepositorySnapshotBuilderWrapper>()) { RepositoryPath = RepoPath, };
-            Helpers.After(TimeSpan.FromMilliseconds(25),
-                          () =>
-                          {
-                              vm.ValidationContext.Text
-                                .First()
-                                .Should()
-                                .Contain("Directory does not exist");
-                          });
+            Helpers.After(TimeSpan.FromMilliseconds(WaitMs),
+                          () => vm.ValidationContext.Text
+                                  .First()
+                                  .Should()
+                                  .Contain("Directory does not exist"));
         }
 
         [Fact]
@@ -62,14 +60,11 @@ namespace Test.Hestia.UIRunner
                                        Mock.Of<IStatsEnricher>(),
                                        Mock.Of<IPathValidator>(),
                                        Mock.Of<IRepositorySnapshotBuilderWrapper>()) { RepositoryPath = RepoPath, };
-            Helpers.After(TimeSpan.FromMilliseconds(25),
-                          () =>
-                          {
-                              vm.ValidationContext.Text
-                                .First()
-                                .Should()
-                                .Contain("Directory is not a git repository");
-                          });
+            Helpers.After(TimeSpan.FromMilliseconds(WaitMs),
+                          () => vm.ValidationContext.Text
+                                  .First()
+                                  .Should()
+                                  .Contain("Directory is not a git repository"));
         }
 
         [Theory]
@@ -86,14 +81,11 @@ namespace Test.Hestia.UIRunner
                 CoverageOutputLocation = "bla",
                 RepositoryPath = input,
             };
-            Helpers.After(TimeSpan.FromMilliseconds(25),
-                          () =>
-                          {
-                              vm.ValidationContext.Text
-                                .Any(s => s.Contains("RepositoryPath should not be empty"))
-                                .Should()
-                                .BeTrue();
-                          });
+            Helpers.After(TimeSpan.FromMilliseconds(WaitMs),
+                          () => vm.ValidationContext.Text
+                                  .Any(s => s.Contains("RepositoryPath should not be empty"))
+                                  .Should()
+                                  .BeTrue());
         }
 
         [Theory]
@@ -110,14 +102,11 @@ namespace Test.Hestia.UIRunner
                 CoverageOutputLocation = "bla",
                 CoverageCommand = input,
             };
-            Helpers.After(TimeSpan.FromMilliseconds(25),
-                          () =>
-                          {
-                              vm.ValidationContext.Text
-                                .Any(s => s.Contains("CoverageCommand should not be empty"))
-                                .Should()
-                                .BeTrue();
-                          });
+            Helpers.After(TimeSpan.FromMilliseconds(WaitMs),
+                          () => vm.ValidationContext.Text
+                                  .Any(s => s.Contains("CoverageCommand should not be empty"))
+                                  .Should()
+                                  .BeTrue());
         }
 
         [Theory]
@@ -134,14 +123,11 @@ namespace Test.Hestia.UIRunner
                 SourceExtensions = "bla",
                 CoverageOutputLocation = input,
             };
-            Helpers.After(TimeSpan.FromMilliseconds(25),
-                          () =>
-                          {
-                              vm.ValidationContext.Text
-                                .Any(s => s.Contains("CoverageOutputLocation should not be empty"))
-                                .Should()
-                                .BeTrue();
-                          });
+            Helpers.After(TimeSpan.FromMilliseconds(WaitMs),
+                          () => vm.ValidationContext.Text
+                                  .Any(s => s.Contains("CoverageOutputLocation should not be empty"))
+                                  .Should()
+                                  .BeTrue());
         }
 
         [Theory]
@@ -159,14 +145,11 @@ namespace Test.Hestia.UIRunner
                 SourceExtensions = input,
             };
 
-            Helpers.After(TimeSpan.FromMilliseconds(25),
-                          () =>
-                          {
-                              vm.ValidationContext.Text
-                                .Any(s => s.Contains("SourceExtensions should not be empty"))
-                                .Should()
-                                .BeTrue();
-                          });
+            Helpers.After(TimeSpan.FromMilliseconds(WaitMs),
+                          () => vm.ValidationContext.Text
+                                  .Any(s => s.Contains("SourceExtensions should not be empty"))
+                                  .Should()
+                                  .BeTrue());
         }
 
         [Fact]
