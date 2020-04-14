@@ -11,6 +11,7 @@ using Hestia.UIRunner.ViewModels;
 using LanguageExt;
 using Microsoft.Reactive.Testing;
 using Moq;
+using Test.Hestia.Utils;
 using Xunit;
 using File = Hestia.Model.File;
 
@@ -37,11 +38,14 @@ namespace Test.Hestia.UIRunner
                                        Mock.Of<IStatsEnricher>(),
                                        Mock.Of<IPathValidator>(),
                                        Mock.Of<IRepositorySnapshotBuilderWrapper>()) { RepositoryPath = RepoPath, };
-
-            vm.ValidationContext.Text
-              .First()
-              .Should()
-              .Contain("Directory does not exist");
+            Helpers.After(TimeSpan.FromMilliseconds(50),
+                          () =>
+                          {
+                              vm.ValidationContext.Text
+                                .First()
+                                .Should()
+                                .Contain("Directory does not exist");
+                          });
         }
 
         [Fact]
@@ -57,11 +61,14 @@ namespace Test.Hestia.UIRunner
                                        Mock.Of<IStatsEnricher>(),
                                        Mock.Of<IPathValidator>(),
                                        Mock.Of<IRepositorySnapshotBuilderWrapper>()) { RepositoryPath = RepoPath, };
-
-            vm.ValidationContext.Text
-              .First()
-              .Should()
-              .Contain("Directory is not a git repository");
+            Helpers.After(TimeSpan.FromMilliseconds(50),
+                          () =>
+                          {
+                              vm.ValidationContext.Text
+                                .First()
+                                .Should()
+                                .Contain("Directory is not a git repository");
+                          });
         }
 
         [Theory]
@@ -99,11 +106,14 @@ namespace Test.Hestia.UIRunner
                 CoverageOutputLocation = "bla",
                 CoverageCommand = input,
             };
-
-            vm.ValidationContext.Text
-              .Any(s => s.Contains("CoverageCommand should not be empty"))
-              .Should()
-              .BeTrue();
+            Helpers.After(TimeSpan.FromMilliseconds(50),
+                          () =>
+                          {
+                              vm.ValidationContext.Text
+                                .Any(s => s.Contains("CoverageCommand should not be empty"))
+                                .Should()
+                                .BeTrue();
+                          });
         }
 
         [Theory]
@@ -120,11 +130,14 @@ namespace Test.Hestia.UIRunner
                 SourceExtensions = "bla",
                 CoverageOutputLocation = input,
             };
-
-            vm.ValidationContext.Text
-              .Any(s => s.Contains("CoverageOutputLocation should not be empty"))
-              .Should()
-              .BeTrue();
+            Helpers.After(TimeSpan.FromMilliseconds(50),
+                          () =>
+                          {
+                              vm.ValidationContext.Text
+                                .Any(s => s.Contains("CoverageOutputLocation should not be empty"))
+                                .Should()
+                                .BeTrue();
+                          });
         }
 
         [Theory]
@@ -142,10 +155,14 @@ namespace Test.Hestia.UIRunner
                 SourceExtensions = input,
             };
 
-            vm.ValidationContext.Text
-              .Any(s => s.Contains("SourceExtensions should not be empty"))
-              .Should()
-              .BeTrue();
+            Helpers.After(TimeSpan.FromMilliseconds(50),
+                          () =>
+                          {
+                              vm.ValidationContext.Text
+                                .Any(s => s.Contains("SourceExtensions should not be empty"))
+                                .Should()
+                                .BeTrue();
+                          });
         }
 
         [Fact]

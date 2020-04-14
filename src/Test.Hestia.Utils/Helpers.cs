@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 
 namespace Test.Hestia.Utils
 {
@@ -27,6 +28,12 @@ namespace Test.Hestia.Utils
             using var reader = new StreamReader(stream ?? throw new Exception());
 
             return reader.ReadToEnd();
+        }
+
+        public static void After(TimeSpan timeSpan, Action actionToPerform)
+        {
+            Thread.Sleep(timeSpan);
+            actionToPerform();
         }
     }
 }
