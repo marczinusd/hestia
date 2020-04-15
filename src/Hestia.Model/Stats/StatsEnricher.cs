@@ -129,7 +129,7 @@ namespace Hestia.Model.Stats
                                            .ParseFileCoveragesFromFilePath(finalPath)
                                            .Single(f => f.FileName.Equals(file.Filename));
 
-            return file.With(coverageStats: new FileCoverageStats?(coverage));
+            return file.With(coverageStats: new FileCoverageStats(coverage));
         }
 
         private RepositorySnapshot ConvertCoverageResults(RepositorySnapshot repositorySnapshot)

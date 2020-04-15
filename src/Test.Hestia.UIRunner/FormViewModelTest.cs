@@ -28,7 +28,9 @@ namespace Test.Hestia.UIRunner
         private const string CoverageCommand = "coverageCommand";
         private const string SourceExtensions = ".cs";
         private const int WaitMs = 25;
-        private static readonly string CoverageOutputLocation = MockRepo.CreateFile().FullPath;
+
+        private static readonly string CoverageOutputLocation = MockRepo.CreateFile()
+                                                                        .FullPath;
 
         public static TheoryData<string> EmptyInputData => new TheoryData<string> { string.Empty, null, "     " };
 
@@ -149,6 +151,9 @@ namespace Test.Hestia.UIRunner
         {
             var scheduler = new TestScheduler();
             var builderMock = new Mock<IRepositorySnapshotBuilderWrapper>();
+            var converterMock = new Mock<ICoverageReportConverter>();
+            converterMock.Setup(mock => mock.Convert(It.IsAny<string>(), It.IsAny<string>()))
+                         .Returns("Cobertura.xml");
             var vm = new FormViewModel(new DiskIOWrapper(),
                                        Mock.Of<IStatsEnricher>(),
                                        Mock.Of<IPathValidator>(),
@@ -205,7 +210,9 @@ namespace Test.Hestia.UIRunner
             scheduler.Start(() => vm.ProcessRepositoryCommand
                                     .Execute());
 
-            converterMock.Verify(mock => mock.Convert(CoverageOutputLocation, Path.GetDirectoryName(CoverageOutputLocation)), Times.Once);
+            converterMock.Verify(mock => mock.Convert(CoverageOutputLocation,
+                                                      Path.GetDirectoryName(CoverageOutputLocation)),
+                                 Times.Once);
             statsEnricherMock.Verify(mock => mock.EnrichWithCoverage(It.IsAny<RepositorySnapshot>()), Times.Once);
             statsEnricherMock.Verify(mock => mock.EnrichWithGitStats(It.IsAny<RepositorySnapshot>()), Times.Once);
         }
