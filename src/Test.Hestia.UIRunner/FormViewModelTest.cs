@@ -159,7 +159,7 @@ namespace Test.Hestia.UIRunner
                                        Mock.Of<IPathValidator>(),
                                        builderMock.Object,
                                        Mock.Of<IOpenFileDialogService>(),
-                                       Mock.Of<ICoverageReportConverter>())
+                                       converterMock.Object)
             {
                 RepositoryPath = RepoPath,
                 CoverageCommand = CoverageCommand,
