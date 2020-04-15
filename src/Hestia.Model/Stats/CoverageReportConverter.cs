@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using Hestia.Model.Wrappers;
 using LanguageExt;
@@ -24,7 +25,14 @@ namespace Hestia.Model.Stats
                                           inputFilePath);
             }
 
-            return _reportGeneratorWrapper.Generate(inputFilePath, outputLocation) ? Path.Join(outputLocation, "coverage.json") : Option<string>.None;
+            var fileName = Path.GetFileName(inputFilePath);
+            if (fileName.Contains("coverage.json", StringComparison.OrdinalIgnoreCase) ||
+                fileName.Contains("cobertura.xml", StringComparison.OrdinalIgnoreCase))
+            {
+                return inputFilePath;
+            }
+
+            return _reportGeneratorWrapper.Generate(inputFilePath, outputLocation) ? Path.Join(outputLocation, "Cobertura.xml") : Option<string>.None;
         }
     }
 }

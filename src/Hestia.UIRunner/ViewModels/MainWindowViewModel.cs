@@ -12,13 +12,15 @@ namespace Hestia.UIRunner.ViewModels
                                    IStatsEnricher statsEnricher,
                                    IPathValidator pathValidator,
                                    IRepositorySnapshotBuilderWrapper builderWrapper,
-                                   IOpenFileDialogService fileDialogService)
+                                   IOpenFileDialogService fileDialogService,
+                                   ICoverageReportConverter converter)
         {
             FormViewModel = new FormViewModel(diskIOWrapper,
                                               statsEnricher,
                                               pathValidator,
                                               builderWrapper,
-                                              fileDialogService);
+                                              fileDialogService,
+                                              converter);
             RepositoryViewModel = new RepositoryViewModel(FormViewModel.RepositoryCreationObservable);
             FileDetailsViewModel = new FileDetailsViewModel(RepositoryViewModel.SelectedItemObservable);
         }

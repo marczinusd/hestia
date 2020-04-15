@@ -10,7 +10,7 @@ namespace Hestia.Model.Builders
         public static RepositorySnapshot Build(this RepositorySnapshotBuilderArguments args)
         {
             args.PathValidator.ValidateDirectoryPath(args.RootPath);
-            args.PathValidator.ValidateDirectoryPath(args.SourceRoot);
+            args.PathValidator.ValidateDirectoryPath(Path.Join(args.RootPath, args.SourceRoot));
 
             return new RepositorySnapshot(args.SnapshotId,
                                           args.DiskIoWrapper.EnumerateAllFilesForPathRecursively(Path.Join(args.RootPath, args.SourceRoot))

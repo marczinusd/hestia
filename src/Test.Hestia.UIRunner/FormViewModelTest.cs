@@ -14,6 +14,7 @@ using LanguageExt;
 using Microsoft.Reactive.Testing;
 using Moq;
 using Test.Hestia.Utils;
+using Test.Hestia.Utils.TestData;
 using Xunit;
 using File = Hestia.Model.File;
 
@@ -23,11 +24,11 @@ namespace Test.Hestia.UIRunner
     public class FormViewModelTest
     {
         private const string RepoPath = "somePath";
-        private const string CoverageOutputLocation = "coverageOutputLocation";
         private const string SourceRoot = "sourceRoot";
         private const string CoverageCommand = "coverageCommand";
         private const string SourceExtensions = ".cs";
         private const int WaitMs = 25;
+        private static readonly string CoverageOutputLocation = MockRepo.CreateFile().FullPath;
 
         public static TheoryData<string> EmptyInputData => new TheoryData<string> { string.Empty, null, "     " };
 
@@ -42,7 +43,8 @@ namespace Test.Hestia.UIRunner
                                        Mock.Of<IStatsEnricher>(),
                                        Mock.Of<IPathValidator>(),
                                        Mock.Of<IRepositorySnapshotBuilderWrapper>(),
-                                       Mock.Of<IOpenFileDialogService>()) { RepositoryPath = RepoPath, };
+                                       Mock.Of<IOpenFileDialogService>(),
+                                       Mock.Of<ICoverageReportConverter>()) { RepositoryPath = RepoPath, };
             Helpers.After(TimeSpan.FromMilliseconds(WaitMs),
                           () => vm.ValidationContext.Text
                                   .First()
@@ -63,7 +65,8 @@ namespace Test.Hestia.UIRunner
                                        Mock.Of<IStatsEnricher>(),
                                        Mock.Of<IPathValidator>(),
                                        Mock.Of<IRepositorySnapshotBuilderWrapper>(),
-                                       Mock.Of<IOpenFileDialogService>()) { RepositoryPath = RepoPath, };
+                                       Mock.Of<IOpenFileDialogService>(),
+                                       Mock.Of<ICoverageReportConverter>()) { RepositoryPath = RepoPath, };
             Helpers.After(TimeSpan.FromMilliseconds(WaitMs),
                           () => vm.ValidationContext.Text
                                   .First()
@@ -79,7 +82,8 @@ namespace Test.Hestia.UIRunner
                                        Mock.Of<IStatsEnricher>(),
                                        Mock.Of<IPathValidator>(),
                                        Mock.Of<IRepositorySnapshotBuilderWrapper>(),
-                                       Mock.Of<IOpenFileDialogService>())
+                                       Mock.Of<IOpenFileDialogService>(),
+                                       Mock.Of<ICoverageReportConverter>())
             {
                 CoverageCommand = "bla",
                 SourceExtensions = "bla",
@@ -95,35 +99,14 @@ namespace Test.Hestia.UIRunner
 
         [Theory]
         [MemberData(nameof(EmptyInputData))]
-        public void CoverageCommandEmptyFieldValidation(string input)
-        {
-            var vm = new FormViewModel(new DiskIOWrapper(),
-                                       Mock.Of<IStatsEnricher>(),
-                                       Mock.Of<IPathValidator>(),
-                                       Mock.Of<IRepositorySnapshotBuilderWrapper>(),
-                                       Mock.Of<IOpenFileDialogService>())
-            {
-                RepositoryPath = "bla",
-                SourceExtensions = "bla",
-                CoverageOutputLocation = "bla",
-                CoverageCommand = input,
-            };
-            Helpers.After(TimeSpan.FromMilliseconds(WaitMs),
-                          () => vm.ValidationContext.Text
-                                  .Any(s => s.Contains("CoverageCommand should not be empty"))
-                                  .Should()
-                                  .BeTrue());
-        }
-
-        [Theory]
-        [MemberData(nameof(EmptyInputData))]
         public void CoverageOutputLocationEmptyFieldValidation(string input)
         {
             var vm = new FormViewModel(new DiskIOWrapper(),
                                        Mock.Of<IStatsEnricher>(),
                                        Mock.Of<IPathValidator>(),
                                        Mock.Of<IRepositorySnapshotBuilderWrapper>(),
-                                       Mock.Of<IOpenFileDialogService>())
+                                       Mock.Of<IOpenFileDialogService>(),
+                                       Mock.Of<ICoverageReportConverter>())
             {
                 RepositoryPath = "bla",
                 CoverageCommand = "bla",
@@ -145,7 +128,8 @@ namespace Test.Hestia.UIRunner
                                        Mock.Of<IStatsEnricher>(),
                                        Mock.Of<IPathValidator>(),
                                        Mock.Of<IRepositorySnapshotBuilderWrapper>(),
-                                       Mock.Of<IOpenFileDialogService>())
+                                       Mock.Of<IOpenFileDialogService>(),
+                                       Mock.Of<ICoverageReportConverter>())
             {
                 RepositoryPath = "bla",
                 CoverageCommand = "bla",
@@ -169,7 +153,8 @@ namespace Test.Hestia.UIRunner
                                        Mock.Of<IStatsEnricher>(),
                                        Mock.Of<IPathValidator>(),
                                        builderMock.Object,
-                                       Mock.Of<IOpenFileDialogService>())
+                                       Mock.Of<IOpenFileDialogService>(),
+                                       Mock.Of<ICoverageReportConverter>())
             {
                 RepositoryPath = RepoPath,
                 CoverageCommand = CoverageCommand,
@@ -193,29 +178,34 @@ namespace Test.Hestia.UIRunner
             var scheduler = new TestScheduler();
             var statsEnricherMock = new Mock<IStatsEnricher>();
             var builderMock = new Mock<IRepositorySnapshotBuilderWrapper>();
+            var converterMock = new Mock<ICoverageReportConverter>();
             var repositorySnapshot = new RepositorySnapshot(-1,
                                                             new List<File>(),
                                                             Option<string>.None,
                                                             Option<string>.None,
                                                             Option<DateTime>.None);
+            converterMock.Setup(mock => mock.Convert(It.IsAny<string>(), It.IsAny<string>()))
+                         .Returns(CoverageOutputLocation);
             builderMock.Setup(mock => mock.Build(It.IsAny<RepositorySnapshotBuilderArguments>()))
                        .Returns(repositorySnapshot);
             var vm = new FormViewModel(new DiskIOWrapper(),
                                        statsEnricherMock.Object,
                                        Mock.Of<IPathValidator>(),
                                        builderMock.Object,
-                                       Mock.Of<IOpenFileDialogService>())
+                                       Mock.Of<IOpenFileDialogService>(),
+                                       converterMock.Object)
             {
                 RepositoryPath = "bla",
                 CoverageCommand = "bla",
                 SourceExtensions = "bla",
                 SourceRoot = "src",
-                CoverageOutputLocation = "bla",
+                CoverageOutputLocation = CoverageOutputLocation,
             };
 
             scheduler.Start(() => vm.ProcessRepositoryCommand
                                     .Execute());
 
+            converterMock.Verify(mock => mock.Convert(CoverageOutputLocation, Path.GetDirectoryName(CoverageOutputLocation)), Times.Once);
             statsEnricherMock.Verify(mock => mock.EnrichWithCoverage(It.IsAny<RepositorySnapshot>()), Times.Once);
             statsEnricherMock.Verify(mock => mock.EnrichWithGitStats(It.IsAny<RepositorySnapshot>()), Times.Once);
         }
@@ -231,7 +221,8 @@ namespace Test.Hestia.UIRunner
                                        Mock.Of<IStatsEnricher>(),
                                        Mock.Of<IPathValidator>(),
                                        Mock.Of<IRepositorySnapshotBuilderWrapper>(),
-                                       fileDialogServiceMock.Object)
+                                       fileDialogServiceMock.Object,
+                                       Mock.Of<ICoverageReportConverter>())
             {
                 RepositoryPath = "bla",
                 CoverageCommand = "bla",
@@ -248,7 +239,7 @@ namespace Test.Hestia.UIRunner
               .Be("path");
         }
 
-        private bool MatchingRepositoryBuilderArgs(RepositorySnapshotBuilderArguments args) =>
+        private static bool MatchingRepositoryBuilderArgs(RepositorySnapshotBuilderArguments args) =>
             args.CoveragePath == CoverageOutputLocation &&
             args.RootPath == RepoPath &&
             args.SourceExtensions.First() == ".cs" &&

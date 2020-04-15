@@ -4,6 +4,6 @@ namespace Hestia.Model.Wrappers
 {
     public interface ICoverageProviderFactory
     {
-        ICoverageProvider CreateProviderForFile();
+        ICoverageProvider CreateProviderForFile(string filePath);
     }
 }

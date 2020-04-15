@@ -61,7 +61,7 @@ namespace Test.Hestia.Model.Stats
 
             result.Match(x => x, () => string.Empty)
                   .Should()
-                  .BeEquivalentTo(Path.Join(outPath, "coverage.json"));
+                  .BeEquivalentTo(Path.Join(outPath, "Cobertura.xml"));
         }
 
         [Fact]

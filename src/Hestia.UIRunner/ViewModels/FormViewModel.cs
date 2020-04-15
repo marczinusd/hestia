@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reactive.Linq;
@@ -21,6 +22,7 @@ namespace Hestia.UIRunner.ViewModels
         private readonly IStatsEnricher _statsEnricher;
         private readonly IPathValidator _pathValidator;
         private readonly IRepositorySnapshotBuilderWrapper _builder;
+        private readonly ICoverageReportConverter _reportConverter;
         private readonly IDiskIOWrapper _ioWrapper;
         private readonly ObservableAsPropertyHelper<bool> _isExecuting;
 
@@ -28,12 +30,14 @@ namespace Hestia.UIRunner.ViewModels
                              IStatsEnricher statsEnricher,
                              IPathValidator pathValidator,
                              IRepositorySnapshotBuilderWrapper builder,
-                             IOpenFileDialogService fileDialogService)
+                             IOpenFileDialogService fileDialogService,
+                             ICoverageReportConverter reportConverter)
         {
             _ioWrapper = ioWrapper;
             _statsEnricher = statsEnricher;
             _pathValidator = pathValidator;
             _builder = builder;
+            _reportConverter = reportConverter;
             this.ValidationRule(vm => vm.RepositoryPath,
                                 ioWrapper.DirectoryExists,
                                 "Directory does not exist.");
@@ -42,7 +46,8 @@ namespace Hestia.UIRunner.ViewModels
                                 path => ioWrapper.DirectoryExists(Path.Join(path, ".git")),
                                 "Directory is not a git repository");
 
-            EmptyFieldValidation(vm => vm.CoverageCommand, nameof(CoverageCommand));
+            // Removed for now
+            // EmptyFieldValidation(vm => vm.CoverageCommand, nameof(CoverageCommand));
             EmptyFieldValidation(vm => vm.RepositoryPath, nameof(RepositoryPath));
             EmptyFieldValidation(vm => vm.SourceExtensions, nameof(SourceExtensions));
             EmptyFieldValidation(vm => vm.CoverageOutputLocation, nameof(CoverageOutputLocation));
@@ -56,6 +61,13 @@ namespace Hestia.UIRunner.ViewModels
 
             OpenFolderDialogCommand =
                 ReactiveCommand.CreateFromTask<Unit, string>(_ => fileDialogService.OpenFolderDialog());
+
+            OpenFileDialogCommand =
+                ReactiveCommand.CreateFromTask<Unit, string[]>(_ => fileDialogService.OpenFileDialog());
+
+            OpenFileDialogCommand.AsObservable()
+                                 .Subscribe(result => CoverageOutputLocation =
+                                                          result.Any() ? result.Single() : CoverageOutputLocation);
 
             OpenFolderDialogCommand.AsObservable()
                                    .Subscribe(result => RepositoryPath =
@@ -77,6 +89,8 @@ namespace Hestia.UIRunner.ViewModels
         public ReactiveCommand<Unit, RepositorySnapshot> ProcessRepositoryCommand { get; set; }
 
         public ReactiveCommand<Unit, string> OpenFolderDialogCommand { get; set; }
+
+        public ReactiveCommand<Unit, string[]> OpenFileDialogCommand { get; set; }
 
         public IObservable<RepositorySnapshot> RepositoryCreationObservable => ProcessRepositoryCommand.AsObservable();
 
@@ -100,7 +114,17 @@ namespace Hestia.UIRunner.ViewModels
         private RepositorySnapshot BuildSnapshotFromViewModelState() =>
             FieldsAsBuilderArguments
                 .Apply(_builder.Build)
+                .Apply(ConvertCoverageReport)
                 .Apply(_statsEnricher.EnrichWithCoverage)
                 .Apply(_statsEnricher.EnrichWithGitStats);
+
+        private RepositorySnapshot ConvertCoverageReport(RepositorySnapshot snapshot)
+        {
+            var newPath = _reportConverter
+                          .Convert(CoverageOutputLocation, Path.GetDirectoryName(CoverageOutputLocation))
+                          .Match(val => val, () => throw new FileNotFoundException());
+
+            return snapshot.With(pathToCoverageResultFile: newPath);
+        }
     }
 }

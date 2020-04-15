@@ -13,6 +13,6 @@ build_thesis:
 test:
 	dotnet test src/Hestia.sln
 cover:
-	dotnet tool install --global dotnet-reportgenerator-globaltool
+	dotnet tool install --global dotnet-reportgenerator-globaltool & exit 0
 	dotnet test src/Hestia.sln /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:Exclude="[xunit*]*" /p:CoverletOutput="coverage.json"
-	$(HOME)/.dotnet/tools/reportgenerator "-reports:**/coverage.json" "-targetdir:coveragereport" "-reporttypes:Html;HtmlSummary;Cobertura;lcov;XML"
+	$(HOME)/.dotnet/tools/reportgenerator "-reports:**/coverage.json" "-targetdir:coveragereport" "-reporttypes:Html;HtmlSummary;Cobertura;lcov;XML;JsonSummary"

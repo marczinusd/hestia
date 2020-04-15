@@ -40,7 +40,7 @@ namespace Test.Hestia.Model.Stats
             fixture.Register(() => coverageProviderMock.Object);
             coverageProviderMock.Setup(mock => mock.ParseFileCoveragesFromFilePath(It.IsAny<string>()))
                                 .Returns(_coverages);
-            providerFactoryMock.Setup(mock => mock.CreateProviderForFile())
+            providerFactoryMock.Setup(mock => mock.CreateProviderForFile(It.IsAny<string>()))
                                .Returns(coverageProviderMock.Object);
             var enricher = fixture.Create<StatsEnricher>();
             var snapshotToEnrich = new RepositorySnapshot(1,
@@ -131,7 +131,7 @@ namespace Test.Hestia.Model.Stats
             var fixture = new Fixture();
             var coverageFactory = new Mock<ICoverageProviderFactory>();
             var coverageProvider = new Mock<ICoverageProvider>();
-            coverageFactory.Setup(mock => mock.CreateProviderForFile())
+            coverageFactory.Setup(mock => mock.CreateProviderForFile(It.IsAny<string>()))
                            .Returns(coverageProvider.Object);
             coverageProvider.Setup(mock => mock.ParseFileCoveragesFromFilePath(It.IsAny<string>()))
                             .Returns(new[]

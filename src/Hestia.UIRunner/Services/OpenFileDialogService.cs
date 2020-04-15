@@ -18,7 +18,10 @@ namespace Hestia.UIRunner.Services
 
         public async Task<string[]> OpenFileDialog()
         {
-            var dialog = new OpenFileDialog();
+            var dialog = new OpenFileDialog
+            {
+                AllowMultiple = false,
+            };
 
             return await dialog.ShowAsync(_window());
         }

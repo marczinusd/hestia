@@ -88,7 +88,7 @@ namespace Hestia.Model.Stats
                                            () =>
                                                throw new
                                                    OptionIsNoneException($"{nameof(repositorySnapshot.PathToCoverageResultFile)} cannot be None"));
-            var coverages = _providerFactory.CreateProviderForFile()
+            var coverages = _providerFactory.CreateProviderForFile(pathToCoverageFile)
                                             .ParseFileCoveragesFromFilePath(pathToCoverageFile);
 
             return repositorySnapshot.With(repositorySnapshot.Files
@@ -101,7 +101,7 @@ namespace Hestia.Model.Stats
         {
             _logger.LogDebug($"Enriching repository snapshot with hash {repositorySnapshot.AtHash} with git stats");
 
-            return repositorySnapshot.With(repositorySnapshot.Files.Apply(EnrichWithGitStats));
+            return repositorySnapshot.With(repositorySnapshot.Files.Apply(EnrichWithGitStats).ToList());
         }
 
         public File Enrich(File file, string coverageReportPath, string coverageCommand)
@@ -126,7 +126,7 @@ namespace Hestia.Model.Stats
             }
 
             // ReSharper disable once UnusedVariable
-            var coverage = _providerFactory.CreateProviderForFile()
+            var coverage = _providerFactory.CreateProviderForFile(finalPath)
                                            .ParseFileCoveragesFromFilePath(finalPath)
                                            .Single(f => f.FileName.Equals(file.Filename));
 

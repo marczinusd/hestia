@@ -32,6 +32,10 @@ namespace Hestia.UIRunner
                    .As<IStatsEnricher>();
             builder.RegisterType<RepositorySnapshotBuilderWrapper>()
                    .As<IRepositorySnapshotBuilderWrapper>();
+            builder.RegisterType<ReportGeneratorWrapper>()
+                   .As<IReportGeneratorWrapper>();
+            builder.RegisterType<CoverageReportConverter>()
+                   .As<ICoverageReportConverter>();
 
             return builder;
         }

@@ -12,16 +12,15 @@ namespace Test.Hestia.UIRunner
     public class MainViewModelTest
     {
         [Fact]
-        public void MainViewModelShowHaveExpectedGreeting()
-        {
+        public void MainViewModelShowHaveExpectedGreeting() =>
             new MainWindowViewModel(new DiskIOWrapper(),
                                     Mock.Of<IStatsEnricher>(),
                                     Mock.Of<IPathValidator>(),
                                     Mock.Of<IRepositorySnapshotBuilderWrapper>(),
-                                    Mock.Of<IOpenFileDialogService>())
+                                    Mock.Of<IOpenFileDialogService>(),
+                                    Mock.Of<ICoverageReportConverter>())
                 .Greeting
                 .Should()
                 .Be("Hello World!");
-        }
     }
 }
