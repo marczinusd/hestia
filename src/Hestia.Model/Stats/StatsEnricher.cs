@@ -125,14 +125,11 @@ namespace Hestia.Model.Stats
                                       .None(() => coverageReportPath);
             }
 
-            // ReSharper disable once UnusedVariable
             var coverage = _providerFactory.CreateProviderForFile(finalPath)
                                            .ParseFileCoveragesFromFilePath(finalPath)
                                            .Single(f => f.FileName.Equals(file.Filename));
 
-            // enrich with coverage stats
-            // enrich with git stats
-            return file;
+            return file.With(coverageStats: new FileCoverageStats?(coverage));
         }
 
         private RepositorySnapshot ConvertCoverageResults(RepositorySnapshot repositorySnapshot)
