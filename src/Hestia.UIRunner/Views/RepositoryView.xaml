@@ -16,8 +16,18 @@
     </Design.DataContext>
 
     <StackPanel>
-        <DataGrid AutoGenerateColumns="True" Items="{Binding Repository.Files}" SelectedItem="{Binding SelectedItem}">
-        </DataGrid>        
+        <ScrollViewer HorizontalScrollBarVisibility="Auto">
+            <DataGrid AutoGenerateColumns="False" Items="{Binding Repository.Files}"
+                      SelectedItem="{Binding SelectedItem}" CanUserResizeColumns="True" CanUserSortColumns="True"
+                      CanUserReorderColumns="True">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="File name" Binding="{Binding Path}" />
+                    <DataGridTextColumn Header="Line coverage" Binding="{Binding CoveragePercentage}" />
+                    <DataGridTextColumn Header="Lifetime # of authors" Binding="{Binding LifetimeAuthors}" />
+                    <DataGridTextColumn Header="Lifetime # of changes" Binding="{Binding LifetimeChanges}" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </ScrollViewer>
     </StackPanel>
     <!-- ReSharper restore Xaml.ConstructorWarning -->
     <!-- ReSharper restore Xaml.UnexpectedTextToken -->

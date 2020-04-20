@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Hestia.Model.Stats;
+using JetBrains.Annotations;
 using LanguageExt;
 
 namespace Hestia.Model
@@ -35,6 +36,18 @@ namespace Hestia.Model
         public Option<FileGitStats> GitStats { get; }
 
         public Option<FileCoverageStats> CoverageStats { get; }
+
+        [JsonIgnore]
+        [UsedImplicitly]
+        public decimal CoveragePercentage => CoverageStats.Match(x => x.PercentageOfLineCoverage, -1);
+
+        [JsonIgnore]
+        [UsedImplicitly]
+        public int LifetimeAuthors => GitStats.Match(x => x.LifetimeAuthors, -1);
+
+        [JsonIgnore]
+        [UsedImplicitly]
+        public int LifetimeChanges => GitStats.Match(x => x.LifetimeChanges, -1);
 
         public File With(IList<SourceLine>? content = null,
                          FileGitStats? gitStats = null,
