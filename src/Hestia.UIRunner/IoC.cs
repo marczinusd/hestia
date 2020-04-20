@@ -3,8 +3,7 @@ using Hestia.Model.Builders;
 using Hestia.Model.Stats;
 using Hestia.Model.Wrappers;
 using Hestia.UIRunner.ViewModels;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
+using Serilog;
 
 namespace Hestia.UIRunner
 {
@@ -12,6 +11,10 @@ namespace Hestia.UIRunner
     {
         public static ContainerBuilder RegisterMainWindowViewModelDependencies(this ContainerBuilder builder)
         {
+            Log.Logger = new LoggerConfiguration().WriteTo
+                                                  .File(@"C:\dev\hestia.log")
+                                                  .CreateLogger();
+
             builder.RegisterType<MainWindowViewModel>();
             builder.RegisterType<DiskIOWrapper>()
                    .As<IDiskIOWrapper>();
@@ -27,7 +30,7 @@ namespace Hestia.UIRunner
                    .As<IReportGeneratorWrapper>();
             builder.RegisterType<CoverageReportConverter>()
                    .As<ICoverageReportConverter>();
-            builder.RegisterInstance<ILogger<IStatsEnricher>>(new NullLogger<IStatsEnricher>());
+            builder.RegisterInstance(Log.Logger);
             builder.RegisterType<StatsEnricher>()
                    .As<IStatsEnricher>();
             builder.RegisterType<RepositorySnapshotBuilderWrapper>()

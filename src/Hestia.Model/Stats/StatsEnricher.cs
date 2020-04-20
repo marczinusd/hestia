@@ -5,7 +5,7 @@ using System.Linq;
 using Hestia.Model.Builders;
 using Hestia.Model.Wrappers;
 using LanguageExt;
-using Microsoft.Extensions.Logging;
+using Serilog;
 using static LanguageExt.Prelude;
 
 namespace Hestia.Model.Stats
@@ -24,11 +24,11 @@ namespace Hestia.Model.Stats
         private readonly ICoverageReportConverter _converter;
         private readonly IGitCommands _gitCommands;
         private readonly IDiskIOWrapper _ioWrapper;
-        private readonly ILogger<IStatsEnricher> _logger;
+        private readonly ILogger _logger;
 
         public StatsEnricher(IDiskIOWrapper ioWrapper,
                              IGitCommands gitCommands,
-                             ILogger<IStatsEnricher> logger,
+                             ILogger logger,
                              ICommandLineExecutor executor,
                              ICoverageProviderFactory providerFactory,
                              IPathValidator pathValidator,
@@ -82,7 +82,7 @@ namespace Hestia.Model.Stats
 
         public RepositorySnapshot EnrichWithCoverage(RepositorySnapshot repositorySnapshot)
         {
-            _logger.LogDebug($"Enriching repository snapshot at {repositorySnapshot.AtHash} with coverage stats");
+            _logger.Debug($"Enriching repository snapshot at {repositorySnapshot.AtHash} with coverage stats");
             var pathToCoverageFile = match(repositorySnapshot.PathToCoverageResultFile,
                                            s => s,
                                            () =>
@@ -99,7 +99,7 @@ namespace Hestia.Model.Stats
 
         public RepositorySnapshot EnrichWithGitStats(RepositorySnapshot repositorySnapshot)
         {
-            _logger.LogDebug($"Enriching repository snapshot with hash {repositorySnapshot.AtHash} with git stats");
+            _logger.Debug($"Enriching repository snapshot with hash {repositorySnapshot.AtHash} with git stats");
 
             return repositorySnapshot.With(repositorySnapshot.Files.Apply(EnrichWithGitStats).ToList());
         }
@@ -184,22 +184,23 @@ namespace Hestia.Model.Stats
 
         private File EnrichWithGitStats(File file)
         {
-            _logger.LogInformation($"Loading git stats for {file.Filename}");
+            _logger.Debug($"Loading git stats for {file.Filename}");
             var gitStats = new FileGitStats(_gitCommands.NumberOfChangesForFile(file.FullPath),
                                             _gitCommands.NumberOfDifferentAuthorsForFile(file.FullPath));
-            var lineStats = _gitCommands.NumberOfDifferentAuthorsAndChangesForLine(file.FullPath, file.Content.Count)
-                                        .Select(x => new LineGitStats(x.lineNumber,
-                                                                      x.numberOfCommits,
-                                                                      x.numberOfAuthors))
-                                        .ToList(); // force evaluation
 
+            // var lineStats = _gitCommands.NumberOfDifferentAuthorsAndChangesForLine(file.FullPath, file.Content.Count)
+            //                             .Select(x => new LineGitStats(x.lineNumber,
+            //                                                           x.numberOfCommits,
+            //                                                           x.numberOfAuthors))
+            //                             .ToList(); // force evaluation
             var enrichedContent =
                 file.Content.Select(line => new SourceLine(line.LineNumber,
                                                            line.Text,
                                                            line.LineCoverageStats,
-                                                           Some(lineStats.Single(stat => stat.LineNumber ==
-                                                                                         line.LineNumber))));
+                                                           Option<LineGitStats>.None));
 
+                                                           // lineStats.Single(stat => stat.LineNumber ==
+                                                           //                               line.LineNumber)))
             return file.With(enrichedContent.ToList(), gitStats);
         }
 

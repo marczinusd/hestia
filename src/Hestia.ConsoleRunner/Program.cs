@@ -3,7 +3,7 @@ using Hestia.ConsoleRunner.Configuration;
 using Hestia.Model.Builders;
 using Hestia.Model.Stats;
 using Hestia.Model.Wrappers;
-using Microsoft.Extensions.Logging;
+using Serilog;
 using IOFile = System.IO.File;
 
 namespace Hestia.ConsoleRunner
@@ -14,21 +14,20 @@ namespace Hestia.ConsoleRunner
     {
         public static void Main(string[] args)
         {
-            var factory = LoggerFactory.Create(builder =>
-            {
-                builder.AddConsole();
-            });
+            Log.Logger = new LoggerConfiguration().WriteTo
+                                                  .Console()
+                                                  .CreateLogger();
             var executor = new CommandLineExecutor();
             var ioWrapper = new DiskIOWrapper();
             var reportConverter = new CoverageReportConverter(ioWrapper, new ReportGeneratorWrapper());
             var enricher = new StatsEnricher(ioWrapper,
                                              new GitCommands(executor),
-                                             factory.CreateLogger<IStatsEnricher>(),
+                                             Log.Logger,
                                              executor,
                                              new CoverageProviderFactory(ioWrapper),
                                              new PathValidator(),
                                              reportConverter);
-            var runner = new HestiaConsoleRunner(factory,
+            var runner = new HestiaConsoleRunner(Log.Logger,
                                                  enricher,
                                                  new JsonConfigurationProvider(),
                                                  ioWrapper,

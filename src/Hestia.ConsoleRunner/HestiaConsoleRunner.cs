@@ -11,28 +11,28 @@ using Hestia.Model.Builders;
 using Hestia.Model.Stats;
 using Hestia.Model.Wrappers;
 using LanguageExt;
-using Microsoft.Extensions.Logging;
+using Serilog;
 using File = System.IO.File;
 
 namespace Hestia.ConsoleRunner
 {
     public class HestiaConsoleRunner
     {
-        private readonly ILoggerFactory _loggerFactory;
+        private readonly ILogger _logger;
         private readonly IStatsEnricher _statsEnricher;
         private readonly IJsonConfigurationProvider _configurationProvider;
         private readonly IDiskIOWrapper _ioWrapper;
         private readonly IPathValidator _validator;
         private readonly ICoverageReportConverter _converter;
 
-        public HestiaConsoleRunner(ILoggerFactory loggerFactory,
+        public HestiaConsoleRunner(ILogger logger,
                                    IStatsEnricher statsEnricher,
                                    IJsonConfigurationProvider configurationProvider,
                                    IDiskIOWrapper ioWrapper,
                                    IPathValidator validator,
                                    ICoverageReportConverter converter)
         {
-            _loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
+            _logger = logger;
             _statsEnricher = statsEnricher ?? throw new ArgumentNullException(nameof(statsEnricher));
             _configurationProvider =
                 configurationProvider ?? throw new ArgumentNullException(nameof(configurationProvider));
@@ -66,7 +66,6 @@ namespace Hestia.ConsoleRunner
 
         private void Execute(Options options)
         {
-            var logger = _loggerFactory.CreateLogger<HestiaConsoleRunner>();
             var config = _configurationProvider.LoadConfiguration(options.JsonConfigPath)
                                                .Result;
             if (!string.IsNullOrWhiteSpace(config.CoverageReportLocation) && !Path
@@ -89,11 +88,11 @@ namespace Hestia.ConsoleRunner
             var enrichedRepository = repository.Apply(_statsEnricher.EnrichWithCoverage)
                                                .Apply(_statsEnricher.EnrichWithGitStats);
 
-            logger.LogInformation("Writing results to output...");
+            _logger.Information("Writing results to output...");
             File.WriteAllText(options.OutputPath,
                               JsonSerializer.Serialize(enrichedRepository,
                                                        new JsonSerializerOptions { WriteIndented = true, }));
-            logger.LogInformation($"Output created at {options.OutputPath}");
+            _logger.Information($"Output created at {options.OutputPath}");
         }
 
         // ReSharper disable once ClassNeverInstantiated.Local

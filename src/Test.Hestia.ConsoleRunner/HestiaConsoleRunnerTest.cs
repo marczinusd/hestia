@@ -4,9 +4,9 @@ using AutoFixture.AutoMoq;
 using FluentAssertions;
 using Hestia.ConsoleRunner;
 using Hestia.Model.Stats;
-using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
+using ILogger = Serilog.ILogger;
 
 namespace Test.Hestia.ConsoleRunner
 {
@@ -32,7 +32,7 @@ namespace Test.Hestia.ConsoleRunner
         public void StatsEnricherCannotBeNull()
         {
             // ReSharper disable once ObjectCreationAsStatement
-            Action act = () => new HestiaConsoleRunner(new LoggerFactory(),
+            Action act = () => new HestiaConsoleRunner(Mock.Of<ILogger>(),
                                                        null,
                                                        null,
                                                        null,
@@ -48,7 +48,7 @@ namespace Test.Hestia.ConsoleRunner
         public void JsonConfigProviderCannotBeNull()
         {
             // ReSharper disable once ObjectCreationAsStatement
-            Action act = () => new HestiaConsoleRunner(new LoggerFactory(),
+            Action act = () => new HestiaConsoleRunner(Mock.Of<ILogger>(),
                                                        Mock.Of<IStatsEnricher>(),
                                                        null,
                                                        null,
