@@ -222,7 +222,7 @@ namespace Test.Hestia.UIRunner
                                                    Times.Once);
                               statsEnricherMock.Verify(mock => mock.EnrichWithCoverage(It.IsAny<RepositorySnapshot>()),
                                                        Times.Once);
-                              statsEnricherMock.Verify(mock => mock.EnrichWithGitStats(It.IsAny<RepositorySnapshot>()),
+                              statsEnricherMock.Verify(mock => mock.EnrichWithGitStats(It.IsAny<RepositorySnapshot>(), GitStatGranularity.File),
                                                        Times.Once);
                           });
         }

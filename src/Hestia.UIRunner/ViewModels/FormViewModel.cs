@@ -115,7 +115,7 @@ namespace Hestia.UIRunner.ViewModels
                 .Apply(_builder.Build)
                 .Apply(ConvertCoverageReport)
                 .Apply(_statsEnricher.EnrichWithCoverage)
-                .Apply(_statsEnricher.EnrichWithGitStats);
+                .Apply(x => _statsEnricher.EnrichWithGitStats(x));
 
         private RepositorySnapshot ConvertCoverageReport(RepositorySnapshot snapshot)
         {

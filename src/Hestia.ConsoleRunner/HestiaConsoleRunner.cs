@@ -86,7 +86,7 @@ namespace Hestia.ConsoleRunner
                                                         _validator);
 
             var enrichedRepository = repository.Apply(_statsEnricher.EnrichWithCoverage)
-                                               .Apply(_statsEnricher.EnrichWithGitStats);
+                                               .Apply(x => _statsEnricher.EnrichWithGitStats(x));
 
             _logger.Information("Writing results to output...");
             File.WriteAllText(options.OutputPath,

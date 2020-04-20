@@ -21,10 +21,12 @@
                       SelectedItem="{Binding SelectedItem}" CanUserResizeColumns="True" CanUserSortColumns="True"
                       CanUserReorderColumns="True">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="File name" Binding="{Binding Path}" />
+                    <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
+                    <DataGridTextColumn Header="File name" Binding="{Binding Filename}" />
                     <DataGridTextColumn Header="Line coverage" Binding="{Binding CoveragePercentage}" />
                     <DataGridTextColumn Header="Lifetime # of authors" Binding="{Binding LifetimeAuthors}" />
                     <DataGridTextColumn Header="Lifetime # of changes" Binding="{Binding LifetimeChanges}" />
+                    <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
                 </DataGrid.Columns>
             </DataGrid>
         </ScrollViewer>

@@ -7,7 +7,8 @@ namespace Hestia.Model.Stats
 
         RepositorySnapshot EnrichWithCoverage(RepositorySnapshot repositorySnapshot);
 
-        RepositorySnapshot EnrichWithGitStats(RepositorySnapshot repositorySnapshot);
+        RepositorySnapshot EnrichWithGitStats(RepositorySnapshot repositorySnapshot,
+                                              GitStatGranularity granularity = GitStatGranularity.File);
 
         File Enrich(File file, string coverageReportPath, string coverageCommand);
     }

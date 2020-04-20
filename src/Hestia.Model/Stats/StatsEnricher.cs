@@ -75,7 +75,7 @@ namespace Hestia.Model.Stats
                                             .Build()
                                             .Apply(ConvertCoverageResults)
                                             .Apply(EnrichWithCoverage)
-                                            .Apply(EnrichWithGitStats)
+                                            .Apply(x => EnrichWithGitStats(x))
                                             .Apply(repo.AddSnapshot);
                          });
         }
@@ -97,11 +97,13 @@ namespace Hestia.Model.Stats
                                            pathToCoverageResultFile: pathToCoverageFile);
         }
 
-        public RepositorySnapshot EnrichWithGitStats(RepositorySnapshot repositorySnapshot)
+        public RepositorySnapshot EnrichWithGitStats(RepositorySnapshot repositorySnapshot,
+                                                     GitStatGranularity granularity = GitStatGranularity.File)
         {
             _logger.Debug($"Enriching repository snapshot with hash {repositorySnapshot.AtHash} with git stats");
 
-            return repositorySnapshot.With(repositorySnapshot.Files.Apply(EnrichWithGitStats).ToList());
+            return repositorySnapshot.With(repositorySnapshot.Files.Apply(x => x.Select(f => EnrichWithGitStats(f, granularity)))
+                                                             .ToList());
         }
 
         public File Enrich(File file, string coverageReportPath, string coverageCommand)
@@ -120,7 +122,8 @@ namespace Hestia.Model.Stats
             var finalPath = coverageReportPath;
             if (!coverageReportPath.Contains("coverage.json"))
             {
-                finalPath = _converter.Convert(coverageReportPath, Path.GetDirectoryName(coverageReportPath) ?? coverageReportPath)
+                finalPath = _converter.Convert(coverageReportPath,
+                                               Path.GetDirectoryName(coverageReportPath) ?? coverageReportPath)
                                       .Some(x => x)
                                       .None(() => coverageReportPath);
             }
@@ -182,29 +185,31 @@ namespace Hestia.Model.Stats
                              coverageStats: new FileCoverageStats(coverage));
         }
 
-        private File EnrichWithGitStats(File file)
+        private File EnrichWithGitStats(File file, GitStatGranularity granularity)
         {
             _logger.Debug($"Loading git stats for {file.Filename}");
             var gitStats = new FileGitStats(_gitCommands.NumberOfChangesForFile(file.FullPath),
                                             _gitCommands.NumberOfDifferentAuthorsForFile(file.FullPath));
 
-            // var lineStats = _gitCommands.NumberOfDifferentAuthorsAndChangesForLine(file.FullPath, file.Content.Count)
-            //                             .Select(x => new LineGitStats(x.lineNumber,
-            //                                                           x.numberOfCommits,
-            //                                                           x.numberOfAuthors))
-            //                             .ToList(); // force evaluation
+            var lineStats = new List<LineGitStats>();
+            if (granularity == GitStatGranularity.Full)
+            {
+                lineStats = _gitCommands.NumberOfDifferentAuthorsAndChangesForLine(file.FullPath, file.Content.Count)
+                                        .Select(x => new LineGitStats(x.lineNumber,
+                                                                      x.numberOfCommits,
+                                                                      x.numberOfAuthors))
+                                        .ToList(); // force evaluation
+            }
+
             var enrichedContent =
                 file.Content.Select(line => new SourceLine(line.LineNumber,
                                                            line.Text,
                                                            line.LineCoverageStats,
-                                                           Option<LineGitStats>.None));
+                                                           lineStats.SingleOrDefault(l => l.LineNumber == line.LineNumber)));
 
-                                                           // lineStats.Single(stat => stat.LineNumber ==
-                                                           //                               line.LineNumber)))
+            // lineStats.Single(stat => stat.LineNumber ==
+            //                               line.LineNumber)))
             return file.With(enrichedContent.ToList(), gitStats);
         }
-
-        private IEnumerable<File> EnrichWithGitStats(IList<File> files) =>
-            files.Select(EnrichWithGitStats);
     }
 }
