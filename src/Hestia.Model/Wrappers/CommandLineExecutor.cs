@@ -16,15 +16,28 @@ namespace Hestia.Model.Wrappers
         }
 
         public string[] Execute(string commandToExecute, string args, string workingDirectory) =>
-            ExecuteAsync(commandToExecute, args, workingDirectory).Result;
+            Command.Read(commandToExecute,
+                         args,
+                         workingDirectory,
+                         _noEcho)
+                   .Split(Environment.NewLine);
 
         public string ExecuteNoSplit(string commandToExecute, string args, string workingDirectory) =>
-            ExecuteAsyncNoSplit(commandToExecute, args, workingDirectory).Result;
+            Command.Read(commandToExecute,
+                         args,
+                         workingDirectory,
+                         _noEcho);
 
         public async Task<string[]> ExecuteAsync(string commandToExecute, string args, string workingDirectory) =>
-            (await Command.ReadAsync(commandToExecute, args, workingDirectory, _noEcho)).Split(Environment.NewLine);
+            (await Command.ReadAsync(commandToExecute,
+                                     args,
+                                     workingDirectory,
+                                     _noEcho)).Split(Environment.NewLine);
 
         public async Task<string> ExecuteAsyncNoSplit(string commandToExecute, string args, string workingDirectory) =>
-            await Command.ReadAsync(commandToExecute, args, workingDirectory, _noEcho);
+            await Command.ReadAsync(commandToExecute,
+                                    args,
+                                    workingDirectory,
+                                    _noEcho);
     }
 }
