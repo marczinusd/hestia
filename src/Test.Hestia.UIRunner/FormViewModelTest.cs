@@ -11,6 +11,7 @@ using Hestia.Model.Wrappers;
 using Hestia.UIRunner.Services;
 using Hestia.UIRunner.ViewModels;
 using LanguageExt;
+using Metsys.Bson;
 using Microsoft.Reactive.Testing;
 using Moq;
 using Test.Hestia.Utils;
@@ -171,10 +172,14 @@ namespace Test.Hestia.UIRunner
             scheduler.Start(() => vm.ProcessRepositoryCommand
                                     .Execute());
 
-            builderMock.Verify(mock =>
-                                   mock.Build(It.Is<RepositorySnapshotBuilderArguments>(x =>
-                                                                                            MatchingRepositoryBuilderArgs(x))),
-                               Times.Once);
+            Helpers.After(TimeSpan.FromMilliseconds(WaitMs),
+                          () =>
+                          {
+                              builderMock.Verify(mock =>
+                                                     mock.Build(It.Is<RepositorySnapshotBuilderArguments>(x =>
+                                                                                                              MatchingRepositoryBuilderArgs(x))),
+                                                 Times.Once);
+                          });
         }
 
         [Fact]
@@ -193,7 +198,7 @@ namespace Test.Hestia.UIRunner
                          .Returns(CoverageOutputLocation);
             builderMock.Setup(mock => mock.Build(It.IsAny<RepositorySnapshotBuilderArguments>()))
                        .Returns(repositorySnapshot);
-            var vm = new FormViewModel(new DiskIOWrapper(),
+            var vm = new FormViewModel(Mock.Of<IDiskIOWrapper>(),
                                        statsEnricherMock.Object,
                                        Mock.Of<IPathValidator>(),
                                        builderMock.Object,
@@ -210,11 +215,17 @@ namespace Test.Hestia.UIRunner
             scheduler.Start(() => vm.ProcessRepositoryCommand
                                     .Execute());
 
-            converterMock.Verify(mock => mock.Convert(CoverageOutputLocation,
-                                                      Path.GetDirectoryName(CoverageOutputLocation)),
-                                 Times.Once);
-            statsEnricherMock.Verify(mock => mock.EnrichWithCoverage(It.IsAny<RepositorySnapshot>()), Times.Once);
-            statsEnricherMock.Verify(mock => mock.EnrichWithGitStats(It.IsAny<RepositorySnapshot>()), Times.Once);
+            Helpers.After(TimeSpan.FromMilliseconds(WaitMs),
+                          () =>
+                          {
+                              converterMock.Verify(mock => mock.Convert(CoverageOutputLocation,
+                                                                        Path.GetDirectoryName(CoverageOutputLocation)),
+                                                   Times.Once);
+                              statsEnricherMock.Verify(mock => mock.EnrichWithCoverage(It.IsAny<RepositorySnapshot>()),
+                                                       Times.Once);
+                              statsEnricherMock.Verify(mock => mock.EnrichWithGitStats(It.IsAny<RepositorySnapshot>()),
+                                                       Times.Once);
+                          });
         }
 
         [Fact]
@@ -224,7 +235,7 @@ namespace Test.Hestia.UIRunner
             var fileDialogServiceMock = new Mock<IOpenFileDialogService>();
             fileDialogServiceMock.Setup(mock => mock.OpenFolderDialog())
                                  .Returns(Task.FromResult("path"));
-            var vm = new FormViewModel(new DiskIOWrapper(),
+            var vm = new FormViewModel(Mock.Of<IDiskIOWrapper>(),
                                        Mock.Of<IStatsEnricher>(),
                                        Mock.Of<IPathValidator>(),
                                        Mock.Of<IRepositorySnapshotBuilderWrapper>(),
@@ -241,9 +252,13 @@ namespace Test.Hestia.UIRunner
             scheduler.Start(() => vm.OpenFolderDialogCommand
                                     .Execute());
 
-            vm.RepositoryPath
-              .Should()
-              .Be("path");
+            Helpers.After(TimeSpan.FromMilliseconds(WaitMs),
+                          () =>
+                          {
+                              vm.RepositoryPath
+                                .Should()
+                                .Be("path");
+                          });
         }
 
         private static bool MatchingRepositoryBuilderArgs(RepositorySnapshotBuilderArguments args) =>
