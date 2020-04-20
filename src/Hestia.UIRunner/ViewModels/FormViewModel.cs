@@ -122,7 +122,7 @@ namespace Hestia.UIRunner.ViewModels
         {
             var newPath = _reportConverter
                           .Convert(CoverageOutputLocation, Path.GetDirectoryName(CoverageOutputLocation))
-                          .Match(val => val, () => throw new FileNotFoundException());
+                          .Match(val => val, () => null);
 
             return snapshot.With(pathToCoverageResultFile: newPath);
         }
