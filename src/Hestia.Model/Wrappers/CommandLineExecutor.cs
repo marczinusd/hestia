@@ -15,12 +15,21 @@ namespace Hestia.Model.Wrappers
             _noEcho = noEcho;
         }
 
-        public string[] Execute(string commandToExecute, string args, string workingDirectory) =>
-            Command.Read(commandToExecute,
-                         args,
-                         workingDirectory,
-                         _noEcho)
-                   .Split(Environment.NewLine);
+        public string[] Execute(string commandToExecute, string args, string workingDirectory)
+        {
+            var result = Command.Read(commandToExecute,
+                                      args,
+                                      workingDirectory,
+                                      _noEcho);
+
+            if (result.Contains(Environment.NewLine))
+            {
+                // Ideally only this should suffice, but due to some weirdness with SimpleExec this only works on linux
+                return result.Split(Environment.NewLine);
+            }
+
+            return result.Split('\n');
+        }
 
         public string ExecuteNoSplit(string commandToExecute, string args, string workingDirectory) =>
             Command.Read(commandToExecute,

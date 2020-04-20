@@ -19,9 +19,11 @@ namespace Hestia.Model.Wrappers
         public GitCommands(ICommandLineExecutor commandLineExecutor)
             => _commandLineExecutor = commandLineExecutor;
 
-        public int NumberOfChangesForFile(string filePath) =>
-            Exec(OnelineFileHistory(filePath), Path.GetDirectoryName(filePath) ?? string.Empty)
-                .Length;
+        public int NumberOfChangesForFile(string filePath)
+        {
+            var result = Exec(OnelineFileHistory(filePath), Path.GetDirectoryName(filePath) ?? string.Empty);
+            return result.Length;
+        }
 
         public int NumberOfChangesForLine(string filePath, int lineNumber) =>
             ParseLineHistoryForNumberOfChanges(Exec(LineHistoryCommand(filePath, lineNumber),

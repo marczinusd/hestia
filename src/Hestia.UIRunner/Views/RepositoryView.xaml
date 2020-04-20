@@ -16,14 +16,14 @@
     </Design.DataContext>
 
     <StackPanel>
-        <ScrollViewer HorizontalScrollBarVisibility="Auto">
+        <ScrollViewer HorizontalScrollBarVisibility="Visible">
             <DataGrid AutoGenerateColumns="False" Items="{Binding Repository.Files}"
                       SelectedItem="{Binding SelectedItem}" CanUserResizeColumns="True" CanUserSortColumns="True"
                       CanUserReorderColumns="True">
                 <DataGrid.Columns>
                     <!-- ReSharper disable Xaml.BindingWithContextNotResolved -->
                     <DataGridTextColumn Header="File name" Binding="{Binding Filename}" />
-                    <DataGridTextColumn Header="Line coverage" Binding="{Binding CoveragePercentage}" />
+                    <DataGridTextColumn Header="Line coverage %" Binding="{Binding CoveragePercentage}" />
                     <DataGridTextColumn Header="Lifetime # of authors" Binding="{Binding LifetimeAuthors}" />
                     <DataGridTextColumn Header="Lifetime # of changes" Binding="{Binding LifetimeChanges}" />
                     <!-- ReSharper restore Xaml.BindingWithContextNotResolved -->
