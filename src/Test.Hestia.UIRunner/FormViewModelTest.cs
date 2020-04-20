@@ -11,7 +11,6 @@ using Hestia.Model.Wrappers;
 using Hestia.UIRunner.Services;
 using Hestia.UIRunner.ViewModels;
 using LanguageExt;
-using Metsys.Bson;
 using Microsoft.Reactive.Testing;
 using Moq;
 using Test.Hestia.Utils;
