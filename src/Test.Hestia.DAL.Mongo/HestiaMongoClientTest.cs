@@ -28,13 +28,12 @@ namespace Test.Hestia.DAL.Mongo
                   .Returns(collectionMock.Object);
             clientMock.Setup(mock => mock.GetDatabase(It.IsAny<string>(), It.IsAny<MongoDatabaseSettings>()))
                       .Returns(dbMock.Object);
-            clientFactoryMock.Setup(mock => mock.CreateClient(It.IsAny<string>()))
+            clientFactoryMock.Setup(mock => mock.CreateClient())
                              .Returns(clientMock.Object);
 
             // ReSharper disable once UnusedVariable
             var hestiaMongoClient = new HestiaMongoClient(clientFactoryMock.Object,
                                                           c => collectionWrapperMock.Object,
-                                                          string.Empty,
                                                           string.Empty,
                                                           string.Empty);
 

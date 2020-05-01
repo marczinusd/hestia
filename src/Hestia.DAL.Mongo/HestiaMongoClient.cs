@@ -16,11 +16,10 @@ namespace Hestia.DAL.Mongo
         public HestiaMongoClient(IMongoClientFactory factory,
                                  Func<IMongoCollection<RepositoryEntity>,
                                      IMongoCollectionWrapper<RepositoryEntity>> wrapperFactory,
-                                 string connectionString,
                                  string databaseName,
                                  string collectionName)
         {
-            var client = factory.CreateClient(connectionString);
+            var client = factory.CreateClient();
             var database = client.GetDatabase(databaseName, new MongoDatabaseSettings());
 
             _repositories = wrapperFactory(database.GetCollection<RepositoryEntity>(collectionName));

@@ -75,7 +75,8 @@ namespace Hestia.ConsoleRunner
                                                                               .Contains("coverage.json"))
             {
                 var result = _converter.Convert(config.CoverageReportLocation,
-                                                Path.GetDirectoryName(config.CoverageReportLocation))
+                                                Path.GetDirectoryName(config.CoverageReportLocation) ??
+                                                throw new DirectoryNotFoundException(config.CoverageReportLocation))
                                        .Match(res => res, () => string.Empty);
                 config = config.With(string.IsNullOrWhiteSpace(result) ? null : result);
             }
