@@ -9,8 +9,10 @@ namespace Hestia.DAL.Mongo
     {
         public IMongoClient CreateClient()
         {
-          return new MongoClient(CreateConnectionString());
+            return new MongoClient(CreateConnectionString());
         }
+
+        public static string DatabaseName => Environment.GetEnvironmentVariable("HESTIA_MONGO_DB") ?? "hestia";
 
         private static string CreateConnectionString()
         {
@@ -32,9 +34,7 @@ namespace Hestia.DAL.Mongo
 
         private static string CreateAuthDbString()
         {
-            var dbName = Environment.GetEnvironmentVariable("HESTIA_MONGO_DB");
-
-            return dbName != null ? $"/{dbName}" : string.Empty;
+            return DatabaseName != null ? $"/{DatabaseName}" : string.Empty;
         }
     }
 }

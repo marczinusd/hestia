@@ -1,4 +1,5 @@
 using FluentAssertions;
+using Hestia.DAL.Mongo;
 using Hestia.Model.Builders;
 using Hestia.Model.Stats;
 using Hestia.Model.Wrappers;
@@ -18,7 +19,8 @@ namespace Test.Hestia.UIRunner
                                     Mock.Of<IPathValidator>(),
                                     Mock.Of<IRepositorySnapshotBuilderWrapper>(),
                                     Mock.Of<IOpenFileDialogService>(),
-                                    Mock.Of<ICoverageReportConverter>())
+                                    Mock.Of<ICoverageReportConverter>(),
+                                    Mock.Of<ISnapshotPersistence>())
                 .Greeting
                 .Should()
                 .Be("Hello World!");

@@ -13,7 +13,7 @@ namespace Test.Hestia.ConsoleRunner
     public class HestiaConsoleRunnerTest
     {
         [Fact]
-        public void LoggerFactoryCannotBeNull()
+        public void LoggerCannotBeNull()
         {
             // ReSharper disable once ObjectCreationAsStatement
             Action act = () => new HestiaConsoleRunner(null,
@@ -25,7 +25,7 @@ namespace Test.Hestia.ConsoleRunner
 
             act.Should()
                .Throw<ArgumentNullException>()
-               .WithMessage("*loggerFactory*");
+               .WithMessage("*logger*");
         }
 
         [Fact]

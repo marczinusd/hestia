@@ -30,6 +30,7 @@
                 </DataGrid.Columns>
             </DataGrid>
         </ScrollViewer>
+        <Button Content="Commit to database" Command="{Binding CommitToDatabaseCommand}" />
     </StackPanel>
     <!-- ReSharper restore Xaml.ConstructorWarning -->
     <!-- ReSharper restore Xaml.UnexpectedTextToken -->

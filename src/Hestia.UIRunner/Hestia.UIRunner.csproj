@@ -35,6 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Hestia.DAL.Mongo\Hestia.DAL.Mongo.csproj" />
     <ProjectReference Include="..\Hestia.Model\Hestia.Model.csproj" />
   </ItemGroup>
 </Project>

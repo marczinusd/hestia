@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Hestia.DAL.Mongo;
 using Hestia.DAL.Mongo.Model;
 using Hestia.DAL.Mongo.Wrappers;
@@ -21,10 +22,10 @@ namespace Test.Hestia.DAL.Mongo
             var clientFactoryMock = new Mock<IMongoClientFactory>();
             var clientMock = new Mock<IMongoClient>();
             var dbMock = new Mock<IMongoDatabase>();
-            var collectionMock = new Mock<IMongoCollection<RepositoryEntity>>();
-            var collectionWrapperMock = new Mock<IMongoCollectionWrapper<RepositoryEntity>>();
-            dbMock.Setup(mock => mock.GetCollection<RepositoryEntity>(It.IsAny<string>(),
-                                                                      It.IsAny<MongoCollectionSettings>()))
+            var collectionMock = new Mock<IMongoCollection<RepositorySnapshotEntity>>();
+            var collectionWrapperMock = new Mock<IMongoCollectionWrapper<RepositorySnapshotEntity>>();
+            dbMock.Setup(mock => mock.GetCollection<RepositorySnapshotEntity>(It.IsAny<string>(),
+                                                                              It.IsAny<MongoCollectionSettings>()))
                   .Returns(collectionMock.Object);
             clientMock.Setup(mock => mock.GetDatabase(It.IsAny<string>(), It.IsAny<MongoDatabaseSettings>()))
                       .Returns(dbMock.Object);
@@ -32,21 +33,21 @@ namespace Test.Hestia.DAL.Mongo
                              .Returns(clientMock.Object);
 
             // ReSharper disable once UnusedVariable
-            var hestiaMongoClient = new HestiaMongoClient(clientFactoryMock.Object,
-                                                          c => collectionWrapperMock.Object,
-                                                          string.Empty,
-                                                          string.Empty);
+            var hestiaMongoClient = new SnapshotMongoClient(clientFactoryMock.Object,
+                                                                  c => collectionWrapperMock.Object,
+                                                                  string.Empty);
 
-            scheduler.Start(() => hestiaMongoClient.GetAllRepos());
-            scheduler.Start(() => hestiaMongoClient.GetRepoById("1"));
-            hestiaMongoClient.AddRepository(new Repository(1,
-                                                           string.Empty,
-                                                           Option<RepositorySnapshot[]>.None,
-                                                           Option<string>.None,
-                                                           Option<string>.None));
+            scheduler.Start(() => hestiaMongoClient.GetAllSnapshots());
+            scheduler.Start(() => hestiaMongoClient.GetSnapshotById("1"));
+            hestiaMongoClient.InsertSnapshot(new RepositorySnapshot(1,
+                                                                    new List<File>(),
+                                                                    Option<string>.None,
+                                                                    Option<string>.None,
+                                                                    Option<DateTime>.None));
 
-            collectionWrapperMock.Verify(mock => mock.Find(It.IsAny<Func<RepositoryEntity, bool>>()), Times.Exactly(2));
-            collectionWrapperMock.Verify(mock => mock.InsertOne(It.IsAny<RepositoryEntity>()), Times.Once);
+            collectionWrapperMock.Verify(mock => mock.Find(It.IsAny<Func<RepositorySnapshotEntity, bool>>()),
+                                         Times.Exactly(2));
+            collectionWrapperMock.Verify(mock => mock.InsertOne(It.IsAny<RepositorySnapshotEntity>()), Times.Once);
         }
     }
 }

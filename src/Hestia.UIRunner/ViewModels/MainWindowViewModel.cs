@@ -1,4 +1,5 @@
-﻿using Hestia.Model.Builders;
+﻿using Hestia.DAL.Mongo;
+using Hestia.Model.Builders;
 using Hestia.Model.Stats;
 using Hestia.Model.Wrappers;
 using Hestia.UIRunner.Services;
@@ -13,7 +14,8 @@ namespace Hestia.UIRunner.ViewModels
                                    IPathValidator pathValidator,
                                    IRepositorySnapshotBuilderWrapper builderWrapper,
                                    IOpenFileDialogService fileDialogService,
-                                   ICoverageReportConverter converter)
+                                   ICoverageReportConverter converter,
+                                   ISnapshotPersistence snapshotPersistence)
         {
             FormViewModel = new FormViewModel(diskIOWrapper,
                                               statsEnricher,
@@ -21,7 +23,7 @@ namespace Hestia.UIRunner.ViewModels
                                               builderWrapper,
                                               fileDialogService,
                                               converter);
-            RepositoryViewModel = new RepositoryViewModel(FormViewModel.RepositoryCreationObservable);
+            RepositoryViewModel = new RepositoryViewModel(FormViewModel.RepositoryCreationObservable, snapshotPersistence);
             FileDetailsViewModel = new FileDetailsViewModel(RepositoryViewModel.SelectedItemObservable);
         }
 

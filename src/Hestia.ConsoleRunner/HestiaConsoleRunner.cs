@@ -32,7 +32,7 @@ namespace Hestia.ConsoleRunner
                                    IPathValidator validator,
                                    ICoverageReportConverter converter)
         {
-            _logger = logger;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _statsEnricher = statsEnricher ?? throw new ArgumentNullException(nameof(statsEnricher));
             _configurationProvider =
                 configurationProvider ?? throw new ArgumentNullException(nameof(configurationProvider));
