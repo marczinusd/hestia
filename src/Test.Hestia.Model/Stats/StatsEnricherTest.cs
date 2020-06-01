@@ -88,7 +88,8 @@ namespace Test.Hestia.Model.Stats
             var enrichedSnapshot = enricher.EnrichWithGitStats(MockRepo.CreateSnapshot(new[] { ".cs" },
                                                                                        "lcov.info",
                                                                                        ioMock.Object,
-                                                                                       Mock.Of<IPathValidator>()));
+                                                                                       Mock.Of<IPathValidator>()),
+                                                               GitStatGranularity.Full);
 
             enrichedSnapshot.Files
                             .Should()
