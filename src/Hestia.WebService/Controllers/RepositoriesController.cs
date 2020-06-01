@@ -27,7 +27,7 @@ namespace Hestia.WebService.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<RepositoryIdentifier>> GetAllRepositories()
         {
-            _logger.LogDebug($"Invoking GET on {typeof(RepositoriesController).Name}");
+            _logger.LogDebug($"Invoking GET on {nameof(RepositoriesController)}");
 
             throw new NotImplementedException();
         }
@@ -43,7 +43,7 @@ namespace Hestia.WebService.Controllers
         [ProducesResponseType(typeof(RepositorySnapshot), 200)]
         public Task<ActionResult<RepositorySnapshot>> GetRepositoryById(long id)
         {
-            _logger.LogDebug($"Invoking GET by id with id=${id} on {typeof(RepositoriesController).Name}");
+            _logger.LogDebug($"Invoking GET by id with id=${id} on {nameof(RepositoriesController)}");
             throw new NotImplementedException();
         }
 
