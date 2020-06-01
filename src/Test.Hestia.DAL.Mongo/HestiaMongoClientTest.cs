@@ -34,16 +34,16 @@ namespace Test.Hestia.DAL.Mongo
 
             // ReSharper disable once UnusedVariable
             var hestiaMongoClient = new SnapshotMongoClient(clientFactoryMock.Object,
-                                                                  c => collectionWrapperMock.Object,
-                                                                  string.Empty);
+                                                            c => collectionWrapperMock.Object,
+                                                            string.Empty);
 
             scheduler.Start(() => hestiaMongoClient.GetAllSnapshots());
             scheduler.Start(() => hestiaMongoClient.GetSnapshotById("1"));
-            hestiaMongoClient.InsertSnapshot(new RepositorySnapshot(1,
-                                                                    new List<File>(),
-                                                                    Option<string>.None,
-                                                                    Option<string>.None,
-                                                                    Option<DateTime>.None));
+            scheduler.Start(() => hestiaMongoClient.InsertSnapshot(new RepositorySnapshot(1,
+                                                                                          new List<File>(),
+                                                                                          Option<string>.None,
+                                                                                          Option<string>.None,
+                                                                                          Option<DateTime>.None)));
 
             collectionWrapperMock.Verify(mock => mock.Find(It.IsAny<Func<RepositorySnapshotEntity, bool>>()),
                                          Times.Exactly(2));

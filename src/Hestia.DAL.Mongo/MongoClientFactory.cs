@@ -19,7 +19,7 @@ namespace Hestia.DAL.Mongo
             var host = Environment.GetEnvironmentVariable("HESTIA_MONGO_HOST") ?? "localhost";
             var port = Environment.GetEnvironmentVariable("HESTIA_MONGO_PORT") ?? "27017";
 
-            return $"mongodb://{CreateAuthConnectionString()}{host}:{port}{CreateAuthDbString()}";
+            return $"mongodb://{CreateAuthConnectionString()}{host}:{port}";
         }
 
         private static string CreateAuthConnectionString()
@@ -30,11 +30,6 @@ namespace Hestia.DAL.Mongo
             return !string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password)
                        ? $"{username}:{password}@"
                        : string.Empty;
-        }
-
-        private static string CreateAuthDbString()
-        {
-            return DatabaseName != null ? $"/{DatabaseName}" : string.Empty;
         }
     }
 }

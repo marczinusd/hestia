@@ -15,7 +15,7 @@
         <vm:FormViewModel />
     </Design.DataContext>
 
-    <Grid RowDefinitions="1*,1*,1*,1*,1*,20">
+    <Grid RowDefinitions="1*,1*,1*,1*,20,1*">
         <StackPanel Grid.Row="0" Grid.ColumnSpan="2">
             <TextBlock Text="Repository Path" Margin="0,0,0,2" />
             <Grid ColumnDefinitions="4*,1*">
@@ -42,8 +42,8 @@
             <TextBlock Text="Source Extensions (separated by semicolon)" Margin="0,0,0,2" />
             <TextBox Text="{Binding SourceExtensions}" IsEnabled="{Binding !IsExecuting}" />
         </StackPanel>
-        <Button Grid.Row="4" Command="{Binding ProcessRepositoryCommand}">Process Repository</Button>
-        <ProgressBar Grid.Row="5" IsIndeterminate="True" IsVisible="{Binding IsExecuting}" />
+        <ProgressBar Grid.Row="4" IsIndeterminate="True" IsVisible="{Binding IsExecuting}" />
+        <Button Grid.Row="5" Command="{Binding ProcessRepositoryCommand}">Process Repository</Button>
     </Grid>
     
     <!-- ReSharper restore Xaml.ConstructorWarning -->

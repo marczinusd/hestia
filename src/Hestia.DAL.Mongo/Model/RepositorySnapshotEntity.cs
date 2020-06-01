@@ -1,6 +1,9 @@
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Text.Json.Serialization;
+using System.Linq;
 using Hestia.Model;
+using JetBrains.Annotations;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace Hestia.DAL.Mongo.Model
@@ -10,16 +13,21 @@ namespace Hestia.DAL.Mongo.Model
     {
         private readonly RepositorySnapshot _snapshot;
 
-        public RepositorySnapshotEntity(RepositorySnapshot snapshot, string? id = null)
+        public RepositorySnapshotEntity(RepositorySnapshot snapshot)
         {
             _snapshot = snapshot;
-            Id = id;
         }
 
-        [BsonId]
-        public string? Id { get; }
+        [BsonId] [UsedImplicitly] public ObjectId? Id { get; } = ObjectId.GenerateNewId();
 
-        [JsonIgnore]
-        public RepositorySnapshot Snapshot => _snapshot;
+        [UsedImplicitly]
+        [BsonElement]
+        public IEnumerable<FileEntity> Files => _snapshot.Files
+                                                         .Select(f => new FileEntity(f));
+
+        [UsedImplicitly]
+        [BsonElement]
+        public string AtHash => _snapshot.AtHash
+                                         .Match(x => x, string.Empty);
     }
 }

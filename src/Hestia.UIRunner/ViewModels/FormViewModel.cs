@@ -13,6 +13,7 @@ using ReactiveUI.Fody.Helpers;
 using ReactiveUI.Validation.Extensions;
 using ReactiveUI.Validation.Helpers;
 using Path = System.IO.Path;
+using Unit = System.Reactive.Unit;
 
 namespace Hestia.UIRunner.ViewModels
 {
@@ -45,16 +46,16 @@ namespace Hestia.UIRunner.ViewModels
                                 path => ioWrapper.DirectoryExists(Path.Join(path, ".git")),
                                 "Directory is not a git repository");
 
-            // Removed for now
-            // EmptyFieldValidation(vm => vm.CoverageCommand, nameof(CoverageCommand));
             EmptyFieldValidation(vm => vm.RepositoryPath, nameof(RepositoryPath));
             EmptyFieldValidation(vm => vm.SourceExtensions, nameof(SourceExtensions));
             EmptyFieldValidation(vm => vm.CoverageOutputLocation, nameof(CoverageOutputLocation));
 
             ProcessRepositoryCommand =
-                ReactiveCommand.Create<Unit, RepositorySnapshot>(_ => BuildSnapshotFromViewModelState(),
-                                                                 this.WhenAnyValue(vm => vm.HasErrors,
-                                                                                   hasErrors => !hasErrors));
+                ReactiveCommand.CreateFromObservable(BuildSnapshotFromViewModelState,
+                                                     this.WhenAnyValue(vm => vm.HasErrors,
+                                                                       hasErrors =>
+                                                                           !hasErrors));
+            ProcessRepositoryCommand.IsExecuting.ToProperty(this, x => x.IsExecuting, out _isExecuting);
 
             _isExecuting = ProcessRepositoryCommand.IsExecuting.ToProperty(this, nameof(IsExecuting));
 
@@ -110,17 +111,19 @@ namespace Hestia.UIRunner.ViewModels
                                           string fieldName) =>
             this.ValidationRule(func, s => !string.IsNullOrWhiteSpace(s), $"{fieldName} should not be empty");
 
-        private RepositorySnapshot BuildSnapshotFromViewModelState() =>
-            FieldsAsBuilderArguments
-                .Apply(_builder.Build)
-                .Apply(ConvertCoverageReport)
-                .Apply(_statsEnricher.EnrichWithCoverage)
-                .Apply(x => _statsEnricher.EnrichWithGitStats(x));
+        private IObservable<RepositorySnapshot> BuildSnapshotFromViewModelState() =>
+            Observable.Start(() => FieldsAsBuilderArguments
+                                   .Apply(_builder.Build)
+                                   .Apply(ConvertCoverageReport)
+                                   .Apply(_statsEnricher.EnrichWithCoverage)
+                                   .Apply(x => _statsEnricher.EnrichWithGitStats(x)));
 
         private RepositorySnapshot ConvertCoverageReport(RepositorySnapshot snapshot)
         {
             var newPath = _reportConverter
-                          .Convert(CoverageOutputLocation, Path.GetDirectoryName(CoverageOutputLocation))
+                          .Convert(CoverageOutputLocation,
+                                   Path.GetDirectoryName(CoverageOutputLocation) ??
+                                   throw new ArgumentException(nameof(CoverageOutputLocation)))
                           .Match(val => val, () => null);
 
             return snapshot.With(pathToCoverageResultFile: newPath);

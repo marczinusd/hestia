@@ -1,6 +1,5 @@
 using System;
 using System.Reactive;
-using System.Reactive.Linq;
 using Hestia.DAL.Mongo;
 using Hestia.Model;
 using ReactiveUI;
@@ -10,20 +9,24 @@ namespace Hestia.UIRunner.ViewModels
 {
     public class RepositoryViewModel : ReactiveObject
     {
-        private readonly ObservableAsPropertyHelper<RepositorySnapshot> selectedRepository;
+        private readonly ObservableAsPropertyHelper<RepositorySnapshot> _selectedRepository;
+        private readonly ObservableAsPropertyHelper<bool> _isExecuting;
 
         public RepositoryViewModel(IObservable<RepositorySnapshot> selectedRepositoryObservable,
                                    ISnapshotPersistence snapshotPersistence)
         {
-            selectedRepository = selectedRepositoryObservable.ToProperty(this, nameof(Repository));
+            _selectedRepository = selectedRepositoryObservable.ToProperty(this, nameof(Repository));
             SelectedItemObservable = this.WhenAnyValue(x => x.SelectedItem);
-            CommitToDatabaseCommand = ReactiveCommand.Create(() =>
-            {
-                snapshotPersistence.InsertSnapshot(selectedRepository.Value);
-            }, selectedRepositoryObservable.Select(x => x != null));
+            CommitToDatabaseCommand =
+                ReactiveCommand.CreateFromObservable<Unit, Unit>(_ => snapshotPersistence
+                                                                     .InsertSnapshot(_selectedRepository
+                                                                                         .Value));
+            CommitToDatabaseCommand.IsExecuting.ToProperty(this, x => x.IsInsertionInProgress, out _isExecuting);
         }
 
-        public RepositorySnapshot Repository => selectedRepository.Value;
+        public bool IsInsertionInProgress => _isExecuting.Value;
+
+        public RepositorySnapshot Repository => _selectedRepository.Value;
 
         public ReactiveCommand<Unit, Unit> CommitToDatabaseCommand { get; }
 

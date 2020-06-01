@@ -15,8 +15,8 @@
         <vm:RepositoryViewModel />
     </Design.DataContext>
 
-    <StackPanel>
-        <ScrollViewer HorizontalScrollBarVisibility="Visible">
+    <Grid RowDefinitions="*, 20, 35">
+        <ScrollViewer Grid.Row="0" HorizontalScrollBarVisibility="Visible">
             <DataGrid AutoGenerateColumns="False" Items="{Binding Repository.Files}"
                       SelectedItem="{Binding SelectedItem}" CanUserResizeColumns="True" CanUserSortColumns="True"
                       CanUserReorderColumns="True">
@@ -30,8 +30,9 @@
                 </DataGrid.Columns>
             </DataGrid>
         </ScrollViewer>
-        <Button Content="Commit to database" Command="{Binding CommitToDatabaseCommand}" />
-    </StackPanel>
+        <ProgressBar Grid.Row="1" IsIndeterminate="True" IsVisible="{Binding IsInsertionInProgress}" />
+        <Button Grid.Row="2" Content="Commit to database" Command="{Binding CommitToDatabaseCommand}" />
+    </Grid>
     <!-- ReSharper restore Xaml.ConstructorWarning -->
     <!-- ReSharper restore Xaml.UnexpectedTextToken -->
 </UserControl>

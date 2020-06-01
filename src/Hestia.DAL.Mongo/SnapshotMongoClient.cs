@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive;
 using Hestia.DAL.Mongo.Model;
 using Hestia.DAL.Mongo.Wrappers;
 using Hestia.Model;
@@ -15,9 +16,9 @@ namespace Hestia.DAL.Mongo
         private readonly IMongoCollectionWrapper<RepositorySnapshotEntity> _snapshots;
 
         public SnapshotMongoClient(IMongoClientFactory factory,
-                                         Func<IMongoCollection<RepositorySnapshotEntity>,
-                                              IMongoCollectionWrapper<RepositorySnapshotEntity>> wrapperFactory,
-                                         string databaseName)
+                                   Func<IMongoCollection<RepositorySnapshotEntity>,
+                                       IMongoCollectionWrapper<RepositorySnapshotEntity>> wrapperFactory,
+                                   string databaseName)
         {
             var client = factory.CreateClient();
             var database = client.GetDatabase(databaseName, new MongoDatabaseSettings());
@@ -29,10 +30,14 @@ namespace Hestia.DAL.Mongo
             ObservableExt.CreateSingle(() => _snapshots.Find(r => true));
 
         public IObservable<RepositorySnapshotEntity> GetSnapshotById(string id) =>
-            ObservableExt.CreateSingle(() => _snapshots.Find(r => r.Id == id)
+            ObservableExt.CreateSingle(() => _snapshots.Find(r => r.Id.ToString()!.Equals(id, StringComparison.InvariantCulture))
                                                        .FirstOrDefault());
 
-        public void InsertSnapshot(RepositorySnapshot snapshot) =>
-            _snapshots.InsertOne(new RepositorySnapshotEntity(snapshot));
+        public IObservable<Unit> InsertSnapshot(RepositorySnapshot snapshot) =>
+            ObservableExt.CreateSingle(() =>
+            {
+                _snapshots.InsertOne(new RepositorySnapshotEntity(snapshot));
+                return Unit.Default;
+            });
     }
 }

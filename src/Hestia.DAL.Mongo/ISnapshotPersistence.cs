@@ -1,9 +1,11 @@
-﻿using Hestia.Model;
+﻿using System;
+using System.Reactive;
+using Hestia.Model;
 
 namespace Hestia.DAL.Mongo
 {
     public interface ISnapshotPersistence
     {
-        void InsertSnapshot(RepositorySnapshot snapshot);
+        IObservable<Unit> InsertSnapshot(RepositorySnapshot snapshot);
     }
 }
