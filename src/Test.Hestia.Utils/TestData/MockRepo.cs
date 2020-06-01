@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using Bogus;
@@ -13,6 +14,7 @@ using File = Hestia.Model.File;
 
 namespace Test.Hestia.Utils.TestData
 {
+    [ExcludeFromCodeCoverage]
     public static class MockRepo
     {
         private static readonly string DirPath = Path.Join("C:", "temp");

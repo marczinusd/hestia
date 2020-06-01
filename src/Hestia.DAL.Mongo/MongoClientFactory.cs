@@ -7,12 +7,12 @@ namespace Hestia.DAL.Mongo
     [ExcludeFromCodeCoverage]
     public class MongoClientFactory : IMongoClientFactory
     {
+        public static string DatabaseName => Environment.GetEnvironmentVariable("HESTIA_MONGO_DB") ?? "hestia";
+
         public IMongoClient CreateClient()
         {
             return new MongoClient(CreateConnectionString());
         }
-
-        public static string DatabaseName => Environment.GetEnvironmentVariable("HESTIA_MONGO_DB") ?? "hestia";
 
         private static string CreateConnectionString()
         {

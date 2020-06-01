@@ -68,12 +68,15 @@ namespace Hestia.ConsoleRunner
         {
             var config = _configurationProvider.LoadConfiguration(options.JsonConfigPath)
                                                .Result;
+
+            // ReSharper disable once PossibleNullReferenceException
             if (!string.IsNullOrWhiteSpace(config.CoverageReportLocation) && !Path
                                                                               .GetFileName(config
                                                                                                .CoverageReportLocation)
                                                                               .ToLower()
                                                                               .Contains("coverage.json"))
             {
+                // ReSharper disable once AssignNullToNotNullAttribute
                 var result = _converter.Convert(config.CoverageReportLocation,
                                                 Path.GetDirectoryName(config.CoverageReportLocation) ??
                                                 throw new DirectoryNotFoundException(config.CoverageReportLocation))

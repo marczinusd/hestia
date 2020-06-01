@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -6,6 +7,7 @@ using System.Threading;
 
 namespace Test.Hestia.Utils
 {
+    [ExcludeFromCodeCoverage]
     public static class Helpers
     {
         public static string LoadResource(string name, Assembly assembly = null)

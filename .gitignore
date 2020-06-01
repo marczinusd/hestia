@@ -489,3 +489,5 @@ dist/
 **/coverage.*
 **/coveragereport/*
 **/lcov.info
+reportgenerator.exe
+.store
