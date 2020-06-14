@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 
 namespace Hestia.DAL.Mongo.Wrappers
