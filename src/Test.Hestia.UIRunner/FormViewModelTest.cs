@@ -146,41 +146,6 @@ namespace Test.Hestia.UIRunner
                                   .BeTrue());
         }
 
-        [Fact(Skip = "Unreliable, fix later")]
-        public void PressingProcessButtonInvokesSnapshotBuilderWithExpectedArguments()
-        {
-            var scheduler = new TestScheduler();
-            var builderMock = new Mock<IRepositorySnapshotBuilderWrapper>();
-            var converterMock = new Mock<ICoverageReportConverter>();
-            converterMock.Setup(mock => mock.Convert(It.IsAny<string>(), It.IsAny<string>()))
-                         .Returns("Cobertura.xml");
-            var vm = new FormViewModel(Mock.Of<IDiskIOWrapper>(),
-                                       Mock.Of<IStatsEnricher>(),
-                                       Mock.Of<IPathValidator>(),
-                                       builderMock.Object,
-                                       Mock.Of<IOpenFileDialogService>(),
-                                       converterMock.Object)
-            {
-                RepositoryPath = RepoPath,
-                CoverageCommand = CoverageCommand,
-                SourceExtensions = SourceExtensions,
-                SourceRoot = SourceRoot,
-                CoverageOutputLocation = CoverageOutputLocation,
-            };
-
-            scheduler.Start(() => vm.ProcessRepositoryCommand
-                                    .Execute());
-
-            Helpers.After(TimeSpan.FromMilliseconds(WaitMs),
-                          () =>
-                          {
-                              builderMock.Verify(mock =>
-                                                     mock.Build(It.Is<RepositorySnapshotBuilderArguments>(x =>
-                                                                                                              MatchingRepositoryBuilderArgs(x))),
-                                                 Times.Once);
-                          });
-        }
-
         [Fact]
         public void PressingProcessButtonShouldInvokeStatsEnricherWithExpectedRepositorySnapshot()
         {

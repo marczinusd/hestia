@@ -117,7 +117,7 @@ namespace Hestia.ConsoleRunner
             [Option('i',
                     "repositoryId",
                     Required = false,
-                    Default = 0,
+                    Default = "",
                     HelpText =
                         "Used to specify the id of the repository which will appear in the JSON representation")]
             public string RepositoryId { get; }

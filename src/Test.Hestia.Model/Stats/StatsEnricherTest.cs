@@ -226,7 +226,7 @@ namespace Test.Hestia.Model.Stats
                      .HaveCount(5);
             snapshots.Select(s => s.Id)
                      .Should()
-                     .BeEquivalentTo(new[] { 1, 2, 3, 4, 5 });
+                     .BeEquivalentTo(Enumerable.Repeat(string.Empty, 5)); // TODO: remove this with all repo/snapshot Ids on model layer
             snapshots.Select(s => s.AtHash.Match(x => x, string.Empty))
                      .Should()
                      .BeEquivalentTo(new[] { "1", "13", "25", "37", "50" });
