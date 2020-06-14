@@ -15,7 +15,7 @@ namespace Test.Hestia.Model.Builders
         [Fact]
         public void RepositorySnapshotBuilderBuildsExpectedStructureFromArguments()
         {
-            var args = new RepositorySnapshotBuilderArguments(1,
+            var args = new RepositorySnapshotBuilderArguments(string.Empty,
                                                               DirPath,
                                                               "src",
                                                               new[] { ".cs" },
@@ -33,9 +33,9 @@ namespace Test.Hestia.Model.Builders
             snapshot.AtHash.Match(x => x, () => string.Empty)
                     .Should()
                     .Be("hash");
-            snapshot.SnapshotId
+            snapshot.Id
                     .Should()
-                    .Be(1);
+                    .Be(string.Empty);
             snapshot.CommitCreationDate.Match(x => x, DateTime.Today)
                     .Should()
                     .Be(default);

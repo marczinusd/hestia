@@ -46,7 +46,7 @@ namespace Hestia.Model.Stats
         public Repository Enrich(Repository repository,
                                  RepositoryStatsEnricherArguments args)
         {
-            var initialSnapshotId = 1;
+            var initialSnapshotId = string.Empty; // TODO
             var repoArgs = new RepositorySnapshotBuilderArguments(initialSnapshotId,
                                                                   args.RepoPath,
                                                                   args.SourceRoot,
@@ -71,7 +71,7 @@ namespace Hestia.Model.Stats
                              _executor.Execute(args.CoverageCommand, string.Empty, args.RepoPath);
                              var commitCreationDate = _gitCommands.DateOfLatestCommitOnBranch(args.RepoPath);
 
-                             return repoArgs.With(initialSnapshotId++, hash, commitCreationDate)
+                             return repoArgs.With(initialSnapshotId, hash, commitCreationDate)
                                             .Build()
                                             .Apply(ConvertCoverageResults)
                                             .Apply(EnrichWithCoverage)

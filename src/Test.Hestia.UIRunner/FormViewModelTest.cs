@@ -188,11 +188,12 @@ namespace Test.Hestia.UIRunner
             var statsEnricherMock = new Mock<IStatsEnricher>();
             var builderMock = new Mock<IRepositorySnapshotBuilderWrapper>();
             var converterMock = new Mock<ICoverageReportConverter>();
-            var repositorySnapshot = new RepositorySnapshot(-1,
+            var repositorySnapshot = new RepositorySnapshot(string.Empty,
                                                             new List<File>(),
                                                             Option<string>.None,
                                                             Option<string>.None,
-                                                            Option<DateTime>.None);
+                                                            Option<DateTime>.None,
+                                                            Option<string>.None);
             converterMock.Setup(mock => mock.Convert(It.IsAny<string>(), It.IsAny<string>()))
                          .Returns(CoverageOutputLocation);
             builderMock.Setup(mock => mock.Build(It.IsAny<RepositorySnapshotBuilderArguments>()))

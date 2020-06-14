@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -9,25 +10,32 @@ using MongoDB.Bson.Serialization.Attributes;
 namespace Hestia.DAL.Mongo.Model
 {
     [ExcludeFromCodeCoverage]
+    [BsonIgnoreExtraElements]
     public class RepositorySnapshotEntity
     {
-        private readonly RepositorySnapshot _snapshot;
-
         public RepositorySnapshotEntity(RepositorySnapshot snapshot)
         {
-            _snapshot = snapshot;
+            Id = ObjectId.GenerateNewId();
+            Files = snapshot.Files.Select(f => new FileEntity(f));
+            AtHash = snapshot.AtHash.Match(x => x, string.Empty);
+            HashDate = snapshot.CommitCreationDate.Match(x => x, null);
         }
 
-        [BsonId] [UsedImplicitly] public ObjectId? Id { get; } = ObjectId.GenerateNewId();
+        [BsonConstructor]
+        public RepositorySnapshotEntity(ObjectId? id, IEnumerable<FileEntity> files, string atHash, DateTime? hashDate)
+        {
+            Id = id;
+            Files = files;
+            AtHash = atHash;
+            HashDate = hashDate;
+        }
 
-        [UsedImplicitly]
-        [BsonElement]
-        public IEnumerable<FileEntity> Files => _snapshot.Files
-                                                         .Select(f => new FileEntity(f));
+        [BsonId] [UsedImplicitly] public ObjectId? Id { get; }
 
-        [UsedImplicitly]
-        [BsonElement]
-        public string AtHash => _snapshot.AtHash
-                                         .Match(x => x, string.Empty);
+        [UsedImplicitly] [BsonElement] public IEnumerable<FileEntity> Files { get; }
+
+        [UsedImplicitly] [BsonElement] public string AtHash { get; }
+
+        [UsedImplicitly] [BsonElement] public DateTime? HashDate { get; }
     }
 }

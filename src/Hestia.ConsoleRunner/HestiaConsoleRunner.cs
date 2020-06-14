@@ -103,7 +103,7 @@ namespace Hestia.ConsoleRunner
         [ExcludeFromCodeCoverage]
         private class Options
         {
-            public Options(int repositoryId,
+            public Options(string repositoryId,
                            string repositoryName,
                            string outputPath,
                            string jsonConfigPath)
@@ -120,7 +120,7 @@ namespace Hestia.ConsoleRunner
                     Default = 0,
                     HelpText =
                         "Used to specify the id of the repository which will appear in the JSON representation")]
-            public int RepositoryId { get; }
+            public string RepositoryId { get; }
 
             [Option('n',
                     "repositoryName",

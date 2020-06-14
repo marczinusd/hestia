@@ -43,11 +43,12 @@ namespace Test.Hestia.Model.Stats
             providerFactoryMock.Setup(mock => mock.CreateProviderForFile(It.IsAny<string>()))
                                .Returns(coverageProviderMock.Object);
             var enricher = fixture.Create<StatsEnricher>();
-            var snapshotToEnrich = new RepositorySnapshot(1,
+            var snapshotToEnrich = new RepositorySnapshot(string.Empty,
                                                           new List<File>(),
                                                           "coverage.json",
                                                           Option<string>.None,
-                                                          Option<DateTime>.None);
+                                                          Option<DateTime>.None,
+                                                          string.Empty);
 
             var enrichedSnapshot = enricher.EnrichWithCoverage(snapshotToEnrich);
 
@@ -60,11 +61,12 @@ namespace Test.Hestia.Model.Stats
         {
             var fixture = new Fixture();
             fixture.Customize(new AutoMoqCustomization { ConfigureMembers = true });
-            var snapshot = new RepositorySnapshot(1,
+            var snapshot = new RepositorySnapshot(string.Empty,
                                                   new List<File>(),
                                                   Option<string>.None,
                                                   "hash",
-                                                  Option<DateTime>.None);
+                                                  Option<DateTime>.None,
+                                                  string.Empty);
             var enricher = fixture.Create<StatsEnricher>();
 
             Action act = () => enricher.EnrichWithCoverage(snapshot);
@@ -222,7 +224,7 @@ namespace Test.Hestia.Model.Stats
             // verify results
             snapshots.Should()
                      .HaveCount(5);
-            snapshots.Select(s => s.SnapshotId)
+            snapshots.Select(s => s.Id)
                      .Should()
                      .BeEquivalentTo(new[] { 1, 2, 3, 4, 5 });
             snapshots.Select(s => s.AtHash.Match(x => x, string.Empty))

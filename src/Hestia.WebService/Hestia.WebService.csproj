@@ -12,6 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Autofac" Version="5.2.0" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="LanguageExt.Core" Version="3.4.15" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.4" />
     <PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="3.6.0" />
@@ -21,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Hestia.DAL.Mongo\Hestia.DAL.Mongo.csproj" />
     <ProjectReference Include="..\Hestia.Model\Hestia.Model.csproj" />
   </ItemGroup>
 </Project>

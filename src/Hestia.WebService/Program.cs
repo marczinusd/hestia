@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
@@ -11,6 +12,7 @@ namespace Hestia.WebService
         public static void Main(string[] args)
         {
             CreateHostBuilder(args)
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .Build()
                 .Run();
         }

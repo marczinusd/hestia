@@ -7,23 +7,40 @@ using MongoDB.Bson.Serialization.Attributes;
 namespace Hestia.DAL.Mongo.Model
 {
     [ExcludeFromCodeCoverage]
+    [BsonIgnoreExtraElements]
     public class FileEntity
     {
-        private readonly File _file;
-
         public FileEntity(File file)
         {
-            _file = file;
+            Id = ObjectId.GenerateNewId();
+            Path = file.Path;
+            LifetimeChanges = file.LifetimeChanges;
+            LifetimeAuthors = file.LifetimeAuthors;
+            CoveragePercentage = file.CoveragePercentage;
         }
 
-        [BsonId] [UsedImplicitly] public ObjectId? Id { get; } = ObjectId.GenerateNewId();
+        [BsonConstructor]
+        public FileEntity(ObjectId? id,
+                          string path,
+                          int lifetimeChanges,
+                          int lifetimeAuthors,
+                          decimal coveragePercentage)
+        {
+            Id = id;
+            Path = path;
+            LifetimeChanges = lifetimeChanges;
+            LifetimeAuthors = lifetimeAuthors;
+            CoveragePercentage = coveragePercentage;
+        }
 
-        [UsedImplicitly] [BsonElement] public string Path => _file.FullPath;
+        [BsonId] [UsedImplicitly] public ObjectId? Id { get; }
 
-        [UsedImplicitly] [BsonElement] public int LifetimeChanges => _file.LifetimeChanges;
+        [UsedImplicitly] [BsonElement] public string Path { get; }
 
-        [UsedImplicitly] [BsonElement] public int LifetimeAuthors => _file.LifetimeAuthors;
+        [UsedImplicitly] [BsonElement] public int LifetimeChanges { get; }
 
-        [UsedImplicitly] [BsonElement] public decimal CoveragePercentage => _file.CoveragePercentage;
+        [UsedImplicitly] [BsonElement] public int LifetimeAuthors { get; }
+
+        [UsedImplicitly] [BsonElement] public decimal CoveragePercentage { get; }
     }
 }

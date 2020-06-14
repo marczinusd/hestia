@@ -1,5 +1,6 @@
 using System;
 using FluentAssertions;
+using Hestia.DAL.Mongo;
 using Hestia.WebService;
 using Hestia.WebService.Controllers;
 using Microsoft.AspNetCore.Hosting;
@@ -18,17 +19,14 @@ namespace Test.Hestia.WebService
         {
             var server = new TestServer(new WebHostBuilder().UseStartup<Startup>());
             server.CreateClient();
-            var controller = new RepositoriesController(Mock.Of<ILogger<RepositoriesController>>());
+            var controller = new SnapshotsController(Mock.Of<ILogger<SnapshotsController>>(), Mock.Of<ISnapshotRetrieval>());
 
             Action act1 = () => controller.GetAllRepositories();
-            Action act2 = () => controller.GetRepositoryById(1);
-            Action act3 = () => controller.GetFileById(1, 2);
+            Action act2 = () => controller.GetRepositoryById(string.Empty);
 
             act1.Should()
                 .Throw<NotImplementedException>();
             act2.Should()
-                .Throw<NotImplementedException>();
-            act3.Should()
                 .Throw<NotImplementedException>();
         }
     }

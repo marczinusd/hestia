@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 
 namespace Hestia.DAL.Mongo.Wrappers
 {
@@ -8,5 +10,7 @@ namespace Hestia.DAL.Mongo.Wrappers
         IEnumerable<T> Find(Func<T, bool> entity);
 
         void InsertOne(T entity);
+
+        IMongoQueryable<T> AsQueryable();
     }
 }

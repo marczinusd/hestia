@@ -46,22 +46,5 @@ namespace Test.Hestia.Model
                    .Should()
                    .Be("lcov.info");
         }
-
-        [Fact]
-        public void AsRepositoryIdentifierShouldReturnTheCorrectIdentifier()
-        {
-            var repo = new Repository(1,
-                                      "bla",
-                                      Option<RepositorySnapshot[]>.None,
-                                      string.Empty,
-                                      string.Empty);
-
-            var identifier = repo.AsRepositoryIdentifier();
-
-            identifier.Id.Should()
-                      .Be(repo.RepositoryId);
-            identifier.Name.Should()
-                      .Be(repo.RepositoryName);
-        }
     }
 }

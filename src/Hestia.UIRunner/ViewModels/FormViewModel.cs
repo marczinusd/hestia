@@ -95,7 +95,7 @@ namespace Hestia.UIRunner.ViewModels
         public IObservable<RepositorySnapshot> RepositoryCreationObservable => ProcessRepositoryCommand.AsObservable();
 
         private RepositorySnapshotBuilderArguments FieldsAsBuilderArguments =>
-            new RepositorySnapshotBuilderArguments(-1,
+            new RepositorySnapshotBuilderArguments(string.Empty,
                                                    RepositoryPath,
                                                    SourceRoot,
                                                    SourceExtensions.Split(";")

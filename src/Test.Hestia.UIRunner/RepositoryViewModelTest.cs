@@ -19,11 +19,12 @@ namespace Test.Hestia.UIRunner
         public void FilesShouldChangeBasedOnSnapshotPublishedOnObservable()
         {
             var scheduler = new TestScheduler();
-            var snapshot = new RepositorySnapshot(-1,
+            var snapshot = new RepositorySnapshot(string.Empty,
                                                   new List<File> { MockRepo.CreateFile(), MockRepo.CreateFile() },
                                                   Option<string>.None,
                                                   Option<string>.None,
-                                                  Option<DateTime>.None);
+                                                  Option<DateTime>.None,
+                                                  Option<string>.None);
             var vm = new RepositoryViewModel(scheduler.CreateColdObservable(snapshot.AsNotification()), Mock.Of<ISnapshotPersistence>());
 
             scheduler.Start();

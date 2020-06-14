@@ -37,13 +37,14 @@ namespace Test.Hestia.DAL.Mongo
                                                             c => collectionWrapperMock.Object,
                                                             string.Empty);
 
-            scheduler.Start(() => hestiaMongoClient.GetAllSnapshots());
-            scheduler.Start(() => hestiaMongoClient.GetSnapshotById("1"));
-            scheduler.Start(() => hestiaMongoClient.InsertSnapshot(new RepositorySnapshot(1,
+            hestiaMongoClient.GetAllSnapshotsHeaders();
+            hestiaMongoClient.GetSnapshotById("1");
+            scheduler.Start(() => hestiaMongoClient.InsertSnapshot(new RepositorySnapshot(string.Empty,
                                                                                           new List<File>(),
                                                                                           Option<string>.None,
                                                                                           Option<string>.None,
-                                                                                          Option<DateTime>.None)));
+                                                                                          Option<DateTime>.None,
+                                                                                          Option<string>.None)));
 
             collectionWrapperMock.Verify(mock => mock.Find(It.IsAny<Func<RepositorySnapshotEntity, bool>>()),
                                          Times.Exactly(2));

@@ -45,7 +45,5 @@ namespace Hestia.Model
                            snapshots ?? Snapshots,
                            coverageExecutionCommand ?? CoverageExecutionCommand,
                            coverageOutputLocation ?? CoverageOutputLocation);
-
-        public RepositoryIdentifier AsRepositoryIdentifier() => new RepositoryIdentifier(RepositoryId, RepositoryName);
     }
 }

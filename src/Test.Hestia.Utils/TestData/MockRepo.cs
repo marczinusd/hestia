@@ -113,7 +113,7 @@ namespace Test.Hestia.Utils.TestData
                                                         string coveragePath,
                                                         IDiskIOWrapper ioWrapper,
                                                         IPathValidator validator) =>
-            new RepositorySnapshotBuilderArguments(1,
+            new RepositorySnapshotBuilderArguments(string.Empty, // TODO
                                                    DirPath,
                                                    string.Empty,
                                                    extensions.ToArray(),

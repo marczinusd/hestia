@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 
 namespace Hestia.DAL.Mongo.Wrappers
 {
@@ -20,5 +21,7 @@ namespace Hestia.DAL.Mongo.Wrappers
                        .ToList();
 
         public void InsertOne(T entity) => _collection.InsertOne(entity);
+
+        public IMongoQueryable<T> AsQueryable() => _collection.AsQueryable();
     }
 }

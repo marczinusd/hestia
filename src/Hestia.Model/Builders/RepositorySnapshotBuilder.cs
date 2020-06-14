@@ -23,7 +23,8 @@ namespace Hestia.Model.Builders
                                               ? Option<string>.None
                                               : Some(args.CoveragePath),
                                           args.AtHash,
-                                          args.CommitCreationDate);
+                                          args.CommitCreationDate,
+                                          string.Empty);
         }
     }
 }
