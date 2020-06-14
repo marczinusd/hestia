@@ -24,9 +24,6 @@ namespace Test.Hestia.UIRunner
     public class FormViewModelTest
     {
         private const string RepoPath = "somePath";
-        private const string SourceRoot = "sourceRoot";
-        private const string CoverageCommand = "coverageCommand";
-        private const string SourceExtensions = ".cs";
         private const int WaitMs = 25;
 
         private static readonly string CoverageOutputLocation = MockRepo.CreateFile()
@@ -225,11 +222,5 @@ namespace Test.Hestia.UIRunner
                                 .Be("path");
                           });
         }
-
-        private static bool MatchingRepositoryBuilderArgs(RepositorySnapshotBuilderArguments args) =>
-            args.CoveragePath == CoverageOutputLocation &&
-            args.RootPath == RepoPath &&
-            args.SourceExtensions.First() == ".cs" &&
-            args.SourceRoot == SourceRoot;
     }
 }
