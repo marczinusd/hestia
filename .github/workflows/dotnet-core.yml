@@ -22,7 +22,7 @@ jobs:
           dotnet tool install --global Codecov.Tool
           export PATH="$PATH:/root/.dotnet/tools"
       - name: Install dependencies
-        run: dotnet restore
+        run: dotnet restore src/Hestia.sln
       - name: Build
         run: dotnet build --no-restore src/Hestia.sln
       - name: Test
