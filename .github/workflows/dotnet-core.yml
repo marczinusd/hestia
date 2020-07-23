@@ -1,4 +1,4 @@
-name: .NET Core
+name: Hestia master
 
 on:
   push:
@@ -29,5 +29,8 @@ jobs:
         run: dotnet test src/Hestia.sln /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:Exclude="[xunit*]*" /p:CoverletOutput="coverage.json"
       - name: Merge coverage reports
         run: reportgenerator "-reports:**/coverage.json" "-targetdir:coveragereport" "-reporttypes:Html;HtmlSummary;Cobertura;lcov;XML"
-      - name: Upload Coverage
-        run: codecov -f coveragereport/lcov.info -t $CODECOV_TOKEN
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coveragereport/lcov.info
