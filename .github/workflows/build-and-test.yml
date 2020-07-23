@@ -19,7 +19,6 @@ jobs:
       - name: Setup global .NET tools
         run: |
           dotnet tool install --global dotnet-reportgenerator-globaltool
-          dotnet tool install --global Codecov.Tool
           export PATH="$PATH:/root/.dotnet/tools"
       - name: Install dependencies
         run: dotnet restore src/Hestia.sln
