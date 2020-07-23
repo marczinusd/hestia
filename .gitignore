@@ -491,3 +491,5 @@ dist/
 **/lcov.info
 reportgenerator.exe
 .store
+
+.vscode/*

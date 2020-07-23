@@ -1,7 +1,7 @@
 # Hestia
 
-[![codecov](https://codecov.io/gl/marczinusd/hestia/branch/master/graph/badge.svg?token=h6C3x4EsIe)](https://codecov.io/gl/marczinusd/hestia)
-[![pipeline status](https://gitlab.com/marczinusd/hestia/badges/master/pipeline.svg)](https://gitlab.com/marczinusd/hestia/commits/master)
+[![codecov](https://codecov.io/gh/marczinusd/hestia/branch/master/graph/badge.svg?token=IZF6men3ZB)](https://codecov.io/gh/marczinusd/hestia)
+![Hestia master](https://github.com/marczinusd/hestia/workflows/Hestia%20master/badge.svg)
 
 WIP application that can analyze a project's code quality by looking at statistics from git and code coverage.
 
