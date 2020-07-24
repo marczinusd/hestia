@@ -41,12 +41,14 @@ namespace Hestia.Model.Wrappers
             (await Command.ReadAsync(commandToExecute,
                                      args,
                                      workingDirectory,
-                                     _noEcho)).Split(Environment.NewLine);
+                                     _noEcho)
+                          .ConfigureAwait(false)).Split(Environment.NewLine);
 
         public async Task<string> ExecuteAsyncNoSplit(string commandToExecute, string args, string workingDirectory) =>
             await Command.ReadAsync(commandToExecute,
                                     args,
                                     workingDirectory,
-                                    _noEcho);
+                                    _noEcho)
+                         .ConfigureAwait(false);
     }
 }

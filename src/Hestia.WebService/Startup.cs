@@ -4,7 +4,6 @@ using Hestia.DAL.Mongo;
 using Hestia.DAL.Mongo.Model;
 using Hestia.DAL.Mongo.Wrappers;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -51,7 +50,7 @@ namespace Hestia.WebService
         }
 
         // ReSharper disable once UnusedMember.Global
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostEnvironment env)
         {
             app.UseSwagger();
             app.UseSwaggerUI(c =>

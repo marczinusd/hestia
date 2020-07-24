@@ -11,5 +11,15 @@ namespace Hestia.Model.Builders
             : base($"File at {filePath} is invalid")
         {
         }
+
+        public FileBuilderException(string message, Exception innerException)
+            : base(message, innerException)
+        {
+        }
+
+        protected FileBuilderException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+        }
     }
 }

@@ -40,16 +40,16 @@ namespace Hestia.Model.Stats
             => Task.Run(() => ParseFileCoveragesFromFilePath(filePath));
 
         private static IEnumerable<(int lineNumber, int hitCount)> ParseLineCoverageJObject(
-            JObject? jObject)
+            JToken? token)
         {
-            if (jObject == null)
+            if (token == null)
             {
                 return new[] { (-1, 0) };
             }
 
-            return jObject.Children<JProperty>()
-                          .Select(prop => (int.Parse(prop.Name),
-                                           int.Parse(prop.Value.ToString())));
+            return token.Children<JProperty>()
+                        .Select(prop => (int.Parse(prop.Name),
+                                         int.Parse(prop.Value.ToString())));
         }
     }
 }
