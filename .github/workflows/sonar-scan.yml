@@ -35,5 +35,4 @@ jobs:
           dotnet build --no-restore Hestia.sln
           dotnet test --no-restore Hestia.sln /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:Exclude="[xunit*]*" /p:CoverletOutput="coverage.json"
           reportgenerator "-reports:**/coverage.json" "-targetdir:coveragereport" "-reporttypes:SonarQube"
-          ls -al coveragereport
           dotnet sonarscanner end /d:sonar.login="$SONAR_LOGIN"
