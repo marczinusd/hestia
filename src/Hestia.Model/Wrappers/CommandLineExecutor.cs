@@ -10,7 +10,7 @@ namespace Hestia.Model.Wrappers
     {
         private readonly bool _noEcho;
 
-        public CommandLineExecutor(bool noEcho = true)
+        public CommandLineExecutor(bool noEcho)
         {
             _noEcho = noEcho;
         }

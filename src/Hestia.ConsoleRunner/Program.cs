@@ -17,7 +17,7 @@ namespace Hestia.ConsoleRunner
             Log.Logger = new LoggerConfiguration().WriteTo
                                                   .Console()
                                                   .CreateLogger();
-            var executor = new CommandLineExecutor();
+            var executor = new CommandLineExecutor(true);
             var ioWrapper = new DiskIOWrapper();
             var reportConverter = new CoverageReportConverter(ioWrapper, new ReportGeneratorWrapper());
             var enricher = new StatsEnricher(ioWrapper,

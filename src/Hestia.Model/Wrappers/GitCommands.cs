@@ -105,25 +105,25 @@ namespace Hestia.Model.Wrappers
         public void Checkout(string hash, string repoPath) =>
             Exec(CheckoutCommand(hash), repoPath);
 
-        private string OnelineFileHistory(string filepath) =>
+        private static string OnelineFileHistory(string filepath) =>
             $"log --pretty=oneline {filepath}";
 
-        private string LineHistoryCommand(string filepath, int lineNumber) =>
+        private static string LineHistoryCommand(string filepath, int lineNumber) =>
             $"log -L {lineNumber},{lineNumber}:\"{filepath}\"";
 
-        private string AuthorsForFileCommand(string filepath) =>
+        private static string AuthorsForFileCommand(string filepath) =>
             $"shortlog -c -s {filepath}";
 
-        private string HashForNthCommitCommand(int commitNumber) =>
+        private static string HashForNthCommitCommand(int commitNumber) =>
             $"log -1 HEAD~{commitNumber}";
 
-        private string CheckoutCommand(string hash) =>
+        private static string CheckoutCommand(string hash) =>
             $"checkout {hash}";
 
-        private int ParseLineHistoryForNumberOfChanges(string[] commandOutput) =>
+        private static int ParseLineHistoryForNumberOfChanges(string[] commandOutput) =>
             commandOutput.Count(line => Regex.IsMatch(line, CommitHeaderPattern));
 
-        private int ParseShortLogForUniqueAuthors(string[] commandOutput) =>
+        private static int ParseShortLogForUniqueAuthors(string[] commandOutput) =>
             commandOutput.Select(line => Regex.Match(line, ShortLogAuthorPattern)
                                               .Captures)
                          .Where(capture => capture.Count == 1)
@@ -132,7 +132,7 @@ namespace Hestia.Model.Wrappers
                          .Distinct()
                          .Count();
 
-        private int ParseNumberOfUniqueAuthorsFromGitHistory(string[] commandOutput) =>
+        private static int ParseNumberOfUniqueAuthorsFromGitHistory(string[] commandOutput) =>
             commandOutput.Select(line => Regex.Match(line, AuthorPattern)
                                               .Captures.FirstOrDefault())
                          .Where(capture => capture != null && !string.IsNullOrWhiteSpace(capture.Value))

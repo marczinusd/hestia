@@ -10,7 +10,7 @@ namespace Hestia.DAL.Mongo.Model
     {
         private readonly Repository _repository;
 
-        public RepositoryEntity(Repository repository, string? id = null)
+        public RepositoryEntity(Repository repository, string? id)
         {
             _repository = repository;
             Id = id;

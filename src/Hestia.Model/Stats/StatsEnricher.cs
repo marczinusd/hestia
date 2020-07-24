@@ -61,7 +61,7 @@ namespace Hestia.Model.Stats
         }
 
         public RepositorySnapshot EnrichWithGitStats(RepositorySnapshot repositorySnapshot,
-                                                     GitStatGranularity granularity = GitStatGranularity.File)
+                                                     GitStatGranularity granularity)
         {
             _logger.Debug($"Enriching repository snapshot with hash {repositorySnapshot.AtHash} with git stats");
 
@@ -102,7 +102,7 @@ namespace Hestia.Model.Stats
                                             .Build()
                                             .Apply(ConvertCoverageResults)
                                             .Apply(EnrichWithCoverage)
-                                            .Apply(x => EnrichWithGitStats(x))
+                                            .Apply(x => EnrichWithGitStats(x, GitStatGranularity.File))
                                             .Apply(repo.AddSnapshot);
                          });
         }
