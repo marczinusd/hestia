@@ -27,6 +27,7 @@ jobs:
           SONAR_LOGIN: ${{ secrets.SONAR_LOGIN }}
           SONAR_PROJECT_KEY: ${{ secrets.SONAR_LOGIN }}
           SONAR_ORG: ${{ secrets.SONAR_ORG }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           dotnet sonarscanner begin /k:"$SONAR_PROJECT_KEY" /o:"$SONAR_ORG" /d:sonar.login="$SONAR_LOGIN" /d:sonar.host.url="https://sonarcloud.io"
           dotnet build --no-restore src/Hestia.sln
