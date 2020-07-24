@@ -28,4 +28,7 @@
     <ProjectReference Include="..\Hestia.DAL.Mongo\Hestia.DAL.Mongo.csproj" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <SonarQubeTestProject>true</SonarQubeTestProject>
+  </PropertyGroup>
 </Project>

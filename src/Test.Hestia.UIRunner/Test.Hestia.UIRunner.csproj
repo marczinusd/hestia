@@ -32,4 +32,7 @@
     <ProjectReference Include="..\Test.Hestia.Utils\Test.Hestia.Utils.csproj" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <SonarQubeTestProject>true</SonarQubeTestProject>
+  </PropertyGroup>
 </Project>

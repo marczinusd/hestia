@@ -19,6 +19,7 @@ jobs:
       - name: Setup global .NET tools
         run: |
           dotnet tool install --global dotnet-reportgenerator-globaltool
+          dotnet tool install --global dotnet-sonarscanner
           export PATH="$PATH:/root/.dotnet/tools"
       - name: Install dependencies
         run: dotnet restore src/Hestia.sln
@@ -33,3 +34,12 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coveragereport/lcov.info
+      - name: Run Sonar and upload results to SonarCloud
+        with:
+          SONAR_LOGIN: ${{ secrets.SONAR_LOGIN }}
+          SONAR_PROJECT_KEY: ${{ secrets.SONAR_LOGIN }}
+          SONAR_ORG: ${{ secrets.SONAR_ORG }}
+        run: |
+          dotnet sonarscanner begin /k:"$SONAR_PROJECT_KEY" /o:"$SONAR_ORG" /d:sonar.login="$SONAR_LOGIN"
+          dotnet build src/Hestia.sln
+          dotnet sonarscanner end /d:sonar.login=$SONAR_LOGIN

@@ -28,4 +28,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Hestia.WebService\Hestia.WebService.csproj" />
   </ItemGroup>
+
+  <PropertyGroup>
+    <SonarQubeTestProject>true</SonarQubeTestProject>
+  </PropertyGroup>
 </Project>

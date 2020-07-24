@@ -47,4 +47,7 @@
     <EmbeddedResource Include="Resources\GitSingleCommitOutput" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <SonarQubeTestProject>true</SonarQubeTestProject>
+  </PropertyGroup>
 </Project>
