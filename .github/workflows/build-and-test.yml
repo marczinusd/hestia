@@ -35,7 +35,7 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coveragereport/lcov.info
       - name: Run Sonar and upload results to SonarCloud
-        with:
+        env:
           SONAR_LOGIN: ${{ secrets.SONAR_LOGIN }}
           SONAR_PROJECT_KEY: ${{ secrets.SONAR_LOGIN }}
           SONAR_ORG: ${{ secrets.SONAR_ORG }}
