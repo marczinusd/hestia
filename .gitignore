@@ -493,3 +493,8 @@ reportgenerator.exe
 .store
 
 .vscode/*
+
+# Sonar
+**/local-sonar-run.cmd
+**/.scannerwork/*
+**/.sonarqube/*
