@@ -30,8 +30,10 @@ jobs:
           SONAR_ORG: ${{ secrets.SONAR_ORG }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          cd src
           dotnet sonarscanner begin /k:"$SONAR_PROJECT_KEY" /o:"$SONAR_ORG" /d:sonar.login="$SONAR_LOGIN" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.coverageReportPaths="coveragereport/SonarQube.xml"
-          dotnet build --no-restore src/Hestia.sln
-          dotnet test --no-restore src/Hestia.sln /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:Exclude="[xunit*]*" /p:CoverletOutput="coverage.json"
+          dotnet build --no-restore Hestia.sln
+          dotnet test --no-restore Hestia.sln /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:Exclude="[xunit*]*" /p:CoverletOutput="coverage.json"
           reportgenerator "-reports:**/coverage.json" "-targetdir:coveragereport" "-reporttypes:SonarQube"
+          ls -al coveragereport
           dotnet sonarscanner end /d:sonar.login="$SONAR_LOGIN"
