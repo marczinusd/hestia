@@ -24,8 +24,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Hestia.UIRunner", "Tes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Hestia.Utils", "Test.Hestia.Utils\Test.Hestia.Utils.csproj", "{C4EE2FC8-3F31-4337-BB2F-5E7567D74161}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Hestia.WebService.Giraffe", "Hestia.WebService.Giraffe\Hestia.WebService.Giraffe.fsproj", "{A540E154-DF82-47B8-B849-2A0BA536DF6F}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -76,10 +74,6 @@ Global
 		{C4EE2FC8-3F31-4337-BB2F-5E7567D74161}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C4EE2FC8-3F31-4337-BB2F-5E7567D74161}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4EE2FC8-3F31-4337-BB2F-5E7567D74161}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A540E154-DF82-47B8-B849-2A0BA536DF6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A540E154-DF82-47B8-B849-2A0BA536DF6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A540E154-DF82-47B8-B849-2A0BA536DF6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A540E154-DF82-47B8-B849-2A0BA536DF6F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{82AF4D38-13F4-44F4-B844-E0BA1006C5ED} = {39BB93D3-D10F-4057-B9C1-F6498FE33699}
