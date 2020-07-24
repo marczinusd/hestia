@@ -19,6 +19,7 @@ jobs:
       - name: Setup SonarScanner
         run: |
           dotnet tool install --global dotnet-sonarscanner
+          dotnet tool install --global dotnet-reportgenerator-globaltool
           export PATH="$PATH:/root/.dotnet/tools"
       - name: Install dependencies
         run: dotnet restore src/Hestia.sln
@@ -29,7 +30,8 @@ jobs:
           SONAR_ORG: ${{ secrets.SONAR_ORG }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git branch
-          dotnet sonarscanner begin /k:"marczinusd_hestia" /o:"marczinusd" /d:sonar.login="$SONAR_LOGIN" /d:sonar.host.url="https://sonarcloud.io"
+          dotnet sonarscanner begin /k:"marczinusd_hestia" /o:"marczinusd" /d:sonar.login="$SONAR_LOGIN" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.coverageReportPaths="coveragereport\SonarQube.xml"
           dotnet build --no-restore src/Hestia.sln
+          dotnet test --no-restore src/Hestia.sln /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:Exclude="[xunit*]*" /p:CoverletOutput="coverage.json"
+          reportgenerator "-reports:**/coverage.json" "-targetdir:coveragereport" "-reporttypes:Html;HtmlSummary;Cobertura;lcov;XML;JsonSummary;SonarQube"
           dotnet sonarscanner end /d:sonar.login="$SONAR_LOGIN"
