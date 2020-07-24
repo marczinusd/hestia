@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Threading.Tasks;
 using CommandLine;
 using Hestia.ConsoleRunner.Configuration;
 using Hestia.Model;
@@ -45,7 +46,7 @@ namespace Hestia.ConsoleRunner
         {
             Parser.Default
                   .ParseArguments<Options>(args)
-                  .WithParsed(Execute);
+                  .WithParsed(async x => await Execute(x));
         }
 
         private static RepositorySnapshot BuildRepositoryWithOptions(Options options,
@@ -64,7 +65,7 @@ namespace Hestia.ConsoleRunner
                                                    ioWrapper,
                                                    validator).Build();
 
-        private async void Execute(Options options)
+        private async Task Execute(Options options)
         {
             var config = await _configurationProvider.LoadConfiguration(options.JsonConfigPath);
 
