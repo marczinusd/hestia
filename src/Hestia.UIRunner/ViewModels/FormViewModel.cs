@@ -94,7 +94,7 @@ namespace Hestia.UIRunner.ViewModels
 
         public IObservable<RepositorySnapshot> RepositoryCreationObservable => ProcessRepositoryCommand.AsObservable();
 
-        private RepositorySnapshotBuilderArguments FieldsAsBuilderArguments =>
+        private RepositorySnapshotBuilderArguments FieldsAsBuilderArguments() =>
             new RepositorySnapshotBuilderArguments(string.Empty,
                                                    RepositoryPath,
                                                    SourceRoot,
@@ -112,7 +112,7 @@ namespace Hestia.UIRunner.ViewModels
             this.ValidationRule(func, s => !string.IsNullOrWhiteSpace(s), $"{fieldName} should not be empty");
 
         private IObservable<RepositorySnapshot> BuildSnapshotFromViewModelState() =>
-            Observable.Start(() => FieldsAsBuilderArguments
+            Observable.Start(() => FieldsAsBuilderArguments()
                                    .Apply(_builder.Build)
                                    .Apply(ConvertCoverageReport)
                                    .Apply(_statsEnricher.EnrichWithCoverage)

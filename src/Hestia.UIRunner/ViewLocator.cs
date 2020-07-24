@@ -14,10 +14,10 @@ namespace Hestia.UIRunner
     {
         public bool SupportsRecycling => false;
 
-        public IControl Build(object data)
+        public IControl Build(object param)
         {
             // ReSharper disable once PossibleNullReferenceException
-            var name = data.GetType().FullName.Replace("ViewModel", "View");
+            var name = param.GetType().FullName.Replace("ViewModel", "View");
             var type = Type.GetType(name);
 
             if (type != null)

@@ -6,7 +6,7 @@ using LanguageExt;
 
 namespace Hestia.Model.Builders
 {
-    public class FileBuilder
+    public static class FileBuilder
     {
         public static File BuildFileFromPath(string filePath, IDiskIOWrapper diskIoWrapper)
         {

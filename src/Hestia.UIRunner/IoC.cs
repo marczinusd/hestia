@@ -17,7 +17,7 @@ namespace Hestia.UIRunner
         public static ContainerBuilder RegisterMainWindowViewModelDependencies(this ContainerBuilder builder)
         {
             Log.Logger = new LoggerConfiguration().WriteTo
-                                                  .File(@"C:\dev\hestia.log")
+                                                  .File(@"hestia.log")
                                                   .CreateLogger();
 
             builder.RegisterType<MainWindowViewModel>();

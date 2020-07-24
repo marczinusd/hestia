@@ -14,6 +14,8 @@ namespace Hestia.Model.Wrappers
         private const string ShortLogAuthorPattern = "\\s*\\d+\\s*(.*)";
         private const string CommitHeaderPattern = "^commit\\s+(.*)";
         private const string GitDateFormat = "ddd MMM d HH:mm:ss yyyy K";
+        private const string LatestCommitDateCommand = "log -1 --format=%cd";
+        private const string CommitCountOnCurrentBranchCommand = "rev-list --count HEAD";
         private readonly ICommandLineExecutor _commandLineExecutor;
 
         public GitCommands(ICommandLineExecutor commandLineExecutor)
@@ -33,9 +35,9 @@ namespace Hestia.Model.Wrappers
             Enumerable.Range(1, lineCount)
                       .Select(lineNumber => NumberOfChangesForLine(filePath, lineNumber));
 
-        public int NumberOfDifferentAuthorsForFile(string filePath) =>
-            ParseShortLogForUniqueAuthors(Exec(AuthorsForFileCommand(filePath),
-                                               Path.GetDirectoryName(filePath) ?? string.Empty));
+        public int NumberOfDifferentAuthorsForFile(string filepath) =>
+            ParseShortLogForUniqueAuthors(Exec(AuthorsForFileCommand(filepath),
+                                               Path.GetDirectoryName(filepath) ?? string.Empty));
 
         public int NumberOfDifferentAuthorForLine(string filePath, int lineNumber) =>
             ParseNumberOfUniqueAuthorsFromGitHistory(Exec(LineHistoryCommand(filePath,
@@ -43,14 +45,14 @@ namespace Hestia.Model.Wrappers
                                                           Path.GetDirectoryName(filePath) ?? string.Empty));
 
         public DateTime DateOfLatestCommitOnBranch(string repoPath) =>
-            DateTime.ParseExact(Exec(LatestCommitDateCommand(), repoPath)
+            DateTime.ParseExact(Exec(LatestCommitDateCommand, repoPath)
                                     .First(),
                                 GitDateFormat,
                                 CultureInfo.InvariantCulture,
                                 DateTimeStyles.None);
 
         public int NumberOfCommitsOnCurrentBranch(string repoPath) =>
-            int.Parse(Exec(CommitCountOnCurrentBranchCommand(), repoPath)
+            int.Parse(Exec(CommitCountOnCurrentBranchCommand, repoPath)
                       .First()
                       .Trim());
 
@@ -111,12 +113,6 @@ namespace Hestia.Model.Wrappers
 
         private string AuthorsForFileCommand(string filepath) =>
             $"shortlog -c -s {filepath}";
-
-        private string LatestCommitDateCommand() =>
-            "log -1 --format=%cd";
-
-        private string CommitCountOnCurrentBranchCommand() =>
-            "rev-list --count HEAD";
 
         private string HashForNthCommitCommand(int commitNumber) =>
             $"log -1 HEAD~{commitNumber}";

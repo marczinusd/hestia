@@ -43,10 +43,37 @@ namespace Hestia.Model.Stats
             _converter = converter;
         }
 
+        public RepositorySnapshot EnrichWithCoverage(RepositorySnapshot repositorySnapshot)
+        {
+            _logger.Debug($"Enriching repository snapshot at {repositorySnapshot.AtHash} with coverage stats");
+            var pathToCoverageFile = match(repositorySnapshot.PathToCoverageResultFile,
+                                           s => s,
+                                           () =>
+                                               throw new
+                                                   OptionIsNoneException($"{nameof(repositorySnapshot.PathToCoverageResultFile)} cannot be None"));
+            var coverages = _providerFactory.CreateProviderForFile(pathToCoverageFile)
+                                            .ParseFileCoveragesFromFilePath(pathToCoverageFile);
+
+            return repositorySnapshot.With(repositorySnapshot.Files
+                                                             .Apply(f => EnrichWithCoverage(f, coverages))
+                                                             .ToArray(),
+                                           pathToCoverageResultFile: pathToCoverageFile);
+        }
+
+        public RepositorySnapshot EnrichWithGitStats(RepositorySnapshot repositorySnapshot,
+                                                     GitStatGranularity granularity = GitStatGranularity.File)
+        {
+            _logger.Debug($"Enriching repository snapshot with hash {repositorySnapshot.AtHash} with git stats");
+
+            return repositorySnapshot.With(repositorySnapshot
+                                           .Files.Apply(x => x.Select(f => EnrichWithGitStats(f, granularity)))
+                                           .ToList());
+        }
+
         public Repository Enrich(Repository repository,
                                  RepositoryStatsEnricherArguments args)
         {
-            var initialSnapshotId = string.Empty; // TODO
+            var initialSnapshotId = string.Empty;
             var repoArgs = new RepositorySnapshotBuilderArguments(initialSnapshotId,
                                                                   args.RepoPath,
                                                                   args.SourceRoot,
@@ -80,32 +107,6 @@ namespace Hestia.Model.Stats
                          });
         }
 
-        public RepositorySnapshot EnrichWithCoverage(RepositorySnapshot repositorySnapshot)
-        {
-            _logger.Debug($"Enriching repository snapshot at {repositorySnapshot.AtHash} with coverage stats");
-            var pathToCoverageFile = match(repositorySnapshot.PathToCoverageResultFile,
-                                           s => s,
-                                           () =>
-                                               throw new
-                                                   OptionIsNoneException($"{nameof(repositorySnapshot.PathToCoverageResultFile)} cannot be None"));
-            var coverages = _providerFactory.CreateProviderForFile(pathToCoverageFile)
-                                            .ParseFileCoveragesFromFilePath(pathToCoverageFile);
-
-            return repositorySnapshot.With(repositorySnapshot.Files
-                                                             .Apply(f => EnrichWithCoverage(f, coverages))
-                                                             .ToArray(),
-                                           pathToCoverageResultFile: pathToCoverageFile);
-        }
-
-        public RepositorySnapshot EnrichWithGitStats(RepositorySnapshot repositorySnapshot,
-                                                     GitStatGranularity granularity = GitStatGranularity.File)
-        {
-            _logger.Debug($"Enriching repository snapshot with hash {repositorySnapshot.AtHash} with git stats");
-
-            return repositorySnapshot.With(repositorySnapshot.Files.Apply(x => x.Select(f => EnrichWithGitStats(f, granularity)))
-                                                             .ToList());
-        }
-
         public File Enrich(File file, string coverageReportPath, string coverageCommand)
         {
             if (string.IsNullOrWhiteSpace(coverageReportPath) || string.IsNullOrWhiteSpace(coverageCommand))
@@ -114,10 +115,7 @@ namespace Hestia.Model.Stats
                     ArgumentOutOfRangeException($"Either {nameof(coverageReportPath)} or {nameof(coverageReportPath)} have to be non-null and non-empty.");
             }
 
-            if (!string.IsNullOrWhiteSpace(coverageCommand))
-            {
-                _executor.Execute(coverageCommand, string.Empty, string.Empty);
-            }
+            _executor.Execute(coverageCommand, string.Empty, string.Empty);
 
             var finalPath = coverageReportPath;
             if (!coverageReportPath.Contains("coverage.json"))
@@ -205,7 +203,8 @@ namespace Hestia.Model.Stats
                 file.Content.Select(line => new SourceLine(line.LineNumber,
                                                            line.Text,
                                                            line.LineCoverageStats,
-                                                           lineStats.SingleOrDefault(l => l.LineNumber == line.LineNumber)));
+                                                           lineStats.SingleOrDefault(l => l.LineNumber ==
+                                                                                          line.LineNumber)));
 
             // lineStats.Single(stat => stat.LineNumber ==
             //                               line.LineNumber)))

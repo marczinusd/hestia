@@ -2,7 +2,7 @@ using System;
 
 namespace Hestia.Model.Stats
 {
-    public class LineCoverage
+    public sealed class LineCoverage
     {
         public LineCoverage(int lineNumber, int hitCount)
         {
