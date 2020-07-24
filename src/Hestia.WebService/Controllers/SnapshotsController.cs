@@ -42,7 +42,7 @@ namespace Hestia.WebService.Controllers
         /// <response code="404">Returns 404 when a repository for id was not found.</response>
         [HttpGet("[Controller]/{id}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(RepositorySnapshotEntity), 200)]
+        [ProducesResponseType(typeof(RepositorySnapshotEntity), StatusCodes.Status200OK)]
         public ActionResult<RepositorySnapshotEntity> GetRepositoryById(string id)
         {
             _logger.LogDebug($"Invoking GET by id with id=${id} on {nameof(SnapshotsController)}");

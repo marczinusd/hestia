@@ -64,10 +64,9 @@ namespace Hestia.ConsoleRunner
                                                    ioWrapper,
                                                    validator).Build();
 
-        private void Execute(Options options)
+        private async void Execute(Options options)
         {
-            var config = _configurationProvider.LoadConfiguration(options.JsonConfigPath)
-                                               .Result;
+            var config = await _configurationProvider.LoadConfiguration(options.JsonConfigPath);
 
             // ReSharper disable once PossibleNullReferenceException
             if (!string.IsNullOrWhiteSpace(config.CoverageReportLocation) && !Path
