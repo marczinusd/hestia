@@ -1,10 +1,12 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 
 namespace Hestia.Model.Builders
 {
     // ReSharper disable once RedundantExtendsListEntry
     [Serializable]
+    [ExcludeFromCodeCoverage]
     public class FileBuilderException : Exception
     {
         public FileBuilderException(string filePath)

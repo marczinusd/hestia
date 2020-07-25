@@ -1,9 +1,11 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Hestia.Model.Wrappers;
 using LanguageExt;
 
 namespace Hestia.Model.Builders
 {
+    [ExcludeFromCodeCoverage]
     public class RepositorySnapshotBuilderArguments
     {
         public RepositorySnapshotBuilderArguments(string snapshotId,
