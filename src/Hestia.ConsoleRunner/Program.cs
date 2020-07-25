@@ -17,14 +17,15 @@ namespace Hestia.ConsoleRunner
             Log.Logger = new LoggerConfiguration().WriteTo
                                                   .Console()
                                                   .CreateLogger();
-            var executor = new CommandLineExecutor(true);
+            var executor = new CommandLineExecutor(ExecutorEchoMode.NoEcho);
             var ioWrapper = new DiskIOWrapper();
             var reportConverter = new CoverageReportConverter(ioWrapper, new ReportGeneratorWrapper());
+            var fileStreamWrapper = new FileStreamWrapper();
             var enricher = new StatsEnricher(ioWrapper,
                                              new GitCommands(executor),
                                              Log.Logger,
                                              executor,
-                                             new CoverageProviderFactory(ioWrapper),
+                                             new CoverageProviderFactory(ioWrapper, fileStreamWrapper),
                                              new PathValidator(),
                                              reportConverter);
             var runner = new HestiaConsoleRunner(Log.Logger,

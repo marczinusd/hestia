@@ -14,9 +14,16 @@
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=5c1bd332_002D2d37_002D46da_002D87e5_002Dd283aaf9d84c/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from &amp;lt;Tests&amp;gt; #3" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;Project Location="C:\dev\hestia\src" Presentation="&amp;lt;Tests&amp;gt;" /&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=6e4854fd_002Da9fd_002D4f1e_002Da543_002Dd11721ffdbd7/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="ConsoleRunnerShouldExecuteStepsWhenGivenValidArguments" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=6e4854fd_002Da9fd_002D4f1e_002Da543_002Dd11721ffdbd7/@EntryIndexedValue">&lt;SessionState ContinuousTestingIsOn="True" ContinuousTestingMode="2" Name="ConsoleRunnerShouldExecuteStepsWhenGivenValidArguments" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;xUnit::799467C9-DB54-4053-8F7A-F10370AD8DA0::.NETCoreApp,Version=v3.1::Test.Hestia.ConsoleRunner.HestiaConsoleRunnerTest.ConsoleRunnerShouldExecuteStepsWhenGivenValidArguments&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::31D305CA-E50F-4C54-96EB-127B2656B353::.NETCoreApp,Version=v3.1::Test.Hestia.Model.Cobertura.CoberturaCoverageProviderTest.VerifySchemaCorrectness&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::31D305CA-E50F-4C54-96EB-127B2656B353::.NETCoreApp,Version=v3.1::Test.Hestia.Model.Cobertura.CoberturaCoverageProviderTest.CoberturaXmlDeserializesCorrectly&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=9ecdda21_002D1a5e_002D478b_002Dac9f_002D4ab062cf94a6/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="VerifySchemaCorrectness" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::31D305CA-E50F-4C54-96EB-127B2656B353::.NETCoreApp,Version=v3.1::Test.Hestia.Model.Cobertura.CoberturaCoverageProviderTest.VerifySchemaCorrectness&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=c2d67e3a_002De5a5_002D434c_002Da9fd_002D1eb6056a9e00/@EntryIndexedValue">&lt;SessionState ContinuousTestingIsOn="True" ContinuousTestingMode="2" Name="All tests from &amp;lt;Tests&amp;gt;" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;

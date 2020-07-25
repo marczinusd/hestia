@@ -7,5 +7,6 @@
         public const string GitPrettyLogOutput = "Test.Hestia.Model.Resources.GitPrettyLogOutput";
         public const string GitShortlogOutput = "Test.Hestia.Model.Resources.GitShortlogOutput";
         public const string GitSingleCommitOutput = "Test.Hestia.Model.Resources.GitSingleCommitOutput";
+        public const string CoberturaXml = "Test.Hestia.Model.Resources.Cobertura.xml";
     }
 }

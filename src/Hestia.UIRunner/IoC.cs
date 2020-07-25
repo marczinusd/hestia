@@ -26,7 +26,8 @@ namespace Hestia.UIRunner
             builder.RegisterType<GitCommands>()
                    .As<IGitCommands>();
             builder.RegisterType<CommandLineExecutor>()
-                   .As<ICommandLineExecutor>();
+                   .As<ICommandLineExecutor>()
+                   .WithParameter("echoMode", ExecutorEchoMode.NoEcho);
             builder.RegisterType<CoverageProviderFactory>()
                    .As<ICoverageProviderFactory>();
             builder.RegisterType<PathValidator>()
@@ -47,6 +48,8 @@ namespace Hestia.UIRunner
             builder.RegisterType<SnapshotMongoClient>()
                    .As<ISnapshotPersistence>()
                    .WithParameter("databaseName", MongoClientFactory.DatabaseName);
+            builder.RegisterType<FileStreamWrapper>()
+                   .As<IFileStreamWrapper>();
             builder.RegisterInstance<Func<IMongoCollection<RepositorySnapshotEntity>,
                 IMongoCollectionWrapper<RepositorySnapshotEntity>>>(entity =>
                                                                         new MongoCollectionWrapper<

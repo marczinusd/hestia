@@ -45,6 +45,8 @@
     <EmbeddedResource Include="Resources\coverage.json" />
     <None Remove="Resources\GitSingleCommitOutput" />
     <EmbeddedResource Include="Resources\GitSingleCommitOutput" />
+    <None Remove="Resources\Cobertura.xml" />
+    <EmbeddedResource Include="Resources\Cobertura.xml" />
   </ItemGroup>
 
   <PropertyGroup>
