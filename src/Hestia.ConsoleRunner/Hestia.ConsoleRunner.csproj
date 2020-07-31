@@ -14,11 +14,9 @@
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.8.0" />
     <PackageReference Include="LanguageExt.Core" Version="3.4.15" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.4" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.0" />
     <PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="3.6.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="NJsonSchema" Version="10.1.18" />
+    <PackageReference Include="NJsonSchema" Version="10.1.24" />
     <PackageReference Include="Serilog" Version="2.9.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.164" />
@@ -26,12 +24,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Hestia.Model\Hestia.Model.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Microsoft.Extensions.Logging.Console, Version=3.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60">
-      <HintPath>..\..\..\..\dotnet\packs\Microsoft.AspNetCore.App.Ref\3.1.0\ref\netcoreapp3.1\Microsoft.Extensions.Logging.Console.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <ItemGroup>
