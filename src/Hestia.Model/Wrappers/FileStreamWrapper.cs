@@ -12,7 +12,7 @@ namespace Hestia.Model.Wrappers
             // Creating the serializer like this is less than ideal due to the perf overhead of xml serializer creation
             // Refactor if this is ever used in multiple places
             var serializer = new XmlSerializer(typeof(T));
-            using Stream reader = new FileStream(path, FileMode.Open);
+            using Stream reader = new FileStream(path, fileMode);
 
             return (T)serializer.Deserialize(reader);
         }
