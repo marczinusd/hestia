@@ -16,7 +16,7 @@
     <PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="3.6.0" />
     <PackageReference Include="MongoDB.Bson" Version="2.11.0" />
     <PackageReference Include="MongoDB.Driver" Version="2.11.0" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.164" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.205" />
     <PackageReference Include="System.Reactive" Version="4.4.1" />
     <PackageReference Include="System.Text.Json" Version="4.7.2" />
   </ItemGroup>
