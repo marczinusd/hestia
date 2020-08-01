@@ -17,7 +17,6 @@ using Moq;
 using Test.Hestia.Utils;
 using Test.Hestia.Utils.TestData;
 using Xunit;
-using File = Hestia.Model.File;
 
 namespace Test.Hestia.UIRunner
 {

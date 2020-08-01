@@ -13,4 +13,8 @@
   <ItemGroup>
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.205" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Hestia.DAL.Interfaces\Hestia.DAL.Interfaces.csproj" />
+  </ItemGroup>
 </Project>
