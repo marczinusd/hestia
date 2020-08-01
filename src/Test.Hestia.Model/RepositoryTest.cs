@@ -1,6 +1,7 @@
 using System;
 using FluentAssertions;
 using Hestia.Model;
+using Hestia.Model.Interfaces;
 using LanguageExt;
 using Xunit;
 
@@ -13,7 +14,7 @@ namespace Test.Hestia.Model
         {
             var repo = new Repository(1,
                                       "bla",
-                                      Array.Empty<RepositorySnapshot>(),
+                                      Array.Empty<IRepositorySnapshot>(),
                                       "someCommand",
                                       "lcov.info");
 
@@ -27,14 +28,14 @@ namespace Test.Hestia.Model
         {
             var repo = new Repository(1,
                                       "bla",
-                                      Option<RepositorySnapshot[]>.None,
+                                      Option<IRepositorySnapshot[]>.None,
                                       string.Empty,
                                       string.Empty);
 
-            var newRepo = repo.With(Array.Empty<RepositorySnapshot>(), "bla", "lcov.info");
+            var newRepo = repo.With(Array.Empty<IRepositorySnapshot>(), "bla", "lcov.info");
 
             newRepo.Snapshots
-                   .Match(x => x, null as RepositorySnapshot[])
+                   .Match(x => x, null as IRepositorySnapshot[])
                    .Should()
                    .BeEmpty();
             newRepo.CoverageExecutionCommand

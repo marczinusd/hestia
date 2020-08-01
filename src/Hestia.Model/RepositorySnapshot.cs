@@ -35,11 +35,11 @@ namespace Hestia.Model
 
         public string Id { get; }
 
-        public RepositorySnapshot With(IEnumerable<IFile>? files = null,
-                                       string? atHash = null,
-                                       string? pathToCoverageResultFile = null,
-                                       DateTime? commitCreationDate = null,
-                                       string? name = null) =>
+        public IRepositorySnapshot With(IEnumerable<IFile>? files = null,
+                                        string? atHash = null,
+                                        string? pathToCoverageResultFile = null,
+                                        DateTime? commitCreationDate = null,
+                                        string? name = null) =>
             new RepositorySnapshot(Id,
                                    files?.ToList() ?? Files,
                                    pathToCoverageResultFile ?? PathToCoverageResultFile,

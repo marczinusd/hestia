@@ -19,7 +19,7 @@ namespace Test.Hestia.Model.Stats
 {
     public class StatsEnricherTest
     {
-        private readonly IEnumerable<FileCoverage> _coverages = new[] { new FileCoverage("bla.js", new[] { (1, 1) }) };
+        private readonly IEnumerable<IFileCoverage> _coverages = new[] { new FileCoverage("bla.js", new[] { (1, 1) }) };
 
         public static TheoryData<string, string> FileEnricherInvalidInput =>
             new TheoryData<string, string>
@@ -206,12 +206,12 @@ namespace Test.Hestia.Model.Stats
 
             var repo = enricher.Enrich(new Repository(0,
                                                       "bla",
-                                                      Option<RepositorySnapshot[]>.None,
+                                                      Option<IRepositorySnapshot[]>.None,
                                                       Option<string>.None,
                                                       Option<string>.None),
                                        args);
 
-            var snapshots = repo.Snapshots.Match(x => x, Array.Empty<RepositorySnapshot>());
+            var snapshots = repo.Snapshots.Match(x => x, Array.Empty<IRepositorySnapshot>());
 
             // verify behavior
             gitCommandsMock.Verify(mock => mock.Checkout(It.IsAny<string>(), It.IsAny<string>()), Times.Exactly(5));
@@ -224,9 +224,6 @@ namespace Test.Hestia.Model.Stats
             // verify results
             snapshots.Should()
                      .HaveCount(5);
-            snapshots.Select(s => s.Id)
-                     .Should()
-                     .BeEquivalentTo(Enumerable.Repeat(string.Empty, 5)); // TODO: remove this with all repo/snapshot Ids on model layer
             snapshots.Select(s => s.AtHash.Match(x => x, string.Empty))
                      .Should()
                      .BeEquivalentTo(new[] { "1", "13", "25", "37", "50" });

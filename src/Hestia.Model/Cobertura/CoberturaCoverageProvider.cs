@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Hestia.Model.Extensions;
+using Hestia.Model.Interfaces;
 using Hestia.Model.Stats;
 using Hestia.Model.Wrappers;
 
@@ -17,7 +18,7 @@ namespace Hestia.Model.Cobertura
             _fileStreamWrapper = fileStreamWrapper;
         }
 
-        public IEnumerable<FileCoverage> ParseFileCoveragesFromFilePath(string filePath)
+        public IEnumerable<IFileCoverage> ParseFileCoveragesFromFilePath(string filePath)
         {
             var rawCoverage = _fileStreamWrapper.Deserialize<Coverage>(filePath, FileMode.Open);
 
@@ -28,7 +29,7 @@ namespace Hestia.Model.Cobertura
                               .DistinctBy(c => c.FileName);
         }
 
-        public Task<IEnumerable<FileCoverage>> ParseFileCoveragesFromFilePathAsync(string filePath) =>
+        public Task<IEnumerable<IFileCoverage>> ParseFileCoveragesFromFilePathAsync(string filePath) =>
             Task.Run(() => ParseFileCoveragesFromFilePath(filePath));
     }
 }

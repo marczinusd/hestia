@@ -1,18 +1,18 @@
 using System;
-using Hestia.Model;
+using Hestia.Model.Interfaces;
 using ReactiveUI;
 
 namespace Hestia.UIRunner.ViewModels
 {
     public class FileDetailsViewModel : ReactiveObject
     {
-        private readonly ObservableAsPropertyHelper<File> _fileObservableAsPropertyHelper;
+        private readonly ObservableAsPropertyHelper<IFile> _fileObservableAsPropertyHelper;
 
-        public FileDetailsViewModel(IObservable<File> observable)
+        public FileDetailsViewModel(IObservable<IFile> observable)
         {
             _fileObservableAsPropertyHelper = observable.ToProperty(this, nameof(File));
         }
 
-        public File File => _fileObservableAsPropertyHelper.Value;
+        public IFile File => _fileObservableAsPropertyHelper.Value;
     }
 }

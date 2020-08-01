@@ -2,8 +2,8 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reactive.Linq;
-using Hestia.Model;
 using Hestia.Model.Builders;
+using Hestia.Model.Interfaces;
 using Hestia.Model.Stats;
 using Hestia.Model.Wrappers;
 using Hestia.UIRunner.Services;
@@ -86,13 +86,13 @@ namespace Hestia.UIRunner.ViewModels
 
         public bool IsExecuting => _isExecuting.Value;
 
-        public ReactiveCommand<Unit, RepositorySnapshot> ProcessRepositoryCommand { get; set; }
+        public ReactiveCommand<Unit, IRepositorySnapshot> ProcessRepositoryCommand { get; set; }
 
         public ReactiveCommand<Unit, string> OpenFolderDialogCommand { get; set; }
 
         public ReactiveCommand<Unit, string[]> OpenFileDialogCommand { get; set; }
 
-        public IObservable<RepositorySnapshot> RepositoryCreationObservable => ProcessRepositoryCommand.AsObservable();
+        public IObservable<IRepositorySnapshot> RepositoryCreationObservable => ProcessRepositoryCommand.AsObservable();
 
         private RepositorySnapshotBuilderArguments FieldsAsBuilderArguments() =>
             new RepositorySnapshotBuilderArguments(string.Empty,
@@ -111,14 +111,14 @@ namespace Hestia.UIRunner.ViewModels
                                           string fieldName) =>
             this.ValidationRule(func, s => !string.IsNullOrWhiteSpace(s), $"{fieldName} should not be empty");
 
-        private IObservable<RepositorySnapshot> BuildSnapshotFromViewModelState() =>
+        private IObservable<IRepositorySnapshot> BuildSnapshotFromViewModelState() =>
             Observable.Start(() => FieldsAsBuilderArguments()
                                    .Apply(_builder.Build)
                                    .Apply(ConvertCoverageReport)
                                    .Apply(_statsEnricher.EnrichWithCoverage)
                                    .Apply(x => _statsEnricher.EnrichWithGitStats(x, GitStatGranularity.File)));
 
-        private RepositorySnapshot ConvertCoverageReport(RepositorySnapshot snapshot)
+        private IRepositorySnapshot ConvertCoverageReport(IRepositorySnapshot snapshot)
         {
             var newPath = _reportConverter
                           .Convert(CoverageOutputLocation,

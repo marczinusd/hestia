@@ -9,9 +9,9 @@ namespace Hestia.Model
     /// </summary>
     public class FileDetails
     {
-        private readonly File _file;
+        private readonly IFile _file;
 
-        public FileDetails(File file)
+        public FileDetails(IFile file)
         {
             _file = file;
         }
@@ -28,7 +28,7 @@ namespace Hestia.Model
 
         public Option<IFileCoverageStats> CoverageStats => _file.CoverageStats;
 
-        public File AsSlimFile() =>
+        public IFile AsSlimFile() =>
             new File(Filename,
                      Extension,
                      Path,

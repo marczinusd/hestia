@@ -1,7 +1,9 @@
+using Hestia.Model.Interfaces;
+
 namespace Hestia.Model.Builders
 {
     public interface IRepositorySnapshotBuilderWrapper
     {
-        RepositorySnapshot Build(RepositorySnapshotBuilderArguments args);
+        IRepositorySnapshot Build(RepositorySnapshotBuilderArguments args);
     }
 }

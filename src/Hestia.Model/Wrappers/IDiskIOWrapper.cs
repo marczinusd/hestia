@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using Hestia.Model.Interfaces;
 
 namespace Hestia.Model.Wrappers
 {
     public interface IDiskIOWrapper
     {
-        SourceLine[] ReadAllLinesFromFileAsSourceModel(string filePath);
+        ISourceLine[] ReadAllLinesFromFileAsSourceModel(string filePath);
 
         IEnumerable<string> ReadAllLinesFromFile(string filePath);
 

@@ -33,9 +33,6 @@ namespace Test.Hestia.Model.Builders
             snapshot.AtHash.Match(x => x, () => string.Empty)
                     .Should()
                     .Be("hash");
-            snapshot.Id
-                    .Should()
-                    .Be(string.Empty);
             snapshot.CommitCreationDate.Match(x => x, DateTime.Today)
                     .Should()
                     .Be(default);

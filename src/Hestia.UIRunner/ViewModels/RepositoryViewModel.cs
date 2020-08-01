@@ -31,7 +31,7 @@ namespace Hestia.UIRunner.ViewModels
 
         public ReactiveCommand<Unit, Unit> CommitToDatabaseCommand { get; }
 
-        public IObservable<File> SelectedItemObservable { get; }
+        public IObservable<IFile> SelectedItemObservable { get; }
 
         [Reactive]
         public File SelectedItem

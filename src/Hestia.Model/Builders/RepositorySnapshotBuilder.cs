@@ -1,5 +1,6 @@
 using System.IO;
 using System.Linq;
+using Hestia.Model.Interfaces;
 using LanguageExt;
 using static LanguageExt.Prelude;
 
@@ -7,13 +8,15 @@ namespace Hestia.Model.Builders
 {
     public static class RepositorySnapshotBuilder
     {
-        public static RepositorySnapshot Build(this RepositorySnapshotBuilderArguments args)
+        public static IRepositorySnapshot Build(this RepositorySnapshotBuilderArguments args)
         {
             args.PathValidator.ValidateDirectoryPath(args.RootPath);
             args.PathValidator.ValidateDirectoryPath(Path.Join(args.RootPath, args.SourceRoot));
 
             return new RepositorySnapshot(args.SnapshotId,
-                                          args.DiskIoWrapper.EnumerateAllFilesForPathRecursively(Path.Join(args.RootPath, args.SourceRoot))
+                                          args.DiskIoWrapper
+                                              .EnumerateAllFilesForPathRecursively(Path.Join(args.RootPath,
+                                                                                             args.SourceRoot))
                                               .Select(filePath =>
                                                           FileBuilder.BuildFileFromPath(filePath, args.DiskIoWrapper))
                                               .Where(f => !args.SourceExtensions.Any() ||

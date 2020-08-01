@@ -1,15 +1,17 @@
+using Hestia.Model.Interfaces;
+
 namespace Hestia.Model.Stats
 {
     public interface IStatsEnricher
     {
-        RepositorySnapshot EnrichWithCoverage(RepositorySnapshot repositorySnapshot);
+        IRepositorySnapshot EnrichWithCoverage(IRepositorySnapshot repositorySnapshot);
 
-        RepositorySnapshot EnrichWithGitStats(RepositorySnapshot repositorySnapshot,
-                                              GitStatGranularity granularity);
+        IRepositorySnapshot EnrichWithGitStats(IRepositorySnapshot repositorySnapshot,
+                                               GitStatGranularity granularity);
 
         Repository Enrich(Repository repository,
                           RepositoryStatsEnricherArguments args);
 
-        File Enrich(File file, string coverageReportPath, string coverageCommand);
+        IFile Enrich(IFile file, string coverageReportPath, string coverageCommand);
     }
 }

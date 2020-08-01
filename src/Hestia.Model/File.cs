@@ -42,17 +42,13 @@ namespace Hestia.Model
         [UsedImplicitly]
         public decimal CoveragePercentage => CoverageStats.Match(x => x.PercentageOfLineCoverage, -1);
 
-        [JsonIgnore]
-        [UsedImplicitly]
-        public int LifetimeAuthors => GitStats.Match(x => x.LifetimeAuthors, -1);
+        [JsonIgnore] [UsedImplicitly] public int LifetimeAuthors => GitStats.Match(x => x.LifetimeAuthors, -1);
 
-        [JsonIgnore]
-        [UsedImplicitly]
-        public int LifetimeChanges => GitStats.Match(x => x.LifetimeChanges, -1);
+        [JsonIgnore] [UsedImplicitly] public int LifetimeChanges => GitStats.Match(x => x.LifetimeChanges, -1);
 
-        public File With(IList<ISourceLine>? content = null,
-                         IFileGitStats? gitStats = null,
-                         IFileCoverageStats? coverageStats = null) =>
+        public IFile With(IList<ISourceLine>? content = null,
+                          IFileGitStats? gitStats = null,
+                          IFileCoverageStats? coverageStats = null) =>
             new File(Filename,
                      Extension,
                      Path,

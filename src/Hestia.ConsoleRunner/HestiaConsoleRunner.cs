@@ -7,8 +7,8 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using CommandLine;
 using Hestia.ConsoleRunner.Configuration;
-using Hestia.Model;
 using Hestia.Model.Builders;
+using Hestia.Model.Interfaces;
 using Hestia.Model.Stats;
 using Hestia.Model.Wrappers;
 using LanguageExt;
@@ -49,10 +49,10 @@ namespace Hestia.ConsoleRunner
                   .WithParsed(async x => await Execute(x));
         }
 
-        private static RepositorySnapshot BuildRepositoryWithOptions(Options options,
-                                                                     ConsoleRunnerConfig config,
-                                                                     IDiskIOWrapper ioWrapper,
-                                                                     IPathValidator validator) =>
+        private static IRepositorySnapshot BuildRepositoryWithOptions(Options options,
+                                                                      ConsoleRunnerConfig config,
+                                                                      IDiskIOWrapper ioWrapper,
+                                                                      IPathValidator validator) =>
             new RepositorySnapshotBuilderArguments(options.RepositoryId,
                                                    config.RepoPath,
                                                    Path.Join(config.RepoPath,
@@ -90,7 +90,8 @@ namespace Hestia.ConsoleRunner
                                                         _validator);
 
             var enrichedRepository = repository.Apply(_statsEnricher.EnrichWithCoverage)
-                                               .Apply(x => _statsEnricher.EnrichWithGitStats(x, GitStatGranularity.File));
+                                               .Apply(x => _statsEnricher.EnrichWithGitStats(x,
+                                                                                             GitStatGranularity.File));
 
             _logger.Information("Writing results to output...");
             File.WriteAllText(options.OutputPath,

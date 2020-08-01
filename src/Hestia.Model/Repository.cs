@@ -1,4 +1,5 @@
 using System.Linq;
+using Hestia.Model.Interfaces;
 using LanguageExt;
 
 namespace Hestia.Model
@@ -7,7 +8,7 @@ namespace Hestia.Model
     {
         public Repository(int repositoryId,
                           string repositoryName,
-                          Option<RepositorySnapshot[]> snapshots,
+                          Option<IRepositorySnapshot[]> snapshots,
                           Option<string> coverageExecutionCommand,
                           Option<string> coverageOutputLocation)
         {
@@ -22,13 +23,13 @@ namespace Hestia.Model
 
         public string RepositoryName { get; }
 
-        public Option<RepositorySnapshot[]> Snapshots { get; }
+        public Option<IRepositorySnapshot[]> Snapshots { get; }
 
         public Option<string> CoverageExecutionCommand { get; }
 
         public Option<string> CoverageOutputLocation { get; }
 
-        public Repository AddSnapshot(RepositorySnapshot snapshot) =>
+        public Repository AddSnapshot(IRepositorySnapshot snapshot) =>
             new Repository(RepositoryId,
                            RepositoryName,
                            Snapshots.Match(s => s.Concat(new[] { snapshot })
@@ -37,7 +38,7 @@ namespace Hestia.Model
                            CoverageExecutionCommand,
                            CoverageOutputLocation);
 
-        public Repository With(RepositorySnapshot[]? snapshots = null,
+        public Repository With(IRepositorySnapshot[]? snapshots = null,
                                string? coverageExecutionCommand = null,
                                string? coverageOutputLocation = null) =>
             new Repository(RepositoryId,

@@ -11,5 +11,7 @@ namespace Hestia.Model.Interfaces
         Option<ILineCoverageStats> LineCoverageStats { get; }
 
         Option<ILineGitStats> LineGitStats { get; }
+
+        ISourceLine With(ILineCoverageStats? coverageStats = null, ILineGitStats? gitStats = null);
     }
 }

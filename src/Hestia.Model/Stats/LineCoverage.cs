@@ -32,7 +32,7 @@ namespace Hestia.Model.Stats
                 return false;
             }
 
-            return Equals((LineCoverage)obj);
+            return Equals((ILineCoverage)obj);
         }
 
         public override int GetHashCode()

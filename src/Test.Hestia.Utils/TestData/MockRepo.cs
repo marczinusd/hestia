@@ -35,7 +35,7 @@ namespace Test.Hestia.Utils.TestData
 
         public static int SecondIncludedFileGitStats { get; } = 3;
 
-        public static FileCoverageStats DefaultCoverage { get; } =
+        public static IFileCoverageStats DefaultCoverage { get; } =
             new FileCoverageStats(new FileCoverage(string.Empty, new (int lineNumber, int hitCount)[0]));
 
         public static Mock<IDiskIOWrapper> CreateDiskIOWrapperMock()
@@ -53,7 +53,7 @@ namespace Test.Hestia.Utils.TestData
             ioWrapper.Setup(mock => mock.ReadAllLinesFromFile(It.IsAny<string>()))
                      .Returns(new List<string> { "bla", "bla", "bla" });
             ioWrapper.Setup(mock => mock.ReadAllLinesFromFileAsSourceModel(It.IsAny<string>()))
-                     .Returns(new[]
+                     .Returns(new ISourceLine[]
                      {
                          new SourceLine(1,
                                         "bla",
@@ -106,14 +106,14 @@ namespace Test.Hestia.Utils.TestData
             CreateFileFaker()
                 .Generate();
 
-        public static IEnumerable<File> CreateFiles(int count) =>
+        public static IEnumerable<IFile> CreateFiles(int count) =>
             CreateFileFaker()
                 .GenerateLazy(count);
 
-        public static RepositorySnapshot CreateSnapshot(IEnumerable<string> extensions,
-                                                        string coveragePath,
-                                                        IDiskIOWrapper ioWrapper,
-                                                        IPathValidator validator) =>
+        public static IRepositorySnapshot CreateSnapshot(IEnumerable<string> extensions,
+                                                         string coveragePath,
+                                                         IDiskIOWrapper ioWrapper,
+                                                         IPathValidator validator) =>
             new RepositorySnapshotBuilderArguments(string.Empty, // TODO
                                                    DirPath,
                                                    string.Empty,
@@ -135,7 +135,8 @@ namespace Test.Hestia.Utils.TestData
                                                                                     l,
                                                                                     Option<ILineCoverageStats>
                                                                                         .None,
-                                                                                    Option<ILineGitStats>.None) as ISourceLine)
+                                                                                    Option<ILineGitStats>.None) as
+                                                                         ISourceLine)
                                                    .ToList(),
                                                   new FileGitStats(1, 1),
                                                   new FileCoverageStats(new FileCoverage(string.Empty,

@@ -183,9 +183,10 @@ namespace Test.Hestia.UIRunner
                               converterMock.Verify(mock => mock.Convert(CoverageOutputLocation,
                                                                         Path.GetDirectoryName(CoverageOutputLocation)),
                                                    Times.Once);
-                              statsEnricherMock.Verify(mock => mock.EnrichWithCoverage(It.IsAny<RepositorySnapshot>()),
+                              statsEnricherMock.Verify(mock => mock.EnrichWithCoverage(It.IsAny<IRepositorySnapshot>()),
                                                        Times.Once);
-                              statsEnricherMock.Verify(mock => mock.EnrichWithGitStats(It.IsAny<RepositorySnapshot>(), GitStatGranularity.File),
+                              statsEnricherMock.Verify(mock => mock.EnrichWithGitStats(It.IsAny<IRepositorySnapshot>(),
+                                                                                       GitStatGranularity.File),
                                                        Times.Once);
                           });
         }
