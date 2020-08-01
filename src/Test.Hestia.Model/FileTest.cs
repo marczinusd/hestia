@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using FluentAssertions;
 using Hestia.Model;
+using Hestia.Model.Interfaces;
 using Hestia.Model.Stats;
 using LanguageExt;
 using Test.Hestia.Utils.TestData;
@@ -26,12 +27,12 @@ namespace Test.Hestia.Model
         {
             var file = MockRepo.CreateFile();
 
-            var newFile = file.With(new List<SourceLine>
+            var newFile = file.With(new List<ISourceLine>
                                     {
                                         new SourceLine(1,
                                                        string.Empty,
-                                                       Option<LineCoverageStats>.None,
-                                                       Option<LineGitStats>.None),
+                                                       Option<ILineCoverageStats>.None,
+                                                       Option<ILineGitStats>.None),
                                     },
                                     new FileGitStats(1, 1),
                                     new FileCoverageStats(new FileCoverage(string.Empty,
@@ -82,9 +83,9 @@ namespace Test.Hestia.Model
             var file = new File("some.cs",
                                 string.Empty,
                                 "dir",
-                                new List<SourceLine>(),
-                                Option<FileGitStats>.None,
-                                Option<FileCoverageStats>.None);
+                                new List<ISourceLine>(),
+                                Option<IFileGitStats>.None,
+                                Option<IFileCoverageStats>.None);
 
             file.FullPath
                 .Should()

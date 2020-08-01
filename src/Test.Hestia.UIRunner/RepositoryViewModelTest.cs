@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using FluentAssertions;
 using Hestia.DAL.Mongo;
 using Hestia.Model;
+using Hestia.Model.Interfaces;
 using Hestia.UIRunner.ViewModels;
 using LanguageExt;
 using Microsoft.Reactive.Testing;
@@ -20,7 +21,7 @@ namespace Test.Hestia.UIRunner
         {
             var scheduler = new TestScheduler();
             var snapshot = new RepositorySnapshot(string.Empty,
-                                                  new List<File> { MockRepo.CreateFile(), MockRepo.CreateFile() },
+                                                  new List<IFile> { MockRepo.CreateFile(), MockRepo.CreateFile() },
                                                   Option<string>.None,
                                                   Option<string>.None,
                                                   Option<DateTime>.None,

@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-using Hestia.Model.Stats;
+using Hestia.Model.Interfaces;
 using LanguageExt;
 
 namespace Hestia.Model.Wrappers
@@ -15,8 +15,8 @@ namespace Hestia.Model.Wrappers
             return ReadAllLinesFromFile(filePath)
                    .Select((line, i) => new SourceLine(i + 1,
                                                        line,
-                                                       Option<LineCoverageStats>.None,
-                                                       Option<LineGitStats>.None))
+                                                       Option<ILineCoverageStats>.None,
+                                                       Option<ILineGitStats>.None))
                    .ToArray();
         }
 

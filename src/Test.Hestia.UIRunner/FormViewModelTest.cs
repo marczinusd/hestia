@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Hestia.Model;
 using Hestia.Model.Builders;
+using Hestia.Model.Interfaces;
 using Hestia.Model.Stats;
 using Hestia.Model.Wrappers;
 using Hestia.UIRunner.Services;
@@ -151,7 +152,7 @@ namespace Test.Hestia.UIRunner
             var builderMock = new Mock<IRepositorySnapshotBuilderWrapper>();
             var converterMock = new Mock<ICoverageReportConverter>();
             var repositorySnapshot = new RepositorySnapshot(string.Empty,
-                                                            new List<File>(),
+                                                            new List<IFile>(),
                                                             Option<string>.None,
                                                             Option<string>.None,
                                                             Option<DateTime>.None,

@@ -1,11 +1,12 @@
 ﻿using System.Linq;
+using Hestia.Model.Interfaces;
 using Newtonsoft.Json;
 
 namespace Hestia.Model.Stats
 {
-    public class FileCoverageStats
+    public class FileCoverageStats : IFileCoverageStats
     {
-        public FileCoverageStats(FileCoverage coverage)
+        public FileCoverageStats(IFileCoverage coverage)
         {
             Coverage = coverage;
         }
@@ -13,7 +14,7 @@ namespace Hestia.Model.Stats
         // Store the coverage for stats, but don't render it unless file details are rendered
         [System.Text.Json.Serialization.JsonIgnore]
         [JsonIgnore]
-        public FileCoverage Coverage { get; }
+        public IFileCoverage Coverage { get; }
 
         public decimal PercentageOfLineCoverage =>
             !Coverage.LineCoverages.Any()

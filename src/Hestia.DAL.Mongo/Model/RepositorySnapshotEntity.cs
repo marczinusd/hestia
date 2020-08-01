@@ -11,7 +11,7 @@ namespace Hestia.DAL.Mongo.Model
 {
     [ExcludeFromCodeCoverage]
     [BsonIgnoreExtraElements]
-    public class RepositorySnapshotEntity
+    public class RepositorySnapshotEntity : IRepositorySnapshotEntity
     {
         public RepositorySnapshotEntity(RepositorySnapshot snapshot)
         {

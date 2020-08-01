@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Hestia.Model.Interfaces;
 using LanguageExt;
 
 namespace Hestia.Model
 {
-    public class RepositorySnapshot
+    public class RepositorySnapshot : IRepositorySnapshot
     {
         public RepositorySnapshot(string id,
-                                  IList<File> files,
+                                  IList<IFile> files,
                                   Option<string> pathToCoverageResultFile,
                                   Option<string> atHash,
                                   Option<DateTime> commitCreationDate,
@@ -30,11 +31,11 @@ namespace Hestia.Model
 
         public Option<string> RepositoryName { get; }
 
-        public IList<File> Files { get; }
+        public IList<IFile> Files { get; }
 
         public string Id { get; }
 
-        public RepositorySnapshot With(IEnumerable<File>? files = null,
+        public RepositorySnapshot With(IEnumerable<IFile>? files = null,
                                        string? atHash = null,
                                        string? pathToCoverageResultFile = null,
                                        DateTime? commitCreationDate = null,

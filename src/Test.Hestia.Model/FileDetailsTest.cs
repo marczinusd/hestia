@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using FluentAssertions;
 using Hestia.Model;
+using Hestia.Model.Interfaces;
 using Hestia.Model.Stats;
 using LanguageExt;
 using Xunit;
@@ -15,12 +16,12 @@ namespace Test.Hestia.Model
             var file = new File(string.Empty,
                                 string.Empty,
                                 string.Empty,
-                                new List<SourceLine>
+                                new List<ISourceLine>
                                 {
                                     new SourceLine(1,
                                                    string.Empty,
-                                                   Option<LineCoverageStats>.None,
-                                                   Option<LineGitStats>.None),
+                                                   Option<ILineCoverageStats>.None,
+                                                   Option<ILineGitStats>.None),
                                 },
                                 new FileGitStats(1, 1),
                                 new FileCoverageStats(new FileCoverage(string.Empty,
@@ -59,12 +60,12 @@ namespace Test.Hestia.Model
             var file = new File(string.Empty,
                                 string.Empty,
                                 string.Empty,
-                                new List<SourceLine>
+                                new List<ISourceLine>
                                 {
                                     new SourceLine(1,
                                                    string.Empty,
-                                                   Option<LineCoverageStats>.None,
-                                                   Option<LineGitStats>.None),
+                                                   Option<ILineCoverageStats>.None,
+                                                   Option<ILineGitStats>.None),
                                 },
                                 new FileGitStats(1, 1),
                                 new FileCoverageStats(new FileCoverage(string.Empty,

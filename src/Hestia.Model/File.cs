@@ -1,19 +1,20 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
-using Hestia.Model.Stats;
+using Hestia.Model.Interfaces;
 using JetBrains.Annotations;
 using LanguageExt;
+using static LanguageExt.Prelude;
 
 namespace Hestia.Model
 {
-    public class File
+    public class File : IFile
     {
         public File(string filename,
                     string extension,
                     string path,
-                    IList<SourceLine> content,
-                    Option<FileGitStats> gitStats,
-                    Option<FileCoverageStats> coverageStats)
+                    IList<ISourceLine> content,
+                    Option<IFileGitStats> gitStats,
+                    Option<IFileCoverageStats> coverageStats)
         {
             Content = content;
             Path = path;
@@ -23,7 +24,7 @@ namespace Hestia.Model
             CoverageStats = coverageStats;
         }
 
-        [JsonIgnore] public IList<SourceLine> Content { get; }
+        [JsonIgnore] public IList<ISourceLine> Content { get; }
 
         [JsonIgnore] public string FullPath => System.IO.Path.Join(Path, Filename);
 
@@ -33,9 +34,9 @@ namespace Hestia.Model
 
         public string Extension { get; }
 
-        public Option<FileGitStats> GitStats { get; }
+        public Option<IFileGitStats> GitStats { get; }
 
-        public Option<FileCoverageStats> CoverageStats { get; }
+        public Option<IFileCoverageStats> CoverageStats { get; }
 
         [JsonIgnore]
         [UsedImplicitly]
@@ -49,15 +50,15 @@ namespace Hestia.Model
         [UsedImplicitly]
         public int LifetimeChanges => GitStats.Match(x => x.LifetimeChanges, -1);
 
-        public File With(IList<SourceLine>? content = null,
-                         FileGitStats? gitStats = null,
-                         FileCoverageStats? coverageStats = null) =>
+        public File With(IList<ISourceLine>? content = null,
+                         IFileGitStats? gitStats = null,
+                         IFileCoverageStats? coverageStats = null) =>
             new File(Filename,
                      Extension,
                      Path,
                      content ?? Content,
-                     gitStats ?? GitStats,
-                     coverageStats ?? CoverageStats);
+                     gitStats != null ? Some(gitStats) : GitStats,
+                     coverageStats != null ? Some(coverageStats) : CoverageStats);
 
         public FileDetails AsFileDetails()
         {

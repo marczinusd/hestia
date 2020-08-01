@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Hestia.Model.Stats;
+using Hestia.Model.Interfaces;
 using LanguageExt;
 
 namespace Hestia.Model
@@ -16,7 +16,7 @@ namespace Hestia.Model
             _file = file;
         }
 
-        public IList<SourceLine> Content => _file.Content;
+        public IList<ISourceLine> Content => _file.Content;
 
         public string Filename => _file.Filename;
 
@@ -24,9 +24,9 @@ namespace Hestia.Model
 
         public string Path => _file.Path;
 
-        public Option<FileGitStats> GitStats => _file.GitStats;
+        public Option<IFileGitStats> GitStats => _file.GitStats;
 
-        public Option<FileCoverageStats> CoverageStats => _file.CoverageStats;
+        public Option<IFileCoverageStats> CoverageStats => _file.CoverageStats;
 
         public File AsSlimFile() =>
             new File(Filename,

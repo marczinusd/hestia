@@ -23,4 +23,8 @@
     <PackageReference Include="System.Reactive" Version="4.4.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Hestia.Model.Interfaces\Hestia.Model.Interfaces.csproj" />
+  </ItemGroup>
+
 </Project>

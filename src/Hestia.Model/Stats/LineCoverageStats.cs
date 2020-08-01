@@ -1,6 +1,8 @@
+using Hestia.Model.Interfaces;
+
 namespace Hestia.Model.Stats
 {
-    public class LineCoverageStats
+    public class LineCoverageStats : ILineCoverageStats
     {
         public LineCoverageStats(bool isCovered)
         {

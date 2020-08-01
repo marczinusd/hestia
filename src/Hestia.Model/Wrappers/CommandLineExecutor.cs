@@ -8,12 +8,12 @@ namespace Hestia.Model.Wrappers
     public enum ExecutorEchoMode
     {
         /// <summary>
-        /// command results and the command executed will be echoed
+        /// command results and the command executed will be echoed.
         /// </summary>
         Echo,
 
         /// <summary>
-        /// only command results will get echoed
+        /// only command results will get echoed.
         /// </summary>
         NoEcho,
     }

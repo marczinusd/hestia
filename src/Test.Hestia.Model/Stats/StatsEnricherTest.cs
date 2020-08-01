@@ -7,13 +7,13 @@ using AutoFixture.AutoMoq;
 using FluentAssertions;
 using Hestia.Model;
 using Hestia.Model.Builders;
+using Hestia.Model.Interfaces;
 using Hestia.Model.Stats;
 using Hestia.Model.Wrappers;
 using LanguageExt;
 using Moq;
 using Test.Hestia.Utils.TestData;
 using Xunit;
-using File = Hestia.Model.File;
 
 namespace Test.Hestia.Model.Stats
 {
@@ -44,7 +44,7 @@ namespace Test.Hestia.Model.Stats
                                .Returns(coverageProviderMock.Object);
             var enricher = fixture.Create<StatsEnricher>();
             var snapshotToEnrich = new RepositorySnapshot(string.Empty,
-                                                          new List<File>(),
+                                                          new List<IFile>(),
                                                           "coverage.json",
                                                           Option<string>.None,
                                                           Option<DateTime>.None,
@@ -62,7 +62,7 @@ namespace Test.Hestia.Model.Stats
             var fixture = new Fixture();
             fixture.Customize(new AutoMoqCustomization { ConfigureMembers = true });
             var snapshot = new RepositorySnapshot(string.Empty,
-                                                  new List<File>(),
+                                                  new List<IFile>(),
                                                   Option<string>.None,
                                                   "hash",
                                                   Option<DateTime>.None,
@@ -139,7 +139,7 @@ namespace Test.Hestia.Model.Stats
             coverageProvider.Setup(mock => mock.ParseFileCoveragesFromFilePath(It.IsAny<string>()))
                             .Returns(new[]
                             {
-                                new FileCoverage(Path.GetFileName(MockRepo.FirstIncludedFilePath),
+                                new FileCoverage(Path.GetFileName(MockRepo.FirstIncludedFilePath) ?? string.Empty,
                                                  lineCoverages),
                             });
             var ioMock = MockRepo.CreateDiskIOWrapperMock();

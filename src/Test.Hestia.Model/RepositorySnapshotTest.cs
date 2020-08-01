@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using FluentAssertions;
 using Hestia.Model;
+using Hestia.Model.Interfaces;
 using Test.Hestia.Utils.TestData;
 using Xunit;
 
@@ -13,7 +14,7 @@ namespace Test.Hestia.Model
         public void WithShouldReturnNewObject()
         {
             var snapshot = new RepositorySnapshot(string.Empty,
-                                                  new List<File>(),
+                                                  new List<IFile>(),
                                                   string.Empty,
                                                   string.Empty,
                                                   default(DateTime),
@@ -27,7 +28,7 @@ namespace Test.Hestia.Model
         public void WithShouldCorrectlyOverridePropertiesWithProvidedValues()
         {
             var snapshot = new RepositorySnapshot(string.Empty,
-                                                  new List<File>(),
+                                                  new List<IFile>(),
                                                   string.Empty,
                                                   string.Empty,
                                                   default(DateTime),

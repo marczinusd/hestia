@@ -3,12 +3,12 @@
     public enum GitStatGranularity
     {
         /// <summary>
-        /// Run line-level git stat analysis
+        /// Run line-level git stat analysis.
         /// </summary>
         Full,
 
         /// <summary>
-        /// Only run file-level git stat analysis
+        /// Only run file-level git stat analysis.
         /// </summary>
         File,
     }

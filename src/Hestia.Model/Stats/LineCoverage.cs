@@ -1,8 +1,9 @@
 using System;
+using Hestia.Model.Interfaces;
 
 namespace Hestia.Model.Stats
 {
-    public sealed class LineCoverage
+    public sealed class LineCoverage : ILineCoverage
     {
         public LineCoverage(int lineNumber, int hitCount)
         {

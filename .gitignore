@@ -498,3 +498,6 @@ reportgenerator.exe
 **/local-sonar-run.cmd
 **/.scannerwork/*
 **/.sonarqube/*
+
+.fake
+.ionide

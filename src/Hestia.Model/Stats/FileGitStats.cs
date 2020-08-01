@@ -1,6 +1,8 @@
-﻿namespace Hestia.Model.Stats
+﻿using Hestia.Model.Interfaces;
+
+namespace Hestia.Model.Stats
 {
-    public class FileGitStats
+    public class FileGitStats : IFileGitStats
     {
         public FileGitStats(int lifetimeChanges, int lifetimeAuthors)
         {

@@ -1,8 +1,9 @@
 ﻿using System;
+using Hestia.Model.Interfaces;
 
 namespace Hestia.Model
 {
-    public class SnapshotHeader
+    public class SnapshotHeader : ISnapshotHeader
     {
         public SnapshotHeader(string id, string name, string atHash, DateTime commitDate)
         {

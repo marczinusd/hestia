@@ -1,6 +1,8 @@
+using Hestia.Model.Interfaces;
+
 namespace Hestia.Model.Stats
 {
-    public class LineGitStats
+    public class LineGitStats : ILineGitStats
     {
         public LineGitStats(int lineNumber, int modifiedInNumberOfCommits, int numberOfLifetimeAuthors)
         {

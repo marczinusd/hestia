@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Hestia.Model.Builders;
+using Hestia.Model.Interfaces;
 using Hestia.Model.Wrappers;
 using LanguageExt;
 using Serilog;
@@ -51,8 +52,8 @@ namespace Hestia.Model.Stats
                                            () =>
                                                throw new
                                                    OptionIsNoneException($"{nameof(repositorySnapshot.PathToCoverageResultFile)} cannot be None"));
-            var coverages = _providerFactory.CreateProviderForFile(pathToCoverageFile)
-                                            .ParseFileCoveragesFromFilePath(pathToCoverageFile);
+            IEnumerable<FileCoverage> coverages = _providerFactory.CreateProviderForFile(pathToCoverageFile)
+                                                                  .ParseFileCoveragesFromFilePath(pathToCoverageFile);
 
             return repositorySnapshot.With(repositorySnapshot.Files
                                                              .Apply(f => EnrichWithCoverage(f, coverages))
@@ -66,7 +67,8 @@ namespace Hestia.Model.Stats
             _logger.Debug($"Enriching repository snapshot with hash {repositorySnapshot.AtHash} with git stats");
 
             return repositorySnapshot.With(repositorySnapshot
-                                           .Files.Apply(x => x.Select(f => EnrichWithGitStats(f, granularity)))
+                                           .Files
+                                           .Apply(x => x.Select(f => EnrichWithGitStats((File)f, granularity)))
                                            .ToList());
         }
 
@@ -155,18 +157,18 @@ namespace Hestia.Model.Stats
             return repositorySnapshot;
         }
 
-        private IEnumerable<File> EnrichWithCoverage(IEnumerable<File> files, IEnumerable<FileCoverage> coverages) =>
-            files.Select(f => EnrichWithCoverage(f,
+        private IEnumerable<IFile> EnrichWithCoverage(IEnumerable<IFile> files, IEnumerable<FileCoverage> coverages) =>
+            files.Select(f => EnrichWithCoverage((File)f,
                                                  coverages.SingleOrDefault(cov => cov.FileName.Contains(f.Filename))));
 
-        private File EnrichWithCoverage(File file, FileCoverage coverage)
+        private IFile EnrichWithCoverage(File file, FileCoverage coverage)
         {
             if (coverage == null || coverage.Equals(default))
             {
                 return file;
             }
 
-            var enrichedContent =
+            IEnumerable<ISourceLine> enrichedContent =
                 _ioWrapper
                     .ReadAllLinesFromFileAsSourceModel(file.FullPath)
                     .Select(l =>
@@ -199,7 +201,7 @@ namespace Hestia.Model.Stats
                                         .ToList(); // force evaluation
             }
 
-            var enrichedContent =
+            IEnumerable<ISourceLine> enrichedContent =
                 file.Content.Select(line => new SourceLine(line.LineNumber,
                                                            line.Text,
                                                            line.LineCoverageStats,

@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
+using Hestia.Model.Interfaces;
 
 namespace Hestia.Model.Stats
 {
-    public class FileCoverage
+    public class FileCoverage : IFileCoverage
     {
         public FileCoverage(string fileName,
                             IEnumerable<(int lineNumber, int hitCount)> lineCoverages)
@@ -14,7 +15,7 @@ namespace Hestia.Model.Stats
 
         public string FileName { get; }
 
-        public IEnumerable<LineCoverage> LineCoverages { get; }
+        public IEnumerable<ILineCoverage> LineCoverages { get; }
 
         public override string ToString() =>
             $"{FileName} : {string.Join(" ", LineCoverages.Select(lc => lc.ToString()))}";

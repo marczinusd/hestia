@@ -6,6 +6,7 @@ using System.Linq;
 using Bogus;
 using Hestia.Model;
 using Hestia.Model.Builders;
+using Hestia.Model.Interfaces;
 using Hestia.Model.Stats;
 using Hestia.Model.Wrappers;
 using LanguageExt;
@@ -56,24 +57,24 @@ namespace Test.Hestia.Utils.TestData
                      {
                          new SourceLine(1,
                                         "bla",
-                                        Option<LineCoverageStats>.None,
-                                        Option<LineGitStats>.None),
+                                        Option<ILineCoverageStats>.None,
+                                        Option<ILineGitStats>.None),
                          new SourceLine(2,
                                         "bla",
-                                        Option<LineCoverageStats>.None,
-                                        Option<LineGitStats>.None),
+                                        Option<ILineCoverageStats>.None,
+                                        Option<ILineGitStats>.None),
                          new SourceLine(3,
                                         "bla",
-                                        Option<LineCoverageStats>.None,
-                                        Option<LineGitStats>.None),
+                                        Option<ILineCoverageStats>.None,
+                                        Option<ILineGitStats>.None),
                          new SourceLine(4,
                                         "bla",
-                                        Option<LineCoverageStats>.None,
-                                        Option<LineGitStats>.None),
+                                        Option<ILineCoverageStats>.None,
+                                        Option<ILineGitStats>.None),
                          new SourceLine(5,
                                         "bla",
-                                        Option<LineCoverageStats>.None,
-                                        Option<LineGitStats>.None),
+                                        Option<ILineCoverageStats>.None,
+                                        Option<ILineGitStats>.None),
                      });
 
             return ioWrapper;
@@ -132,9 +133,9 @@ namespace Test.Hestia.Utils.TestData
                                                    .Split(Environment.NewLine)
                                                    .Select((l, i) => new SourceLine(i + 1,
                                                                                     l,
-                                                                                    Option<LineCoverageStats>
+                                                                                    Option<ILineCoverageStats>
                                                                                         .None,
-                                                                                    Option<LineGitStats>.None))
+                                                                                    Option<ILineGitStats>.None) as ISourceLine)
                                                    .ToList(),
                                                   new FileGitStats(1, 1),
                                                   new FileCoverageStats(new FileCoverage(string.Empty,
@@ -144,8 +145,8 @@ namespace Test.Hestia.Utils.TestData
                                .Split(Environment.NewLine)
                                .Select((l, i) => new SourceLine(i + 1,
                                                                 l,
-                                                                Option<LineCoverageStats>.None,
-                                                                Option<LineGitStats>.None))
+                                                                Option<ILineCoverageStats>.None,
+                                                                Option<ILineGitStats>.None) as ISourceLine)
                                .ToList())
                 .RuleFor(file => file.Extension, f => f.System.FileExt())
                 .RuleFor(file => file.Filename, f => f.System.FileName())

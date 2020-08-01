@@ -8,7 +8,7 @@ namespace Hestia.DAL.Mongo.Model
 {
     [ExcludeFromCodeCoverage]
     [BsonIgnoreExtraElements]
-    public class FileEntity
+    public class FileEntity : IFileEntity
     {
         public FileEntity(File file)
         {

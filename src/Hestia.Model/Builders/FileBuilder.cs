@@ -1,6 +1,6 @@
 using System.IO;
 using System.Linq;
-using Hestia.Model.Stats;
+using Hestia.Model.Interfaces;
 using Hestia.Model.Wrappers;
 using LanguageExt;
 
@@ -8,7 +8,7 @@ namespace Hestia.Model.Builders
 {
     public static class FileBuilder
     {
-        public static File BuildFileFromPath(string filePath, IDiskIOWrapper diskIoWrapper)
+        public static IFile BuildFileFromPath(string filePath, IDiskIOWrapper diskIoWrapper)
         {
             var fileContent = diskIoWrapper.ReadAllLinesFromFile(filePath);
 
@@ -16,8 +16,8 @@ namespace Hestia.Model.Builders
                             Path.GetExtension(filePath) ?? throw new FileBuilderException(filePath),
                             Path.GetDirectoryName(filePath) ?? throw new FileBuilderException(filePath),
                             SourceLineBuilder.BuildSourceLineFromLineOfCode(fileContent.ToArray()),
-                            Option<FileGitStats>.None,
-                            Option<FileCoverageStats>.None);
+                            Option<IFileGitStats>.None,
+                            Option<IFileCoverageStats>.None);
         }
     }
 }

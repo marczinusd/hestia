@@ -1,14 +1,15 @@
-using Hestia.Model.Stats;
+using Hestia.Model.Interfaces;
 using LanguageExt;
+using static LanguageExt.Prelude;
 
 namespace Hestia.Model
 {
-    public class SourceLine
+    public class SourceLine : ISourceLine
     {
         public SourceLine(int lineNumber,
                           string text,
-                          Option<LineCoverageStats> lineCoverageStats,
-                          Option<LineGitStats> lineGitStats)
+                          Option<ILineCoverageStats> lineCoverageStats,
+                          Option<ILineGitStats> lineGitStats)
         {
             LineCoverageStats = lineCoverageStats;
             Text = text;
@@ -20,14 +21,14 @@ namespace Hestia.Model
 
         public string Text { get; }
 
-        public Option<LineCoverageStats> LineCoverageStats { get; }
+        public Option<ILineCoverageStats> LineCoverageStats { get; }
 
-        public Option<LineGitStats> LineGitStats { get; }
+        public Option<ILineGitStats> LineGitStats { get; }
 
-        public SourceLine With(LineCoverageStats? coverageStats = null, LineGitStats? gitStats = null) =>
+        public SourceLine With(ILineCoverageStats? coverageStats = null, ILineGitStats? gitStats = null) =>
             new SourceLine(LineNumber,
                            Text,
-                           coverageStats ?? LineCoverageStats,
-                           gitStats ?? LineGitStats);
+                           coverageStats != null ? Some(coverageStats) : LineCoverageStats,
+                           gitStats != null ? Some(gitStats) : LineGitStats);
     }
 }
