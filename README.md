@@ -15,10 +15,11 @@ Features working currently:
 * Simple UI runner to create repository snapshots to analyze
 * Console runner
 
-Planned / partially working:
+WIP:
 
-* MongoDB store for project statistics
-* Simple web API to serve statistics stored in Mongo store
+* Persistence with EFCore
+* Simple web API to serve statistics
+* React-based web client here: [marczinusd/hestia-client](https://github.com/marczinusd/hestia-ui)
 
 ## Build
 
