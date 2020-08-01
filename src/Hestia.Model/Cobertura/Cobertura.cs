@@ -6,6 +6,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
+
 #nullable disable
 namespace Hestia.Model.Cobertura
 {
@@ -15,6 +17,7 @@ namespace Hestia.Model.Cobertura
     [System.Diagnostics.DebuggerStepThroughAttribute]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlRootAttribute("coverage", Namespace = "")]
+    [ExcludeFromCodeCoverage]
     public partial class Coverage
     {
         [System.Xml.Serialization.XmlElementAttribute("sources")]

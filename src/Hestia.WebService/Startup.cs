@@ -1,6 +1,7 @@
 using Autofac;
 using Hestia.DAL.EFCore;
 using Hestia.DAL.Interfaces;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,6 +33,7 @@ namespace Hestia.WebService
             services.AddSingleton<ISnapshotPersistence, SnapshotEFClient>();
         }
 
+        [UsedImplicitly]
         public void ConfigureContainer(ContainerBuilder builder)
         {
         }

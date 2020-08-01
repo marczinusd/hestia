@@ -42,7 +42,7 @@ namespace Hestia.Model.Stats
 
         public override string ToString() => $"({LineNumber}, {HitCount})";
 
-        private bool Equals(LineCoverage other)
+        private bool Equals(ILineCoverage other)
         {
             return LineNumber == other.LineNumber && HitCount == other.HitCount;
         }
