@@ -1,7 +1,8 @@
 using System;
-using System.Reactive;
-using Hestia.DAL.Mongo;
+using Hestia.DAL.Interfaces;
 using Hestia.Model;
+using Hestia.Model.Interfaces;
+using LanguageExt;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
@@ -9,10 +10,10 @@ namespace Hestia.UIRunner.ViewModels
 {
     public class RepositoryViewModel : ReactiveObject
     {
-        private readonly ObservableAsPropertyHelper<RepositorySnapshot> _selectedRepository;
+        private readonly ObservableAsPropertyHelper<IRepositorySnapshot> _selectedRepository;
         private readonly ObservableAsPropertyHelper<bool> _isExecuting;
 
-        public RepositoryViewModel(IObservable<RepositorySnapshot> selectedRepositoryObservable,
+        public RepositoryViewModel(IObservable<IRepositorySnapshot> selectedRepositoryObservable,
                                    ISnapshotPersistence snapshotPersistence)
         {
             _selectedRepository = selectedRepositoryObservable.ToProperty(this, nameof(Repository));
@@ -26,7 +27,7 @@ namespace Hestia.UIRunner.ViewModels
 
         public bool IsInsertionInProgress => _isExecuting.Value;
 
-        public RepositorySnapshot Repository => _selectedRepository.Value;
+        public IRepositorySnapshot Repository => _selectedRepository.Value;
 
         public ReactiveCommand<Unit, Unit> CommitToDatabaseCommand { get; }
 

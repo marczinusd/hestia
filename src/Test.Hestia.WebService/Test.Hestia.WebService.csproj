@@ -26,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Hestia.DAL.Interfaces\Hestia.DAL.Interfaces.csproj" />
     <ProjectReference Include="..\Hestia.WebService\Hestia.WebService.csproj" />
   </ItemGroup>
 

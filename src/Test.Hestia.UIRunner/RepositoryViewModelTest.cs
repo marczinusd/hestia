@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using FluentAssertions;
-using Hestia.DAL.Mongo;
+using Hestia.DAL.Interfaces;
 using Hestia.Model;
 using Hestia.Model.Interfaces;
 using Hestia.UIRunner.ViewModels;

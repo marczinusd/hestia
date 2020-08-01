@@ -1,5 +1,5 @@
 using FluentAssertions;
-using Hestia.DAL.Mongo;
+using Hestia.DAL.Interfaces;
 using Hestia.Model.Builders;
 using Hestia.Model.Stats;
 using Hestia.Model.Wrappers;

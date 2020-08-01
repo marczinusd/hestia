@@ -23,6 +23,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Hestia.DAL.EFCore\Hestia.DAL.EFCore.csproj" />
+    <ProjectReference Include="..\Hestia.DAL.Interfaces\Hestia.DAL.Interfaces.csproj" />
     <ProjectReference Include="..\Hestia.DAL.Mongo\Hestia.DAL.Mongo.csproj" />
     <ProjectReference Include="..\Hestia.Model\Hestia.Model.csproj" />
   </ItemGroup>

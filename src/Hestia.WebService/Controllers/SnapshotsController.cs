@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using Hestia.DAL.Mongo;
-using Hestia.DAL.Mongo.Model;
-using Hestia.Model;
+using Hestia.DAL.Interfaces;
+using Hestia.Model.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -27,11 +26,11 @@ namespace Hestia.WebService.Controllers
         /// <returns>Full list of repository ids and names.</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<IEnumerable<SnapshotHeader>> GetAllRepositories()
+        public ActionResult<IEnumerable<ISnapshotHeader>> GetAllRepositories()
         {
             _logger.LogDebug($"Invoking GET on {nameof(SnapshotsController)}");
 
-            return new ActionResult<IEnumerable<SnapshotHeader>>(_snapshotRetrieval.GetAllSnapshotsHeaders());
+            return new ActionResult<IEnumerable<ISnapshotHeader>>(_snapshotRetrieval.GetAllSnapshotsHeaders());
         }
 
         /// <summary>
@@ -42,12 +41,12 @@ namespace Hestia.WebService.Controllers
         /// <response code="404">Returns 404 when a repository for id was not found.</response>
         [HttpGet("[Controller]/{id}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(RepositorySnapshotEntity), StatusCodes.Status200OK)]
-        public ActionResult<RepositorySnapshotEntity> GetRepositoryById(string id)
+        [ProducesResponseType(typeof(IRepositorySnapshotEntity), StatusCodes.Status200OK)]
+        public ActionResult<IRepositorySnapshotEntity> GetRepositoryById(string id)
         {
             _logger.LogDebug($"Invoking GET by id with id=${id} on {nameof(SnapshotsController)}");
 
-            return new ActionResult<RepositorySnapshotEntity>(_snapshotRetrieval.GetSnapshotById(id));
+            return new ActionResult<IRepositorySnapshotEntity>(_snapshotRetrieval.GetSnapshotById(id));
         }
     }
 }

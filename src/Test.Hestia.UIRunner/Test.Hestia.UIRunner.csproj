@@ -28,6 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Hestia.DAL.Interfaces\Hestia.DAL.Interfaces.csproj" />
     <ProjectReference Include="..\Hestia.UIRunner\Hestia.UIRunner.csproj" />
     <ProjectReference Include="..\Test.Hestia.Utils\Test.Hestia.Utils.csproj" />
   </ItemGroup>

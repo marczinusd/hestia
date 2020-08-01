@@ -1,14 +1,11 @@
-using System;
 using Autofac;
-using Hestia.DAL.Mongo;
-using Hestia.DAL.Mongo.Model;
-using Hestia.DAL.Mongo.Wrappers;
+using Hestia.DAL.EFCore;
+using Hestia.DAL.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using MongoDB.Driver;
 
 namespace Hestia.WebService
 {
@@ -32,21 +29,11 @@ namespace Hestia.WebService
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Hestia API", Version = "v1" });
             });
 
-            services.AddSingleton<IMongoClientFactory, MongoClientFactory>();
-            services.AddSingleton<ISnapshotPersistence, SnapshotMongoClient>();
+            services.AddSingleton<ISnapshotPersistence, SnapshotEFClient>();
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            builder.RegisterType<SnapshotMongoClient>()
-                   .As<ISnapshotRetrieval>()
-                   .WithParameter("databaseName", MongoClientFactory.DatabaseName);
-            builder.RegisterInstance<Func<IMongoCollection<RepositorySnapshotEntity>,
-                IMongoCollectionWrapper<RepositorySnapshotEntity>>>(entity =>
-                                                                        new MongoCollectionWrapper<
-                                                                            RepositorySnapshotEntity>(entity));
-            builder.RegisterType<MongoClientFactory>()
-                   .As<IMongoClientFactory>();
         }
 
         // ReSharper disable once UnusedMember.Global

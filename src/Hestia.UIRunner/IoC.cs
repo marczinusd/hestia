@@ -1,13 +1,10 @@
-using System;
 using Autofac;
-using Hestia.DAL.Mongo;
-using Hestia.DAL.Mongo.Model;
-using Hestia.DAL.Mongo.Wrappers;
+using Hestia.DAL.EFCore;
+using Hestia.DAL.Interfaces;
 using Hestia.Model.Builders;
 using Hestia.Model.Stats;
 using Hestia.Model.Wrappers;
 using Hestia.UIRunner.ViewModels;
-using MongoDB.Driver;
 using Serilog;
 
 namespace Hestia.UIRunner
@@ -45,17 +42,10 @@ namespace Hestia.UIRunner
                    .As<IReportGeneratorWrapper>();
             builder.RegisterType<CoverageReportConverter>()
                    .As<ICoverageReportConverter>();
-            builder.RegisterType<SnapshotMongoClient>()
-                   .As<ISnapshotPersistence>()
-                   .WithParameter("databaseName", MongoClientFactory.DatabaseName);
+            builder.RegisterType<SnapshotEFClient>()
+                   .As<ISnapshotPersistence>();
             builder.RegisterType<FileStreamWrapper>()
                    .As<IFileStreamWrapper>();
-            builder.RegisterInstance<Func<IMongoCollection<RepositorySnapshotEntity>,
-                IMongoCollectionWrapper<RepositorySnapshotEntity>>>(entity =>
-                                                                        new MongoCollectionWrapper<
-                                                                            RepositorySnapshotEntity>(entity));
-            builder.RegisterType<MongoClientFactory>()
-                   .As<IMongoClientFactory>();
 
             return builder;
         }

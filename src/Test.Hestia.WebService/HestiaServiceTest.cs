@@ -1,7 +1,7 @@
 using System;
 using Autofac.Extensions.DependencyInjection;
 using FluentAssertions;
-using Hestia.DAL.Mongo;
+using Hestia.DAL.Interfaces;
 using Hestia.WebService;
 using Hestia.WebService.Controllers;
 using Microsoft.AspNetCore.Hosting;
