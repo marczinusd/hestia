@@ -82,6 +82,7 @@ namespace Hestia.Model.Cobertura
     [System.Diagnostics.DebuggerStepThroughAttribute]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlRootAttribute("sources", Namespace = "")]
+    [ExcludeFromCodeCoverage]
     public partial class Sources
     {
     }
@@ -92,6 +93,7 @@ namespace Hestia.Model.Cobertura
     [System.Diagnostics.DebuggerStepThroughAttribute]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlRootAttribute("packages", Namespace = "")]
+    [ExcludeFromCodeCoverage]
     public partial class Packages
     {
         [System.Xml.Serialization.XmlIgnoreAttribute]
@@ -125,6 +127,7 @@ namespace Hestia.Model.Cobertura
     [System.Diagnostics.DebuggerStepThroughAttribute]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlRootAttribute("package", Namespace = "")]
+    [ExcludeFromCodeCoverage]
     public partial class Package
     {
         [System.Xml.Serialization.XmlIgnoreAttribute]
@@ -171,6 +174,7 @@ namespace Hestia.Model.Cobertura
     [System.Diagnostics.DebuggerStepThroughAttribute]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlRootAttribute("classes", Namespace = "")]
+    [ExcludeFromCodeCoverage]
     public partial class Classes
     {
         [System.Xml.Serialization.XmlIgnoreAttribute]
@@ -204,6 +208,7 @@ namespace Hestia.Model.Cobertura
     [System.Diagnostics.DebuggerStepThroughAttribute]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlRootAttribute("class", Namespace = "")]
+    [ExcludeFromCodeCoverage]
     public partial class Class
     {
         [System.Xml.Serialization.XmlIgnoreAttribute]
@@ -271,6 +276,7 @@ namespace Hestia.Model.Cobertura
     [System.Diagnostics.DebuggerStepThroughAttribute]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlRootAttribute("methods", Namespace = "")]
+    [ExcludeFromCodeCoverage]
     public partial class Methods
     {
         [System.Xml.Serialization.XmlIgnoreAttribute]
@@ -304,6 +310,7 @@ namespace Hestia.Model.Cobertura
     [System.Diagnostics.DebuggerStepThroughAttribute]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlRootAttribute("method", Namespace = "")]
+    [ExcludeFromCodeCoverage]
     public partial class Method
     {
         [System.Xml.Serialization.XmlIgnoreAttribute]
@@ -353,6 +360,7 @@ namespace Hestia.Model.Cobertura
     [System.Diagnostics.DebuggerStepThroughAttribute]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlRootAttribute("lines", Namespace = "")]
+    [ExcludeFromCodeCoverage]
     public partial class Lines
     {
         [System.Xml.Serialization.XmlIgnoreAttribute]
@@ -386,6 +394,7 @@ namespace Hestia.Model.Cobertura
     [System.Diagnostics.DebuggerStepThroughAttribute]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlRootAttribute("line", Namespace = "")]
+    [ExcludeFromCodeCoverage]
     public partial class Line
     {
         [System.Xml.Serialization.XmlAttributeAttribute("branch")]
