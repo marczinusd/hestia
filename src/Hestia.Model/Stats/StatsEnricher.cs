@@ -53,7 +53,7 @@ namespace Hestia.Model.Stats
                                                throw new
                                                    OptionIsNoneException($"{nameof(repositorySnapshot.PathToCoverageResultFile)} cannot be None"));
             IEnumerable<IFileCoverage> coverages = _providerFactory.CreateProviderForFile(pathToCoverageFile)
-                                                                  .ParseFileCoveragesFromFilePath(pathToCoverageFile);
+                                                                   .ParseFileCoveragesFromFilePath(pathToCoverageFile);
 
             return repositorySnapshot.With(repositorySnapshot.Files
                                                              .Apply(f => EnrichWithCoverage(f, coverages))
@@ -202,11 +202,15 @@ namespace Hestia.Model.Stats
             }
 
             IEnumerable<ISourceLine> enrichedContent =
-                file.Content.Select(line => new SourceLine(line.LineNumber,
-                                                           line.Text,
-                                                           line.LineCoverageStats,
-                                                           Some(lineStats.SingleOrDefault(l => l.LineNumber ==
-                                                                                          line.LineNumber))));
+                file.Content.Select(line =>
+                {
+                    ILineGitStats statsForLine = lineStats.SingleOrDefault(l => l.LineNumber ==
+                                                                      line.LineNumber);
+                    return new SourceLine(line.LineNumber,
+                                          line.Text,
+                                          line.LineCoverageStats,
+                                          statsForLine != null ? Some(statsForLine) : Option<ILineGitStats>.None);
+                });
 
             // lineStats.Single(stat => stat.LineNumber ==
             //                               line.LineNumber)))
