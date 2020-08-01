@@ -5,6 +5,7 @@ using Hestia.Model;
 using Hestia.Model.Interfaces;
 using Test.Hestia.Utils.TestData;
 using Xunit;
+using static LanguageExt.Prelude;
 
 namespace Test.Hestia.Model
 {
@@ -54,6 +55,32 @@ namespace Test.Hestia.Model
             newSnapshot.Files
                        .Should()
                        .HaveCount(3);
+        }
+
+        [Fact]
+        public void AsHeaderShouldCreateExpectedRepositorySnapshotRepresentation()
+        {
+            var snapshot = new RepositorySnapshot("id",
+                                                  new List<IFile>(),
+                                                  Some("path"),
+                                                  Some("hash"),
+                                                  Some(DateTime.MaxValue),
+                                                  Some("name"));
+
+            var header = snapshot.AsHeader();
+
+            header.Id
+                  .Should()
+                  .Be(snapshot.Id);
+            header.Name
+                  .Should()
+                  .Be(snapshot.RepositoryName.Match(x => x, string.Empty));
+            header.AtHash
+                  .Should()
+                  .Be(snapshot.AtHash.Match(x => x, string.Empty));
+            header.CommitDate
+                  .Should()
+                  .Be(snapshot.CommitCreationDate.Match(x => x, DateTime.MinValue));
         }
     }
 }
