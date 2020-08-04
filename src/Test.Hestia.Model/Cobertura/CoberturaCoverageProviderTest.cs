@@ -20,7 +20,7 @@ namespace Test.Hestia.Model.Cobertura
             var coverage =
                 Helpers.LoadAndDeserializeXmlResource<Coverage>(Resources.Paths.CoberturaXml,
                                                                 typeof(CoberturaCoverageProviderTest).Assembly);
-            var fileStreamWrapperMock = new Mock<IFileStreamWrapper>();
+            var fileStreamWrapperMock = new Mock<IXmlFileSerializationWrapper>();
             fileStreamWrapperMock.Setup(mock => mock.Deserialize<Coverage>(It.IsAny<string>(), FileMode.Open))
                                  .Returns(coverage);
             var provider = new CoberturaCoverageProvider(fileStreamWrapperMock.Object);

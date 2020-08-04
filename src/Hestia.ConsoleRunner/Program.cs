@@ -20,7 +20,7 @@ namespace Hestia.ConsoleRunner
             var executor = new CommandLineExecutor(ExecutorEchoMode.NoEcho);
             var ioWrapper = new DiskIOWrapper();
             var reportConverter = new CoverageReportConverter(ioWrapper, new ReportGeneratorWrapper());
-            var fileStreamWrapper = new FileStreamWrapper();
+            var fileStreamWrapper = new XmlFileSerializationWrapper();
             var enricher = new StatsEnricher(ioWrapper,
                                              new GitCommands(executor),
                                              Log.Logger,

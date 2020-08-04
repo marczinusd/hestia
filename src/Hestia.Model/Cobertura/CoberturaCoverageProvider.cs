@@ -11,16 +11,16 @@ namespace Hestia.Model.Cobertura
 {
     public class CoberturaCoverageProvider : ICoverageProvider
     {
-        private readonly IFileStreamWrapper _fileStreamWrapper;
+        private readonly IXmlFileSerializationWrapper _xmlFileSerializationWrapper;
 
-        public CoberturaCoverageProvider(IFileStreamWrapper fileStreamWrapper)
+        public CoberturaCoverageProvider(IXmlFileSerializationWrapper xmlFileSerializationWrapper)
         {
-            _fileStreamWrapper = fileStreamWrapper;
+            _xmlFileSerializationWrapper = xmlFileSerializationWrapper;
         }
 
         public IEnumerable<IFileCoverage> ParseFileCoveragesFromFilePath(string filePath)
         {
-            var rawCoverage = _fileStreamWrapper.Deserialize<Coverage>(filePath, FileMode.Open);
+            var rawCoverage = _xmlFileSerializationWrapper.Deserialize<Coverage>(filePath, FileMode.Open);
 
             return rawCoverage.Packages
                               .SelectMany(p => p.Classes)

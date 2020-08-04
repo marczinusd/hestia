@@ -10,12 +10,12 @@ namespace Hestia.Model.Wrappers
     public class CoverageProviderFactory : ICoverageProviderFactory
     {
         private readonly IDiskIOWrapper _ioWrapper;
-        private readonly IFileStreamWrapper _fileStreamWrapper;
+        private readonly IXmlFileSerializationWrapper _xmlFileSerializationWrapper;
 
-        public CoverageProviderFactory(IDiskIOWrapper ioWrapper, IFileStreamWrapper fileStreamWrapper)
+        public CoverageProviderFactory(IDiskIOWrapper ioWrapper, IXmlFileSerializationWrapper xmlFileSerializationWrapper)
         {
             _ioWrapper = ioWrapper;
-            _fileStreamWrapper = fileStreamWrapper;
+            _xmlFileSerializationWrapper = xmlFileSerializationWrapper;
         }
 
         public ICoverageProvider CreateProviderForFile(string filePath)
@@ -27,7 +27,7 @@ namespace Hestia.Model.Wrappers
 
             if (Path.GetFileName(filePath).Contains("cobertura.xml", StringComparison.OrdinalIgnoreCase))
             {
-                return new CoberturaCoverageProvider(_fileStreamWrapper);
+                return new CoberturaCoverageProvider(_xmlFileSerializationWrapper);
             }
 
             throw new InvalidOperationException($"Coverage report at {filePath} is not supported");

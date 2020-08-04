@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 namespace Hestia.Model.Wrappers
 {
     [ExcludeFromCodeCoverage]
-    public class FileStreamWrapper : IFileStreamWrapper
+    public class XmlFileSerializationWrapper : IXmlFileSerializationWrapper
     {
         public T Deserialize<T>(string path, FileMode fileMode)
         {

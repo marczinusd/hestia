@@ -6,20 +6,16 @@ namespace Hestia.Model
 {
     public class Repository
     {
-        public Repository(int repositoryId,
-                          string repositoryName,
+        public Repository(string repositoryName,
                           Option<IRepositorySnapshot[]> snapshots,
                           Option<string> coverageExecutionCommand,
                           Option<string> coverageOutputLocation)
         {
-            RepositoryId = repositoryId;
             RepositoryName = repositoryName;
             Snapshots = snapshots;
             CoverageExecutionCommand = coverageExecutionCommand;
             CoverageOutputLocation = coverageOutputLocation;
         }
-
-        public int RepositoryId { get; }
 
         public string RepositoryName { get; }
 
@@ -30,8 +26,7 @@ namespace Hestia.Model
         public Option<string> CoverageOutputLocation { get; }
 
         public Repository AddSnapshot(IRepositorySnapshot snapshot) =>
-            new Repository(RepositoryId,
-                           RepositoryName,
+            new Repository(RepositoryName,
                            Snapshots.Match(s => s.Concat(new[] { snapshot })
                                                  .ToArray(),
                                            new[] { snapshot }),
@@ -41,8 +36,7 @@ namespace Hestia.Model
         public Repository With(IRepositorySnapshot[]? snapshots = null,
                                string? coverageExecutionCommand = null,
                                string? coverageOutputLocation = null) =>
-            new Repository(RepositoryId,
-                           RepositoryName,
+            new Repository(RepositoryName,
                            snapshots ?? Snapshots,
                            coverageExecutionCommand ?? CoverageExecutionCommand,
                            coverageOutputLocation ?? CoverageOutputLocation);

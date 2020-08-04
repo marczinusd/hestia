@@ -204,8 +204,7 @@ namespace Test.Hestia.Model.Stats
             fixture.Customize(new AutoMoqCustomization { ConfigureMembers = true });
             var enricher = fixture.Create<StatsEnricher>();
 
-            var repo = enricher.Enrich(new Repository(0,
-                                                      "bla",
+            var repo = enricher.Enrich(new Repository("bla",
                                                       Option<IRepositorySnapshot[]>.None,
                                                       Option<string>.None,
                                                       Option<string>.None),

@@ -44,8 +44,8 @@ namespace Hestia.UIRunner
                    .As<ICoverageReportConverter>();
             builder.RegisterType<SnapshotEFClient>()
                    .As<ISnapshotPersistence>();
-            builder.RegisterType<FileStreamWrapper>()
-                   .As<IFileStreamWrapper>();
+            builder.RegisterType<XmlFileSerializationWrapper>()
+                   .As<IXmlFileSerializationWrapper>();
 
             return builder;
         }

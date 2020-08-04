@@ -12,8 +12,7 @@ namespace Test.Hestia.Model
         [Fact]
         public void WithShouldReturnNewObject()
         {
-            var repo = new Repository(1,
-                                      "bla",
+            var repo = new Repository("bla",
                                       Array.Empty<IRepositorySnapshot>(),
                                       "someCommand",
                                       "lcov.info");
@@ -24,10 +23,9 @@ namespace Test.Hestia.Model
         }
 
         [Fact]
-        public void WithShouldCorretlyOverridePropertiesWithProvidedValues()
+        public void WithShouldCorrectlyOverridePropertiesWithProvidedValues()
         {
-            var repo = new Repository(1,
-                                      "bla",
+            var repo = new Repository("bla",
                                       Option<IRepositorySnapshot[]>.None,
                                       string.Empty,
                                       string.Empty);

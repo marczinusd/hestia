@@ -2,7 +2,7 @@
 
 namespace Hestia.Model.Wrappers
 {
-    public interface IFileStreamWrapper
+    public interface IXmlFileSerializationWrapper
     {
         T Deserialize<T>(string path, FileMode fileMode);
     }
