@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Hestia.DAL.Interfaces;
+using Hestia.Model;
 using Hestia.Model.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace Hestia.WebService.Controllers
 {
@@ -12,13 +12,14 @@ namespace Hestia.WebService.Controllers
     [Route("[controller]")]
     public class SnapshotsController : ControllerBase
     {
-        private readonly ILogger<SnapshotsController> _logger;
         private readonly ISnapshotRetrieval _snapshotRetrieval;
+        private readonly IFileRetrieval _fileRetrieval;
 
-        public SnapshotsController(ILogger<SnapshotsController> logger, ISnapshotRetrieval snapshotRetrieval)
+        public SnapshotsController(ISnapshotRetrieval snapshotRetrieval,
+                                   IFileRetrieval fileRetrieval)
         {
-            _logger = logger;
             _snapshotRetrieval = snapshotRetrieval;
+            _fileRetrieval = fileRetrieval;
         }
 
         /// <summary>
@@ -27,12 +28,8 @@ namespace Hestia.WebService.Controllers
         /// <returns>Full list of repository ids and names.</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<IEnumerable<ISnapshotHeader>> GetAllRepositories()
-        {
-            _logger.LogDebug($"Invoking GET on {nameof(SnapshotsController)}");
-
-            return new ActionResult<IEnumerable<ISnapshotHeader>>(_snapshotRetrieval.GetAllSnapshotsHeaders());
-        }
+        public ActionResult<IEnumerable<ISnapshotHeader>> GetAllSnapshots() =>
+            Ok(_snapshotRetrieval.GetAllSnapshotsHeaders());
 
         /// <summary>
         ///     Looks up a repository by id.
@@ -43,12 +40,9 @@ namespace Hestia.WebService.Controllers
         [HttpGet("[Controller]/{id}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(IRepositorySnapshotEntity), StatusCodes.Status200OK)]
-        public ActionResult<IRepositorySnapshotEntity> GetRepositoryById(string id)
-        {
-            _logger.LogDebug($"Invoking GET by id with id=${id} on {nameof(SnapshotsController)}");
-
-            return new ActionResult<IRepositorySnapshotEntity>(_snapshotRetrieval.GetSnapshotById(id));
-        }
+        public ActionResult<IRepositorySnapshotEntity> GetSnapshotById(string id) =>
+            _snapshotRetrieval.GetSnapshotById(id)
+                              .Match<ActionResult>(Ok, NotFound);
 
         /// <summary>
         ///     Fetches complete file details by id.
@@ -59,10 +53,9 @@ namespace Hestia.WebService.Controllers
         [HttpGet("[Controller]/{id}/files/{fileId}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(IFileEntity), StatusCodes.Status200OK)]
-        public ActionResult<IFileEntity> GetFileDetailsById(string id, string fileId)
-        {
-            return new ActionResult<IFileEntity>(Ok(null));
-        }
+        public ActionResult<IFileEntity> GetFileDetailsById(string id, string fileId) =>
+            _fileRetrieval.GetFileDetails(fileId, id)
+                          .Match<ActionResult>(Ok, NotFound);
 
         /// <summary>
         ///     Fetches all file headers for given snapshot.
@@ -72,9 +65,15 @@ namespace Hestia.WebService.Controllers
         [HttpGet("[Controller]/{id}/files")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(IEnumerable<IFileHeader>), StatusCodes.Status200OK)]
-        public ActionResult<IEnumerable<IFileHeader>> GetAllFileHeaders(string id)
-        {
-            return new ActionResult<IEnumerable<IFileHeader>>(Ok(Enumerable.Empty<IFileHeader>()));
-        }
+        public ActionResult<IEnumerable<IFileHeader>> GetAllFileHeaders(string id) =>
+            _snapshotRetrieval.GetSnapshotById(id)
+                              .Match<ActionResult>(file => Ok(file.Files.Select(EntityAsHeader).ToList()),
+                                                   NotFound);
+
+        private IFileHeader EntityAsHeader(IFileEntity entity)
+            => new FileHeader(entity.Path,
+                              entity.CoveragePercentage,
+                              entity.LifetimeAuthors,
+                              entity.LifetimeChanges);
     }
 }

@@ -1,7 +1,9 @@
-﻿namespace Hestia.DAL.Interfaces
+﻿using LanguageExt;
+
+namespace Hestia.DAL.Interfaces
 {
     public interface IFileRetrieval
     {
-        IFileEntity GetFileDetails(string fileId, string snapshotId);
+        Option<IFileEntity> GetFileDetails(string fileId, string snapshotId);
     }
 }

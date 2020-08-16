@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Hestia.Model.Interfaces;
+using LanguageExt;
 
 namespace Hestia.DAL.Interfaces
 {
@@ -7,6 +8,6 @@ namespace Hestia.DAL.Interfaces
     {
         IEnumerable<ISnapshotHeader> GetAllSnapshotsHeaders();
 
-        IRepositorySnapshotEntity GetSnapshotById(string id);
+        Option<IRepositorySnapshotEntity> GetSnapshotById(string id);
     }
 }

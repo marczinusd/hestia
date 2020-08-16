@@ -186,13 +186,13 @@ namespace Test.Hestia.UIRunner
                               statsEnricherMock.Verify(mock => mock.EnrichWithCoverage(It.IsAny<IRepositorySnapshot>()),
                                                        Times.Once);
                               statsEnricherMock.Verify(mock => mock.EnrichWithGitStats(It.IsAny<IRepositorySnapshot>(),
-                                                                                       GitStatGranularity.File),
+                                                           GitStatGranularity.File),
                                                        Times.Once);
                           });
         }
 
         [Fact]
-        public void ExecutingOpenFileDialogCommandInvokesFileDialogServiceAndPublishesResultOnRepositoryPath()
+        public void ExecutingOpenFolderDialogCommandInvokesFileDialogServiceAndPublishesResultOnRepositoryPath()
         {
             var scheduler = new TestScheduler();
             var fileDialogServiceMock = new Mock<IOpenFileDialogService>();
@@ -203,25 +203,36 @@ namespace Test.Hestia.UIRunner
                                        Mock.Of<IPathValidator>(),
                                        Mock.Of<IRepositorySnapshotBuilderWrapper>(),
                                        fileDialogServiceMock.Object,
-                                       Mock.Of<ICoverageReportConverter>())
-            {
-                RepositoryPath = "bla",
-                CoverageCommand = "bla",
-                SourceExtensions = "bla",
-                SourceRoot = "src",
-                CoverageOutputLocation = "bla",
-            };
+                                       Mock.Of<ICoverageReportConverter>());
 
             scheduler.Start(() => vm.OpenFolderDialogCommand
                                     .Execute());
 
-            Helpers.After(TimeSpan.FromMilliseconds(WaitMs),
-                          () =>
-                          {
-                              vm.RepositoryPath
-                                .Should()
-                                .Be("path");
-                          });
+            vm.RepositoryPath
+              .Should()
+              .Be("path");
+        }
+
+        [Fact]
+        public void ExecutingOpenFileDialogCommandInvokesFileDialogServiceAndPublishesResultOnCoveragePath()
+        {
+            var scheduler = new TestScheduler();
+            var fileDialogServiceMock = new Mock<IOpenFileDialogService>();
+            fileDialogServiceMock.Setup(mock => mock.OpenFileDialog())
+                                 .Returns(Task.FromResult(new[] { "path" }));
+            var vm = new FormViewModel(Mock.Of<IDiskIOWrapper>(),
+                                       Mock.Of<IStatsEnricher>(),
+                                       Mock.Of<IPathValidator>(),
+                                       Mock.Of<IRepositorySnapshotBuilderWrapper>(),
+                                       fileDialogServiceMock.Object,
+                                       Mock.Of<ICoverageReportConverter>());
+
+            scheduler.Start(() => vm.OpenFileDialogCommand
+                                    .Execute());
+
+            vm.CoverageOutputLocation
+              .Should()
+              .Be("path");
         }
     }
 }

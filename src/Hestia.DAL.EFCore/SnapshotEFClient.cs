@@ -13,7 +13,7 @@ namespace Hestia.DAL.EFCore
             throw new NotImplementedException();
         }
 
-        public IRepositorySnapshotEntity GetSnapshotById(string id)
+        public Option<IRepositorySnapshotEntity> GetSnapshotById(string id)
         {
             throw new NotImplementedException();
         }
@@ -23,7 +23,7 @@ namespace Hestia.DAL.EFCore
             throw new NotImplementedException();
         }
 
-        public IFileEntity GetFileDetails(string fileId, string snapshotId)
+        public Option<IFileEntity> GetFileDetails(string fileId, string snapshotId)
         {
             throw new NotImplementedException();
         }
