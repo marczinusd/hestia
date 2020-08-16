@@ -26,7 +26,8 @@ namespace Test.Hestia.UIRunner
                                                   Option<string>.None,
                                                   Option<DateTime>.None,
                                                   Option<string>.None);
-            var vm = new RepositoryViewModel(scheduler.CreateColdObservable(snapshot.AsNotification()), Mock.Of<ISnapshotPersistence>());
+            var vm = new RepositoryViewModel(scheduler.CreateColdObservable(snapshot.AsNotification()),
+                                             Mock.Of<ISnapshotPersistence>());
 
             scheduler.Start();
 
@@ -34,6 +35,27 @@ namespace Test.Hestia.UIRunner
               .Files
               .Should()
               .BeEquivalentTo(snapshot.Files);
+        }
+
+        [Fact]
+        public void ExecutingCommitToDatabaseCommandInvokesSnapshotPersistor()
+        {
+            var scheduler = new TestScheduler();
+            var snapshot = new RepositorySnapshot(string.Empty,
+                                                  new List<IFile> { MockRepo.CreateFile(), MockRepo.CreateFile() },
+                                                  Option<string>.None,
+                                                  Option<string>.None,
+                                                  Option<DateTime>.None,
+                                                  Option<string>.None);
+            var snapshotPersistence = new Mock<ISnapshotPersistence>();
+            var vm = new RepositoryViewModel(scheduler.CreateColdObservable(snapshot.AsNotification()),
+                                             snapshotPersistence.Object);
+            scheduler.Start();
+
+            vm.CommitToDatabaseCommand.Execute();
+
+            snapshotPersistence.Verify(mock =>
+                                           mock.InsertSnapshot(It.Is<IRepositorySnapshot>(x => x.Equals(snapshot))), Times.Once);
         }
     }
 }
