@@ -64,6 +64,26 @@ namespace Test.Hestia.Model.Stats
                   .BeEquivalentTo(Path.Join(outPath, "Cobertura.xml"));
         }
 
+        [Theory]
+        [InlineData("somePath/coverage.json")]
+        [InlineData("somePath/cobertura.xml")]
+        public void ReturnOriginalFilePathIfNoConversionIsNecessary(string path)
+        {
+            const string outPath = "someLocation";
+            var ioMock = new Mock<IDiskIOWrapper>();
+            var reportGeneratorMock = new Mock<IReportGeneratorWrapper>();
+            ioMock.Setup(mock => mock.FileExists(path))
+                  .Returns(true);
+            var converter = new CoverageReportConverter(ioMock.Object, reportGeneratorMock.Object);
+
+            var result = converter.Convert(path, outPath);
+
+            result.Match(x => x, string.Empty)
+                  .Should()
+                  .Be(path);
+            reportGeneratorMock.Verify(mock => mock.Generate(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+        }
+
         [Fact]
         public void IfReportGeneratorFailsConvertShouldReturnNone()
         {
