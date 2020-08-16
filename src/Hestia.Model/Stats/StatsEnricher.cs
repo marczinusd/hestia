@@ -109,32 +109,6 @@ namespace Hestia.Model.Stats
                          });
         }
 
-        public IFile Enrich(IFile file, string coverageReportPath, string coverageCommand)
-        {
-            if (string.IsNullOrWhiteSpace(coverageReportPath) || string.IsNullOrWhiteSpace(coverageCommand))
-            {
-                throw new
-                    ArgumentOutOfRangeException($"Either {nameof(coverageReportPath)} or {nameof(coverageReportPath)} have to be non-null and non-empty.");
-            }
-
-            _executor.Execute(coverageCommand, string.Empty, string.Empty);
-
-            var finalPath = coverageReportPath;
-            if (!coverageReportPath.Contains("coverage.json"))
-            {
-                finalPath = _converter.Convert(coverageReportPath,
-                                               Path.GetDirectoryName(coverageReportPath) ?? coverageReportPath)
-                                      .Some(x => x)
-                                      .None(() => coverageReportPath);
-            }
-
-            var coverage = _providerFactory.CreateProviderForFile(finalPath)
-                                           .ParseFileCoveragesFromFilePath(finalPath)
-                                           .Single(f => f.FileName.Equals(file.Filename));
-
-            return file.With(coverageStats: new FileCoverageStats(coverage));
-        }
-
         private IRepositorySnapshot ConvertCoverageResults(IRepositorySnapshot repositorySnapshot)
         {
             var path = repositorySnapshot.PathToCoverageResultFile.Some(x => x)

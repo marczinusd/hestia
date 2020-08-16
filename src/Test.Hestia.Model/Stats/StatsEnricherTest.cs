@@ -227,21 +227,5 @@ namespace Test.Hestia.Model.Stats
                      .Should()
                      .BeEquivalentTo(new[] { "1", "13", "25", "37", "50" });
         }
-
-        [Theory]
-        [MemberData(nameof(FileEnricherInvalidInput))]
-        public void FileEnricherThrowsExceptionIfBothCoverageArgumentsAreInvalid(
-            string reportPath,
-            string coverageCommand)
-        {
-            var fixture = new Fixture();
-            fixture.Customize(new AutoMoqCustomization { ConfigureMembers = true });
-            var enricher = fixture.Create<StatsEnricher>();
-
-            Action act = () => enricher.Enrich(MockRepo.CreateFile(), reportPath, coverageCommand);
-
-            act.Should()
-               .Throw<ArgumentOutOfRangeException>();
-        }
     }
 }

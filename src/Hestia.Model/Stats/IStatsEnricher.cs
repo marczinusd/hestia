@@ -11,7 +11,5 @@ namespace Hestia.Model.Stats
 
         Repository Enrich(Repository repository,
                           RepositoryStatsEnricherArguments args);
-
-        IFile Enrich(IFile file, string coverageReportPath, string coverageCommand);
     }
 }
