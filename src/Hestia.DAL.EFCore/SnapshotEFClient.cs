@@ -6,7 +6,7 @@ using LanguageExt;
 
 namespace Hestia.DAL.EFCore
 {
-    public class SnapshotEFClient : ISnapshotRetrieval, ISnapshotPersistence
+    public class SnapshotEFClient : ISnapshotRetrieval, ISnapshotPersistence, IFileRetrieval
     {
         public IEnumerable<ISnapshotHeader> GetAllSnapshotsHeaders()
         {
@@ -19,6 +19,11 @@ namespace Hestia.DAL.EFCore
         }
 
         public IObservable<Unit> InsertSnapshot(IRepositorySnapshot snapshot)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IFileEntity GetFileDetails(string fileId, string snapshotId)
         {
             throw new NotImplementedException();
         }

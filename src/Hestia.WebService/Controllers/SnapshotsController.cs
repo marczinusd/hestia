@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Hestia.DAL.Interfaces;
 using Hestia.Model.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -47,6 +48,33 @@ namespace Hestia.WebService.Controllers
             _logger.LogDebug($"Invoking GET by id with id=${id} on {nameof(SnapshotsController)}");
 
             return new ActionResult<IRepositorySnapshotEntity>(_snapshotRetrieval.GetSnapshotById(id));
+        }
+
+        /// <summary>
+        ///     Fetches complete file details by id.
+        /// </summary>
+        /// <param name="id">Id of the snapshot that contains the file.</param>
+        /// <param name="fileId">Id of the file within the snapshot.</param>
+        /// <returns>Returns 404 if file was not found.</returns>
+        [HttpGet("[Controller]/{id}/files/{fileId}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(IFileEntity), StatusCodes.Status200OK)]
+        public ActionResult<IFileEntity> GetFileDetailsById(string id, string fileId)
+        {
+            return new ActionResult<IFileEntity>(Ok(null));
+        }
+
+        /// <summary>
+        ///     Fetches all file headers for given snapshot.
+        /// </summary>
+        /// <param name="id">Snapshot id.</param>
+        /// <returns>Returns 404 if snapshot id is invalid.</returns>
+        [HttpGet("[Controller]/{id}/files")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(IEnumerable<IFileHeader>), StatusCodes.Status200OK)]
+        public ActionResult<IEnumerable<IFileHeader>> GetAllFileHeaders(string id)
+        {
+            return new ActionResult<IEnumerable<IFileHeader>>(Ok(Enumerable.Empty<IFileHeader>()));
         }
     }
 }

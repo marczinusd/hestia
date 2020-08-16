@@ -159,10 +159,11 @@ namespace Hestia.Model.Stats
 
         private IEnumerable<IFile> EnrichWithCoverage(IEnumerable<IFile> files, IEnumerable<IFileCoverage> coverages) =>
             files.Select(f => EnrichWithCoverage(f,
-                                                 coverages.SingleOrDefault(cov => cov.FileName.Contains(f.Filename))));
+                                                 coverages.SingleOrDefault(cov => cov.FileName.Contains(f.Filename))!));
 
         private IFile EnrichWithCoverage(IFile file, IFileCoverage coverage)
         {
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
             if (coverage == null || coverage.Equals(default))
             {
                 return file;
