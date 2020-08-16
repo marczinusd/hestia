@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reactive.Linq;
 using FluentAssertions;
 using Hestia.DAL.Interfaces;
 using Hestia.Model;
@@ -40,7 +41,6 @@ namespace Test.Hestia.UIRunner
         [Fact]
         public void ExecutingCommitToDatabaseCommandInvokesSnapshotPersistor()
         {
-            var scheduler = new TestScheduler();
             var snapshot = new RepositorySnapshot(string.Empty,
                                                   new List<IFile> { MockRepo.CreateFile(), MockRepo.CreateFile() },
                                                   Option<string>.None,
@@ -48,14 +48,16 @@ namespace Test.Hestia.UIRunner
                                                   Option<DateTime>.None,
                                                   Option<string>.None);
             var snapshotPersistence = new Mock<ISnapshotPersistence>();
-            var vm = new RepositoryViewModel(scheduler.CreateColdObservable(snapshot.AsNotification()),
+            var vm = new RepositoryViewModel(Observable.Return(snapshot),
                                              snapshotPersistence.Object);
-            scheduler.Start();
+            snapshotPersistence.Setup(mock => mock.InsertSnapshot(It.IsAny<IRepositorySnapshot>()))
+                               .Returns(Observable.Empty<Unit>);
 
             vm.CommitToDatabaseCommand.Execute();
 
             snapshotPersistence.Verify(mock =>
-                                           mock.InsertSnapshot(It.Is<IRepositorySnapshot>(x => x.Equals(snapshot))), Times.Once);
+                                           mock.InsertSnapshot(It.Is<IRepositorySnapshot>(x => x.Equals(snapshot))),
+                                       Times.Once);
         }
     }
 }
