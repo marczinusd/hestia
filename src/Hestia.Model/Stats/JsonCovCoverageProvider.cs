@@ -43,14 +43,9 @@ namespace Hestia.Model.Stats
         private static IEnumerable<(int lineNumber, int hitCount)> ParseLineCoverageJObject(
             JToken? token)
         {
-            if (token == null)
-            {
-                return new[] { (-1, 0) };
-            }
-
-            return token.Children<JProperty>()
-                        .Select(prop => (int.Parse(prop.Name),
-                                         int.Parse(prop.Value.ToString())));
+            return token!.Children<JProperty>()
+                         .Select(prop => (int.Parse(prop.Name),
+                                          int.Parse(prop.Value.ToString())));
         }
     }
 }

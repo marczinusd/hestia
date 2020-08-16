@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Hestia.DAL.Interfaces;
-using Hestia.Model;
 using Hestia.Model.Interfaces;
+using Hestia.WebService.Helpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -67,13 +67,7 @@ namespace Hestia.WebService.Controllers
         [ProducesResponseType(typeof(IEnumerable<IFileHeader>), StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<IFileHeader>> GetAllFileHeaders(string id) =>
             _snapshotRetrieval.GetSnapshotById(id)
-                              .Match<ActionResult>(file => Ok(file.Files.Select(EntityAsHeader).ToList()),
+                              .Match<ActionResult>(file => Ok(file.Files.Select(Mappers.EntityAsHeader)),
                                                    NotFound);
-
-        private IFileHeader EntityAsHeader(IFileEntity entity)
-            => new FileHeader(entity.Path,
-                              entity.CoveragePercentage,
-                              entity.LifetimeAuthors,
-                              entity.LifetimeChanges);
     }
 }
