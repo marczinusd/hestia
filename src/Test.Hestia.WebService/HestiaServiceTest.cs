@@ -26,10 +26,16 @@ namespace Test.Hestia.WebService
 
             Action act1 = () => controller.GetAllRepositories();
             Action act2 = () => controller.GetRepositoryById(string.Empty);
+            Action act3 = () => controller.GetAllFileHeaders(string.Empty);
+            Action act4 = () => controller.GetFileDetailsById(string.Empty, string.Empty);
 
             act1.Should()
                 .NotThrow<NotImplementedException>();
             act2.Should()
+                .NotThrow<NotImplementedException>();
+            act3.Should()
+                .NotThrow<NotImplementedException>();
+            act4.Should()
                 .NotThrow<NotImplementedException>();
         }
     }

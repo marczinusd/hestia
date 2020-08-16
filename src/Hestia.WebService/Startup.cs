@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Autofac;
 using Hestia.DAL.EFCore;
 using Hestia.DAL.Interfaces;
@@ -10,6 +11,7 @@ using Microsoft.OpenApi.Models;
 
 namespace Hestia.WebService
 {
+    [ExcludeFromCodeCoverage]
     public class Startup
     {
         public Startup(IConfiguration configuration)
