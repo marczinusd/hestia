@@ -43,7 +43,7 @@ namespace Test.Hestia.Model.Builders
         [Fact]
         public void FileBuilderShouldThrowExceptionWhenGivenANullParameter()
         {
-            Action act = () => FileBuilder.BuildFileFromPath(null, Mock.Of<IDiskIOWrapper>());
+            Action act = () => FileBuilder.BuildFileFromPath(null!, Mock.Of<IDiskIOWrapper>());
 
             act.Should()
                .Throw<FileBuilderException>();

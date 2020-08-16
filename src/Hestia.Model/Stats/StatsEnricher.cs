@@ -179,8 +179,9 @@ namespace Hestia.Model.Stats
             IEnumerable<ISourceLine> enrichedContent =
                 file.Content.Select(line =>
                 {
+                    // ReSharper disable once AssignNullToNotNullAttribute
                     ILineGitStats statsForLine = lineStats.SingleOrDefault(l => l.LineNumber ==
-                                                                      line.LineNumber);
+                                                                               line.LineNumber);
                     return new SourceLine(line.LineNumber,
                                           line.Text,
                                           line.LineCoverageStats,
