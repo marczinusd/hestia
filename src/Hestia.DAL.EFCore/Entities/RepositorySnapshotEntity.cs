@@ -24,14 +24,14 @@ namespace Hestia.DAL.EFCore.Entities
             Id = id;
         }
 
-        public IEnumerable<FileEntity> Files { get; set; }
+        [UsedImplicitly] public IEnumerable<FileEntity> Files { get; set; }
 
-        public string Id { get; set; }
+        [UsedImplicitly] public string Id { get; set; }
 
-        public string Name { get; set; }
+        [UsedImplicitly] public string Name { get; set; }
 
-        public string AtHash { get; set; }
+        [UsedImplicitly] public string AtHash { get; set; }
 
-        public DateTime? CommitDate { get; set; }
+        [UsedImplicitly] public DateTime? CommitDate { get; set; }
     }
 }

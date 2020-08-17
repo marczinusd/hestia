@@ -2,6 +2,7 @@
 
 namespace Hestia.DAL.EFCore.Entities
 {
+    // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
     public class LineEntity
     {
         [UsedImplicitly]
@@ -18,16 +19,16 @@ namespace Hestia.DAL.EFCore.Entities
             Id = id;
         }
 
-        public string Id { get; set; }
+        [UsedImplicitly] public string Id { get; set; }
 
-        public string Content { get; set; }
+        [UsedImplicitly] public string Content { get; set; }
 
-        public bool IsCovered { get; set; }
+        [UsedImplicitly] public bool IsCovered { get; set; }
 
-        public int NumberOfAuthors { get; set; }
+        [UsedImplicitly] public int NumberOfAuthors { get; set; }
 
-        public int NumberOfChanges { get; set; }
+        [UsedImplicitly] public int NumberOfChanges { get; set; }
 
-        public virtual FileEntity Parent { get; set; }
+        [UsedImplicitly] public virtual FileEntity Parent { get; set; }
     }
 }

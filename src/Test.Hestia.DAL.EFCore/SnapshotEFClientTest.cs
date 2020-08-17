@@ -38,7 +38,7 @@ namespace Test.Hestia.DAL.EFCore
             "someRepo",
             SeededSnapshotId);
 
-        private static readonly IRepositorySnapshot NewSnapshot =
+        private static readonly RepositorySnapshot NewSnapshot =
             new RepositorySnapshot("newid",
                                    new List<IFile>(),
                                    "coveragePath",
@@ -65,6 +65,10 @@ namespace Test.Hestia.DAL.EFCore
             context.Snapshots
                    .Should()
                    .HaveCount(2);
+            context.Snapshots.ToList()[1]
+                   .Name
+                   .Should()
+                   .Be("somename");
         }
 
         [Fact]
@@ -77,6 +81,18 @@ namespace Test.Hestia.DAL.EFCore
                   .Match(x => x, () => null)
                   ?.Id.Should()
                   .Be(SeededSnapshotId);
+        }
+
+        [Fact]
+        public void GetSnapshotByIdShouldReturnNoneIfSnapshotWasNotFound()
+        {
+            using var context = new HestiaContext(Options);
+            var client = new SnapshotEFClient(context);
+
+            client.GetSnapshotById("invalid")
+                  .IsNone
+                  .Should()
+                  .BeTrue();
         }
 
         [Fact]
@@ -102,6 +118,18 @@ namespace Test.Hestia.DAL.EFCore
                   .Match(x => x, () => null)
                   ?.Id.Should()
                   .Be(SeededFileId);
+        }
+
+        [Fact]
+        public void GetFileDetailsShouldReturnNoneIfFileWasNotFound()
+        {
+            using var context = new HestiaContext(Options);
+            var client = new SnapshotEFClient(context);
+
+            client.GetFileDetails("invalid", SeededSnapshotId)
+                  .IsNone
+                  .Should()
+                  .BeTrue();
         }
 
         private void SeedDb()

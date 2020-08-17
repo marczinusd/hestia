@@ -25,18 +25,18 @@ namespace Hestia.DAL.EFCore.Entities
             Id = id;
         }
 
-        public string Id { get; set; }
+        [UsedImplicitly] public string Id { get; set; }
 
-        public string Path { get; set; }
+        [UsedImplicitly] public string Path { get; set; }
 
-        public int LifetimeChanges { get; set; }
+        [UsedImplicitly] public int LifetimeChanges { get; set; }
 
-        public int LifetimeAuthors { get; set; }
+        [UsedImplicitly] public int LifetimeAuthors { get; set; }
 
-        public decimal CoveragePercentage { get; set; }
+        [UsedImplicitly] public decimal CoveragePercentage { get; set; }
 
-        public List<LineEntity> Lines { get; set; }
+        [UsedImplicitly] public List<LineEntity> Lines { get; set; }
 
-        public RepositorySnapshotEntity Parent { get; set; }
+        [UsedImplicitly] public RepositorySnapshotEntity Parent { get; set; }
     }
 }
