@@ -9,14 +9,18 @@ namespace Hestia.DAL.EFCore.Entities
                           int lifetimeChanges,
                           int lifetimeAuthors,
                           decimal coveragePercentage,
-                          List<ISourceLineEntity> lines)
+                          List<ISourceLineEntity> lines,
+                          string id)
         {
             Path = path;
             LifetimeChanges = lifetimeChanges;
             LifetimeAuthors = lifetimeAuthors;
             CoveragePercentage = coveragePercentage;
             Lines = lines;
+            Id = id;
         }
+
+        public string Id { get; }
 
         public string Path { get; }
 

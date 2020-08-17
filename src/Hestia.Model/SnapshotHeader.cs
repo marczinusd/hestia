@@ -19,6 +19,6 @@ namespace Hestia.Model
 
         public string AtHash { get; }
 
-        public DateTime CommitDate { get; }
+        public DateTime? CommitDate { get; }
     }
 }

@@ -25,10 +25,13 @@ namespace Test.Hestia.WebService
                                                             1,
                                                             2,
                                                             3,
-                                                            new List<ISourceLineEntity>()),
+                                                            new List<ISourceLineEntity>(),
+                                                            "id"),
                                          },
                                          "hash",
-                                         DateTime.MinValue);
+                                         DateTime.MinValue,
+                                         "name",
+                                         null!);
 
         [Fact]
         public void GetAllRepositories()

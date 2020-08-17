@@ -16,7 +16,14 @@ namespace Test.Hestia.WebService
                                         1,
                                         2,
                                         3,
-                                        new List<ISourceLineEntity>() { new LineEntity("bla", true, 2, 3) });
+                                        new List<ISourceLineEntity>()
+                                        {
+                                            new LineEntity("bla",
+                                                           true,
+                                                           2,
+                                                           3),
+                                        },
+                                        "id");
 
             var result = Mappers.EntityAsHeader(entity);
 
@@ -32,6 +39,9 @@ namespace Test.Hestia.WebService
             result.LifetimeChanges
                   .Should()
                   .Be(entity.LifetimeChanges);
+            result.Id
+                  .Should()
+                  .BeNull();
         }
     }
 }

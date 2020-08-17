@@ -22,11 +22,14 @@ namespace Hestia.Model
             Extension = extension;
             GitStats = gitStats;
             CoverageStats = coverageStats;
+            Id = string.Empty; // Id is irrelevant in the model
         }
 
         [JsonIgnore] public IList<ISourceLine> Content { get; }
 
         [JsonIgnore] public string FullPath => System.IO.Path.Join(Path, Filename);
+
+        public string Id { get; }
 
         public string Path { get; }
 

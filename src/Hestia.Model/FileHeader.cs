@@ -4,13 +4,16 @@ namespace Hestia.Model
 {
     public class FileHeader : IFileHeader
     {
-        public FileHeader(string path, decimal coveragePercentage, int lifetimeAuthors, int lifetimeChanges)
+        public FileHeader(string path, decimal coveragePercentage, int lifetimeAuthors, int lifetimeChanges, string id)
         {
             Path = path;
             CoveragePercentage = coveragePercentage;
             LifetimeAuthors = lifetimeAuthors;
             LifetimeChanges = lifetimeChanges;
+            Id = id;
         }
+
+        public string Id { get; }
 
         public string Path { get; }
 

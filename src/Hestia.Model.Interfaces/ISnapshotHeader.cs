@@ -10,6 +10,6 @@ namespace Hestia.Model.Interfaces
 
         string AtHash { get; }
 
-        DateTime CommitDate { get; }
+        DateTime? CommitDate { get; }
     }
 }

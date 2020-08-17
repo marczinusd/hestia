@@ -10,6 +10,7 @@ namespace Hestia.WebService.Helpers
             => new FileHeader(entity.Path,
                               entity.CoveragePercentage,
                               entity.LifetimeAuthors,
-                              entity.LifetimeChanges);
+                              entity.LifetimeChanges,
+                              entity.Id);
     }
 }

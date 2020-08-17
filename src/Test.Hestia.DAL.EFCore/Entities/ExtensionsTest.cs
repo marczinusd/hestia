@@ -59,7 +59,7 @@ namespace Test.Hestia.DAL.EFCore.Entities
             entity.AtHash
                   .Should()
                   .Be(snapshot.AtHash.Match(x => x, string.Empty));
-            entity.HashDate
+            entity.CommitDate
                   .Should()
                   .Be(snapshot.CommitCreationDate.Match(x => x, DateTime.MaxValue));
         }

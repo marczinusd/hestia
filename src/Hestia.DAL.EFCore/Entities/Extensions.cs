@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Hestia.DAL.Interfaces;
 using Hestia.Model.Interfaces;
 
@@ -13,12 +14,15 @@ namespace Hestia.DAL.EFCore.Entities
                            file.CoveragePercentage,
                            file.Content
                                .Select(AsEntity)
-                               .ToList());
+                               .ToList(),
+                           null);
 
         public static IRepositorySnapshotEntity AsEntity(this IRepositorySnapshot snapshot) =>
             new RepositorySnapshotEntity(snapshot.Files.Select(f => f.AsEntity()),
                                          snapshot.AtHash.Match(x => x, string.Empty),
-                                         snapshot.CommitCreationDate.Match(x => x, null));
+                                         snapshot.CommitCreationDate.Match(x => x, () => null as DateTime?),
+                                         snapshot.RepositoryName.Match(x => x, () => null!),
+                                         null!);
 
         public static ISourceLineEntity AsEntity(this ISourceLine line) =>
             new LineEntity(line.Text,
