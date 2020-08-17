@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using Hestia.DAL.Interfaces;
-using Hestia.Model.Interfaces;
+using JetBrains.Annotations;
 
 namespace Hestia.DAL.EFCore.Entities
 {
-    public class RepositorySnapshotEntity : IRepositorySnapshotEntity
+    public class RepositorySnapshotEntity
     {
-        public RepositorySnapshotEntity(IEnumerable<IFileEntity> files,
+        [UsedImplicitly]
+        public RepositorySnapshotEntity()
+        {
+        }
+
+        public RepositorySnapshotEntity(IEnumerable<FileEntity> files,
                                         string atHash,
                                         DateTime? hashDate,
                                         string name,
@@ -20,14 +24,14 @@ namespace Hestia.DAL.EFCore.Entities
             Id = id;
         }
 
-        public IEnumerable<IFileEntity> Files { get; }
+        public IEnumerable<FileEntity> Files { get; set; }
 
-        public string Id { get; }
+        public string Id { get; set; }
 
-        public string Name { get; }
+        public string Name { get; set; }
 
-        public string AtHash { get; }
+        public string AtHash { get; set; }
 
-        public DateTime? CommitDate { get; }
+        public DateTime? CommitDate { get; set; }
     }
 }

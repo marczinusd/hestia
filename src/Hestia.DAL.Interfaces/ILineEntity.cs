@@ -1,6 +1,6 @@
 ﻿namespace Hestia.DAL.Interfaces
 {
-    public interface ISourceLineEntity
+    public interface ILineEntity
     {
         string Content { get; }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
+using Hestia.DAL.EFCore.Adapters;
 using Hestia.DAL.EFCore.Entities;
 using Hestia.DAL.Interfaces;
 using Hestia.Model.Interfaces;
@@ -10,38 +11,36 @@ using static LanguageExt.Prelude;
 
 namespace Hestia.DAL.EFCore
 {
-    public class SnapshotEFClient : ISnapshotRetrieval, ISnapshotPersistence, IFileRetrieval
+    public class SnapshotEFClient : ISnapshotRetrieval, ISnapshotPersistence, IFileRetrieval, IDisposable
     {
-        public IEnumerable<ISnapshotHeader> GetAllSnapshotsHeaders()
+        private readonly HestiaContext _dbContext;
+
+        public SnapshotEFClient(HestiaContext dbContext)
         {
-            using var context = new HestiaContext();
-            return context.Snapshots.ToList();
+            _dbContext = dbContext;
         }
 
-        public Option<IRepositorySnapshotEntity> GetSnapshotById(string id)
-        {
-            using var context = new HestiaContext();
-            var entity = context.Snapshots.SingleOrDefault(s => s.Id == id);
+        public IEnumerable<ISnapshotHeader> GetAllSnapshotsHeaders() => _dbContext.Snapshots.Select(s => new RepositorySnapshotEntityAdapter(s)).ToList();
 
-            return entity != null ? Some(entity) : Option<IRepositorySnapshotEntity>.None;
-        }
+        public Option<IRepositorySnapshotEntity> GetSnapshotById(string id) =>
+            _dbContext.Snapshots.SingleOrDefault(s => s.Id == id) is { } entity ? Some<IRepositorySnapshotEntity>(new RepositorySnapshotEntityAdapter(entity)) : None;
 
         public IObservable<Unit> InsertSnapshot(IRepositorySnapshot snapshot)
         {
-            using var context = new HestiaContext();
-            context.Snapshots.Add(snapshot.AsEntity());
+            _dbContext.Snapshots.Add(snapshot.AsEntity());
 
-            return Observable.FromAsync(context.SaveChangesAsync)
+            return Observable.FromAsync(_dbContext.SaveChangesAsync)
                              .Select(x => Unit.Default);
         }
 
         public Option<IFileEntity> GetFileDetails(string fileId, string snapshotId)
         {
-            using var context = new HestiaContext();
-            var file = context.Snapshots.SingleOrDefault(s => s.Id == snapshotId)
-                              ?.Files.SingleOrDefault(f => f.Id == fileId);
+            var file = _dbContext.Snapshots.SingleOrDefault(s => s.Id == snapshotId)
+                                 ?.Files.SingleOrDefault(f => f.Id == fileId);
 
-            return file != null ? Some(file) : Option<IFileEntity>.None;
+            return file != null ? Some<IFileEntity>(new FileEntityAdapter(file)) : None;
         }
+
+        public void Dispose() => _dbContext?.Dispose();
     }
 }

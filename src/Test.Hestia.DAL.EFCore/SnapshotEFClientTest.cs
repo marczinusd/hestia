@@ -1,56 +1,118 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using Hestia.DAL.EFCore;
+using Hestia.DAL.EFCore.Entities;
+using Hestia.Model;
 using Hestia.Model.Interfaces;
-using Moq;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Reactive.Testing;
 using Xunit;
 
 namespace Test.Hestia.DAL.EFCore
 {
     public class SnapshotEFClientTest
     {
+        private const string SeededSnapshotId = "repoid";
+        private const string SeededFileId = "fileId";
+
+        private static readonly RepositorySnapshotEntity SeededRepo = new RepositorySnapshotEntity(new List<FileEntity>
+            {
+                new FileEntity("path",
+                               1,
+                               2,
+                               100,
+                               new List<LineEntity>()
+                               {
+                                   new LineEntity("blabla",
+                                                  true,
+                                                  1,
+                                                  2,
+                                                  "id"),
+                               },
+                               SeededFileId),
+            },
+            "someHash",
+            DateTime.MinValue,
+            "someRepo",
+            SeededSnapshotId);
+
+        private static readonly IRepositorySnapshot NewSnapshot =
+            new RepositorySnapshot("newid",
+                                   new List<IFile>(),
+                                   "coveragePath",
+                                   "hash",
+                                   DateTime.MinValue,
+                                   "somename");
+
+
+        public SnapshotEFClientTest() => SeedDb();
+
+        private DbContextOptions<HestiaContext> Options =>
+            new DbContextOptionsBuilder<HestiaContext>()
+                .UseSqlite("Data Source=hestia.test.db")
+                .Options;
+
         [Fact]
-        public void InsertSnapshotShouldThrowNotImplementedException()
+        public void InsertSnapshotShouldPersistAsExpected()
         {
-            var client = new SnapshotEFClient();
+            using var context = new HestiaContext(Options);
+            var scheduler = new TestScheduler();
+            var client = new SnapshotEFClient(context);
 
-            Action act = () => client.InsertSnapshot(Mock.Of<IRepositorySnapshot>());
+            scheduler.Start(() => client.InsertSnapshot(NewSnapshot));
 
-            act.Should()
-               .Throw<NotImplementedException>();
+            context.Snapshots
+                   .Should()
+                   .HaveCount(2);
         }
 
         [Fact]
-        public void GetFileDetailsShouldThrowNotImplementedException()
+        public void GetSnapshotByIdShouldReturnSeededSnapshot()
         {
-            var client = new SnapshotEFClient();
+            using var context = new HestiaContext(Options);
+            var client = new SnapshotEFClient(context);
 
-            Action act = () => client.GetFileDetails(string.Empty, string.Empty);
-
-            act.Should()
-               .Throw<NotImplementedException>();
+            client.GetSnapshotById(SeededSnapshotId)
+                  .Match(x => x, () => null)
+                  ?.Id.Should()
+                  .Be(SeededSnapshotId);
         }
 
         [Fact]
-        public void GetAllSnapshotsHeadersShouldThrowNotImplementedException()
+        public void GetAllSnapshotsShouldReturnTheSeededSnapshots()
         {
-            var client = new SnapshotEFClient();
+            using var context = new HestiaContext(Options);
+            var client = new SnapshotEFClient(context);
 
-            Action act = () => client.GetAllSnapshotsHeaders();
-
-            act.Should()
-               .Throw<NotImplementedException>();
+            client.GetAllSnapshotsHeaders()
+                  .First()
+                  .Id
+                  .Should()
+                  .Be(SeededSnapshotId);
         }
 
         [Fact]
-        public void GetSnapshotByIdShouldThrowNotImplementedException()
+        public void GetFileDetailsShouldReturnSeededFileDetails()
         {
-            var client = new SnapshotEFClient();
+            using var context = new HestiaContext(Options);
+            var client = new SnapshotEFClient(context);
 
-            Action act = () => client.GetSnapshotById(string.Empty);
+            client.GetFileDetails(SeededFileId, SeededSnapshotId)
+                  .Match(x => x, () => null)
+                  ?.Id.Should()
+                  .Be(SeededFileId);
+        }
 
-            act.Should()
-               .Throw<NotImplementedException>();
+        private void SeedDb()
+        {
+            using var context = new HestiaContext(Options);
+            context.Database.EnsureDeleted();
+            context.Database.EnsureCreated();
+            context.Snapshots.Add(SeededRepo);
+
+            context.SaveChanges();
         }
     }
 }

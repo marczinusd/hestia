@@ -3,7 +3,7 @@
     public interface IFileHeader
     {
         string Id { get; }
-        
+
         string Path { get; }
 
         decimal CoveragePercentage { get; }

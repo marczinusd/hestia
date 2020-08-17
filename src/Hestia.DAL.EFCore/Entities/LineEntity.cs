@@ -1,23 +1,31 @@
-﻿using Hestia.DAL.Interfaces;
+﻿using JetBrains.Annotations;
 
 namespace Hestia.DAL.EFCore.Entities
 {
-    public class LineEntity : ISourceLineEntity
+    public class LineEntity
     {
-        public LineEntity(string content, bool isCovered, int numberOfAuthors, int numberOfChanges)
+        [UsedImplicitly]
+        public LineEntity()
+        {
+        }
+
+        public LineEntity(string content, bool isCovered, int numberOfAuthors, int numberOfChanges, string id)
         {
             Content = content;
             IsCovered = isCovered;
             NumberOfAuthors = numberOfAuthors;
             NumberOfChanges = numberOfChanges;
+            Id = id;
         }
 
-        public string Content { get; }
+        public string Id { get; set; }
 
-        public bool IsCovered { get; }
+        public string Content { get; set; }
 
-        public int NumberOfAuthors { get; }
+        public bool IsCovered { get; set; }
 
-        public int NumberOfChanges { get; }
+        public int NumberOfAuthors { get; set; }
+
+        public int NumberOfChanges { get; set; }
     }
 }

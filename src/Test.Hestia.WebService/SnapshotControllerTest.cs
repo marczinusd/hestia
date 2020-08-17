@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
+using Hestia.DAL.EFCore.Adapters;
 using Hestia.DAL.EFCore.Entities;
 using Hestia.DAL.Interfaces;
 using Hestia.WebService.Controllers;
@@ -18,14 +19,14 @@ namespace Test.Hestia.WebService
         private const string SnapshotId = "snapshotId";
         private const string FileId = "fileId";
 
-        private static IRepositorySnapshotEntity snapshotEntity =
-            new RepositorySnapshotEntity(new IFileEntity[]
+        private static RepositorySnapshotEntity snapshotEntity =
+            new RepositorySnapshotEntity(new[]
                                          {
                                              new FileEntity(string.Empty,
                                                             1,
                                                             2,
                                                             3,
-                                                            new List<ISourceLineEntity>(),
+                                                            new List<LineEntity>(),
                                                             "id"),
                                          },
                                          "hash",
@@ -50,7 +51,7 @@ namespace Test.Hestia.WebService
         {
             var snapshotRetrieval = new Mock<ISnapshotRetrieval>();
             snapshotRetrieval.Setup(mock => mock.GetSnapshotById(It.IsAny<string>()))
-                             .Returns(Some(snapshotEntity));
+                             .Returns(Some(snapshotEntity.AsModel()));
             var controller = new SnapshotsController(snapshotRetrieval.Object,
                                                      Mock.Of<IFileRetrieval>());
 
@@ -84,7 +85,7 @@ namespace Test.Hestia.WebService
             var controller = new SnapshotsController(snapshotRetrieval.Object,
                                                      Mock.Of<IFileRetrieval>());
             snapshotRetrieval.Setup(mock => mock.GetSnapshotById(It.IsAny<string>()))
-                             .Returns(Some(snapshotEntity));
+                             .Returns(Some(snapshotEntity.AsModel()));
 
             var result = controller.GetAllFileHeaders(SnapshotId);
 
@@ -116,7 +117,7 @@ namespace Test.Hestia.WebService
             var controller = new SnapshotsController(Mock.Of<ISnapshotRetrieval>(),
                                                      fileRetrieval.Object);
             fileRetrieval.Setup(mock => mock.GetFileDetails(It.IsAny<string>(), It.IsAny<string>()))
-                         .Returns(Some(snapshotEntity.Files.First()));
+                         .Returns(Some(snapshotEntity.Files.First().AsModel()));
 
             var result = controller.GetFileDetailsById(SnapshotId, FileId);
 
@@ -124,9 +125,9 @@ namespace Test.Hestia.WebService
                   .Should()
                   .BeOfType<OkObjectResult>();
             result.Result.As<OkObjectResult>()
-                  .Value.As<IFileEntity>()
+                  .Value.As<IFileEntity>().Id
                   .Should()
-                  .Be(snapshotEntity.Files.First());
+                  .Be(snapshotEntity.Files.First().Id);
         }
 
         [Fact]
