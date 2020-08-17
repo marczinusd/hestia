@@ -1,13 +1,10 @@
-﻿namespace Hestia.DAL.Interfaces
+﻿using System.Collections.Generic;
+using Hestia.Model.Interfaces;
+
+namespace Hestia.DAL.Interfaces
 {
-    public interface IFileEntity
+    public interface IFileEntity : IFileHeader
     {
-        string Path { get; }
-
-        int LifetimeChanges { get; }
-
-        int LifetimeAuthors { get; }
-
-        decimal CoveragePercentage { get; }
+        List<ISourceLineEntity> Lines { get; }
     }
 }

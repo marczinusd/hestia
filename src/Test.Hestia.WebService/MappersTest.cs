@@ -1,5 +1,7 @@
-﻿using FluentAssertions;
+﻿using System.Collections.Generic;
+using FluentAssertions;
 using Hestia.DAL.EFCore.Entities;
+using Hestia.DAL.Interfaces;
 using Hestia.WebService.Helpers;
 using Xunit;
 
@@ -13,7 +15,8 @@ namespace Test.Hestia.WebService
             var entity = new FileEntity("path",
                                         1,
                                         2,
-                                        3);
+                                        3,
+                                        new List<ISourceLineEntity>() { new LineEntity("bla", true, 2, 3) });
 
             var result = Mappers.EntityAsHeader(entity);
 

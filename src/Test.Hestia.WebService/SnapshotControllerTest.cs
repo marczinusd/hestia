@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using Hestia.DAL.EFCore.Entities;
@@ -23,7 +24,8 @@ namespace Test.Hestia.WebService
                                              new FileEntity(string.Empty,
                                                             1,
                                                             2,
-                                                            3),
+                                                            3,
+                                                            new List<ISourceLineEntity>()),
                                          },
                                          "hash",
                                          DateTime.MinValue);

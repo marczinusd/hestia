@@ -10,11 +10,23 @@ namespace Hestia.DAL.EFCore.Entities
             new FileEntity(file.FullPath,
                            file.LifetimeChanges,
                            file.LifetimeAuthors,
-                           file.CoveragePercentage);
+                           file.CoveragePercentage,
+                           file.Content
+                               .Select(AsEntity)
+                               .ToList());
 
         public static IRepositorySnapshotEntity AsEntity(this IRepositorySnapshot snapshot) =>
             new RepositorySnapshotEntity(snapshot.Files.Select(f => f.AsEntity()),
                                          snapshot.AtHash.Match(x => x, string.Empty),
                                          snapshot.CommitCreationDate.Match(x => x, null));
+
+        public static ISourceLineEntity AsEntity(this ISourceLine line) =>
+            new LineEntity(line.Text,
+                           line.LineCoverageStats.Match(x => x.IsCovered,
+                                                        () => false),
+                           line.LineGitStats.Match(x => x.NumberOfLifetimeAuthors,
+                                                   () => 0),
+                           line.LineGitStats.Match(x => x.ModifiedInNumberOfCommits,
+                                                   () => 0));
     }
 }
