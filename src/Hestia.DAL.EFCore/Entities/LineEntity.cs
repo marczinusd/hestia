@@ -27,5 +27,7 @@ namespace Hestia.DAL.EFCore.Entities
         public int NumberOfAuthors { get; set; }
 
         public int NumberOfChanges { get; set; }
+
+        public virtual FileEntity Parent { get; set; }
     }
 }

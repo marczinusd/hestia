@@ -23,7 +23,7 @@ namespace Test.Hestia.DAL.EFCore
                                1,
                                2,
                                100,
-                               new List<LineEntity>()
+                               new List<LineEntity>
                                {
                                    new LineEntity("blabla",
                                                   true,
@@ -45,7 +45,6 @@ namespace Test.Hestia.DAL.EFCore
                                    "hash",
                                    DateTime.MinValue,
                                    "somename");
-
 
         public SnapshotEFClientTest() => SeedDb();
 

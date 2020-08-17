@@ -20,10 +20,14 @@ namespace Hestia.DAL.EFCore
             _dbContext = dbContext;
         }
 
-        public IEnumerable<ISnapshotHeader> GetAllSnapshotsHeaders() => _dbContext.Snapshots.Select(s => new RepositorySnapshotEntityAdapter(s)).ToList();
+        public IEnumerable<ISnapshotHeader> GetAllSnapshotsHeaders() => _dbContext.Snapshots
+            .Select(s => new RepositorySnapshotEntityAdapter(s))
+            .ToList();
 
         public Option<IRepositorySnapshotEntity> GetSnapshotById(string id) =>
-            _dbContext.Snapshots.SingleOrDefault(s => s.Id == id) is { } entity ? Some<IRepositorySnapshotEntity>(new RepositorySnapshotEntityAdapter(entity)) : None;
+            _dbContext.Snapshots.SingleOrDefault(s => s.Id == id) is { } entity
+                ? Some<IRepositorySnapshotEntity>(new RepositorySnapshotEntityAdapter(entity))
+                : None;
 
         public IObservable<Unit> InsertSnapshot(IRepositorySnapshot snapshot)
         {
@@ -33,13 +37,10 @@ namespace Hestia.DAL.EFCore
                              .Select(x => Unit.Default);
         }
 
-        public Option<IFileEntity> GetFileDetails(string fileId, string snapshotId)
-        {
-            var file = _dbContext.Snapshots.SingleOrDefault(s => s.Id == snapshotId)
-                                 ?.Files.SingleOrDefault(f => f.Id == fileId);
-
-            return file != null ? Some<IFileEntity>(new FileEntityAdapter(file)) : None;
-        }
+        public Option<IFileEntity> GetFileDetails(string fileId, string snapshotId) =>
+            _dbContext.Files.FirstOrDefault(f => f.Id == fileId && f.Parent.Id == snapshotId) is { } result
+                ? Some<IFileEntity>(new FileEntityAdapter(result))
+                : None;
 
         public void Dispose() => _dbContext?.Dispose();
     }

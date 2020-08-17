@@ -36,5 +36,7 @@ namespace Hestia.DAL.EFCore.Entities
         public decimal CoveragePercentage { get; set; }
 
         public List<LineEntity> Lines { get; set; }
+
+        public RepositorySnapshotEntity Parent { get; set; }
     }
 }
