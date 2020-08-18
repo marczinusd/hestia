@@ -48,7 +48,7 @@ namespace Test.Hestia.DAL.EFCore
 
         public SnapshotEFClientTest() => SeedDb();
 
-        private DbContextOptions<HestiaContext> Options =>
+        private static DbContextOptions<HestiaContext> Options =>
             new DbContextOptionsBuilder<HestiaContext>()
                 .UseSqlite("Data Source=hestia.test.db")
                 .Options;
