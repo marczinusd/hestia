@@ -182,6 +182,40 @@ namespace Test.Hestia.Model.Stats
         }
 
         [Fact]
+        public void OptionIsNoneShouldBeThrownIfInvalidCoveragePathWasProvided()
+        {
+            var lineCoverages = new List<(int lineNumber, int hitCount)> { (1, 1), (5, 1) };
+            var fixture = new Fixture();
+            var coverageFactory = new Mock<ICoverageProviderFactory>();
+            var coverageProvider = new Mock<ICoverageProvider>();
+            var converter = new Mock<ICoverageReportConverter>();
+            coverageFactory.Setup(mock => mock.CreateProviderForFile(It.IsAny<string>()))
+                           .Returns(coverageProvider.Object);
+            coverageProvider.Setup(mock => mock.ParseFileCoveragesFromFilePath(It.IsAny<string>()))
+                            .Returns(new[]
+                            {
+                                new FileCoverage(Path.GetFileName(MockRepo.FirstIncludedFilePath) ?? string.Empty,
+                                                 lineCoverages)
+                            });
+            converter.Setup(mock => mock.Convert(It.IsAny<string>(), It.IsAny<string>()))
+                     .Returns(Option<string>.None);
+            var ioMock = MockRepo.CreateDiskIOWrapperMock();
+            fixture.Register(() => ioMock.Object);
+            fixture.Register(() => coverageFactory.Object);
+            fixture.Register(() => converter.Object);
+            fixture.Customize(new AutoMoqCustomization { ConfigureMembers = true });
+            var enricher = fixture.Create<StatsEnricher>();
+
+            Action act = () => enricher.EnrichWithCoverage(MockRepo.CreateSnapshot(new[] { ".cs" },
+                                                                   string.Empty,
+                                                                   ioMock.Object,
+                                                                   Mock.Of<IPathValidator>()));
+
+            act.Should()
+               .Throw<OptionIsNoneException>();
+        }
+
+        [Fact]
         public void EnrichOnRepositoryCreatesEnrichedSnapshotsCorrectly()
         {
             var args = new RepositoryStatsEnricherArguments("bla",
@@ -210,7 +244,7 @@ namespace Test.Hestia.Model.Stats
                                                       Option<string>.None),
                                        args);
 
-            var snapshots = repo.Snapshots.Match(x => x, Array.Empty<IRepositorySnapshot>());
+            var snapshots = repo.Snapshots.Match(x => x, () => Array.Empty<IRepositorySnapshot>());
 
             // verify behavior
             gitCommandsMock.Verify(mock => mock.Checkout(It.IsAny<string>(), It.IsAny<string>()), Times.Exactly(5));

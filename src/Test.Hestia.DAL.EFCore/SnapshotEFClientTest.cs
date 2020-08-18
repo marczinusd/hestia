@@ -70,6 +70,9 @@ namespace Test.Hestia.DAL.EFCore
                    .Name
                    .Should()
                    .Be("somename");
+            context.SourceLines
+                   .Should()
+                   .HaveCount(1);
         }
 
         [Fact]

@@ -113,9 +113,7 @@ namespace Hestia.Model.Stats
         {
             var path = repositorySnapshot.PathToCoverageResultFile.Some(x => x)
                                          .None(() => string.Empty);
-            var result = _converter.Convert(path,
-                                            Path.GetDirectoryName(path) ??
-                                            throw new DirectoryNotFoundException($"Invalid path provided: {path}"));
+            var result = _converter.Convert(path, Path.GetDirectoryName(path)!);
 
             return repositorySnapshot.With(pathToCoverageResultFile: result.Some(x => x)
                                                                            .None(() => path));
