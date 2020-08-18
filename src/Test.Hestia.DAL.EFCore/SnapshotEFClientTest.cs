@@ -148,6 +148,17 @@ namespace Test.Hestia.DAL.EFCore
                    .BeTrue();
         }
 
+        [Fact]
+        public void DisposeCanBeCalledSafelyIfContextIsNull()
+        {
+            var client = new SnapshotEFClient(null);
+
+            Action act = () => client.Dispose();
+
+            act.Should()
+               .NotThrow<NullReferenceException>();
+        }
+
         private void SeedDb()
         {
             using var context = new HestiaContext(Options);

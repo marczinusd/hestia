@@ -5,7 +5,6 @@ using Hestia.DAL.EFCore.Entities;
 using Hestia.Model;
 using Hestia.Model.Interfaces;
 using Hestia.Model.Stats;
-using LanguageExt;
 using Xunit;
 using static LanguageExt.Prelude;
 

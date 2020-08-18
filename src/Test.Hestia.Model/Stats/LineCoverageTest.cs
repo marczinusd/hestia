@@ -12,6 +12,8 @@ namespace Test.Hestia.Model.Stats
             var lineCoverage1 = new LineCoverage(1, 1);
             var lineCoverage1Again = lineCoverage1;
             var lineCoverage2 = new LineCoverage(1, 1);
+            var lineCoverage3 = new LineCoverage(1, 2);
+            var lineCoverage4 = new LineCoverage(2, 1);
 
             lineCoverage1.Should()
                          .BeEquivalentTo(lineCoverage2);
@@ -26,6 +28,10 @@ namespace Test.Hestia.Model.Stats
             lineCoverage1.GetHashCode()
                          .Should()
                          .Be(lineCoverage2.GetHashCode());
+            lineCoverage3.Should()
+                         .NotBeEquivalentTo(lineCoverage1);
+            lineCoverage4.Should()
+                         .NotBeEquivalentTo(lineCoverage2);
         }
     }
 }

@@ -13,8 +13,8 @@ namespace Hestia.Model.Builders
             var fileContent = diskIoWrapper.ReadAllLinesFromFile(filePath);
 
             return new File(Path.GetFileName(filePath) ?? throw new FileBuilderException(filePath),
-                            Path.GetExtension(filePath) ?? throw new FileBuilderException(filePath),
-                            Path.GetDirectoryName(filePath) ?? throw new FileBuilderException(filePath),
+                            Path.GetExtension(filePath)!,
+                            Path.GetDirectoryName(filePath)!,
                             SourceLineBuilder.BuildSourceLineFromLineOfCode(fileContent.ToArray()),
                             Option<IFileGitStats>.None,
                             Option<IFileCoverageStats>.None);

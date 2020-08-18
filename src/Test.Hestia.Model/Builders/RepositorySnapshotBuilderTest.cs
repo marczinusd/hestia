@@ -38,5 +38,25 @@ namespace Test.Hestia.Model.Builders
                     .Should()
                     .Be(default);
         }
+
+        [Fact]
+        public void AllFilesShouldBeIncludedIfNoSourceExtensionIsProided()
+        {
+            var args = new RepositorySnapshotBuilderArguments(string.Empty,
+                                                              DirPath,
+                                                              "src",
+                                                              new string[0],
+                                                              "lcov.info",
+                                                              "hash",
+                                                              default(DateTime),
+                                                              MockRepo.CreateDiskIOWrapperMock()
+                                                                      .Object,
+                                                              Mock.Of<IPathValidator>());
+
+            var snapshot = args.Build();
+
+            snapshot.Files.Should()
+                    .HaveCount(4);
+        }
     }
 }
