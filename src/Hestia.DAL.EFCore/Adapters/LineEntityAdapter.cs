@@ -16,5 +16,7 @@ namespace Hestia.DAL.EFCore.Adapters
         public int NumberOfAuthors => _entity.NumberOfAuthors;
 
         public int NumberOfChanges => _entity.NumberOfChanges;
+
+        public int LineNumber => _entity.LineNumber;
     }
 }

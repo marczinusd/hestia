@@ -31,6 +31,7 @@ namespace Hestia.DAL.EFCore.Entities
                                                    () => 0),
                            line.LineGitStats.Match(x => x.ModifiedInNumberOfCommits,
                                                    () => 0),
-                           null);
+                           null,
+                           line.LineNumber);
     }
 }

@@ -6,20 +6,24 @@ namespace Hestia.DAL.EFCore.Entities
     public class LineEntity
     {
         [UsedImplicitly]
-        public LineEntity()
+        public LineEntity(int lineNumber)
         {
+            LineNumber = lineNumber;
         }
 
-        public LineEntity(string content, bool isCovered, int numberOfAuthors, int numberOfChanges, string id)
+        public LineEntity(string content, bool isCovered, int numberOfAuthors, int numberOfChanges, string id, int lineNumber)
         {
             Content = content;
             IsCovered = isCovered;
             NumberOfAuthors = numberOfAuthors;
             NumberOfChanges = numberOfChanges;
             Id = id;
+            LineNumber = lineNumber;
         }
 
         [UsedImplicitly] public string Id { get; set; }
+
+        [UsedImplicitly] public int LineNumber { get; set; }
 
         [UsedImplicitly] public string Content { get; set; }
 

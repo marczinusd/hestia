@@ -9,5 +9,7 @@
         int NumberOfAuthors { get; }
 
         int NumberOfChanges { get; }
+
+        int LineNumber { get; }
     }
 }

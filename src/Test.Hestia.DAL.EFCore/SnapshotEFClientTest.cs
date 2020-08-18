@@ -29,7 +29,8 @@ namespace Test.Hestia.DAL.EFCore
                                                   true,
                                                   1,
                                                   2,
-                                                  "id")
+                                                  "id",
+                                                  1)
                                },
                                SeededFileId)
             },

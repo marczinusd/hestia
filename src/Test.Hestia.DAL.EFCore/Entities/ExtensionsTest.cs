@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using FluentAssertions;
 using Hestia.DAL.EFCore.Entities;
 using Hestia.Model;
@@ -14,54 +13,83 @@ namespace Test.Hestia.DAL.EFCore.Entities
 {
     public class ExtensionsTest
     {
+        private static readonly SourceLine Line = new SourceLine(1,
+                                                                 "bla",
+                                                                 new LineCoverageStats(true),
+                                                                 new LineGitStats(1, 2, 3));
+
+        private static readonly File File = new File("filename",
+                                                     "ext",
+                                                     "path",
+                                                     new List<ISourceLine> { Line },
+                                                     new FileGitStats(1, 2),
+                                                     new FileCoverageStats(new FileCoverage("path", new[] { (1, 1) })));
+
+        private static readonly RepositorySnapshot Snapshot = new RepositorySnapshot("id",
+            new List<IFile> { File },
+            Option<string>.None,
+            Some("hash"),
+            Some(DateTime.MinValue),
+            Some("name"));
+
         [Fact]
         public void FileIsCorrectlyMappedToEntityTest()
         {
-            var file = new File("filename",
-                                "ext",
-                                "path",
-                                Enumerable.Empty<ISourceLine>()
-                                          .ToList(),
-                                new FileGitStats(1, 2),
-                                new FileCoverageStats(new FileCoverage("path", new[] { (1, 1) })));
-
-            var entity = file.AsEntity();
+            var entity = File.AsEntity();
 
             entity.Path
                   .Should()
-                  .Be(file.FullPath);
+                  .Be(File.FullPath);
             entity.LifetimeAuthors
                   .Should()
-                  .Be(file.LifetimeAuthors);
+                  .Be(File.LifetimeAuthors);
             entity.LifetimeChanges
                   .Should()
-                  .Be(file.LifetimeChanges);
+                  .Be(File.LifetimeChanges);
             entity.CoveragePercentage
                   .Should()
-                  .Be(file.CoveragePercentage);
+                  .Be(File.CoveragePercentage);
+            entity.Id.Should()
+                  .BeNull();
+            entity.Lines.Should()
+                  .HaveCount(1);
+            entity.Parent.Should()
+                  .BeNull();
         }
 
         [Fact]
         public void RepositorySnapshotIsCorrectlyMappedToEntityTest()
         {
-            var snapshot = new RepositorySnapshot("id",
-                                                  new List<IFile>(),
-                                                  Option<string>.None,
-                                                  Some("hash"),
-                                                  Some(DateTime.MinValue),
-                                                  Some("name"));
-
-            var entity = snapshot.AsEntity();
+            var entity = Snapshot.AsEntity();
 
             entity.Files
                   .Should()
-                  .HaveCount(snapshot.Files.Count);
+                  .HaveCount(Snapshot.Files.Count);
             entity.AtHash
                   .Should()
-                  .Be(snapshot.AtHash.Match(x => x, string.Empty));
+                  .Be(Snapshot.AtHash.Match(x => x, string.Empty));
             entity.CommitDate
                   .Should()
-                  .Be(snapshot.CommitCreationDate.Match(x => x, DateTime.MaxValue));
+                  .Be(Snapshot.CommitCreationDate.Match(x => x, DateTime.MaxValue));
+        }
+
+        [Fact]
+        public void LineIsCorrectlyMappedToEntity()
+        {
+            var entity = Line.AsEntity();
+
+            entity.Content.Should()
+                  .Be("bla");
+            entity.LineNumber.Should()
+                  .Be(1);
+            entity.Parent.Should()
+                  .BeNull();
+            entity.IsCovered.Should()
+                  .BeTrue();
+            entity.NumberOfAuthors.Should()
+                  .Be(3);
+            entity.NumberOfChanges.Should()
+                  .Be(2);
         }
     }
 }
