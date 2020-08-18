@@ -18,6 +18,11 @@ namespace Test.Hestia.DAL.EFCore.Entities
                                                                  new LineCoverageStats(true),
                                                                  new LineGitStats(1, 2, 3));
 
+        private static readonly SourceLine LineWithNones = new SourceLine(1,
+                                                                          "bla",
+                                                                          None,
+                                                                          None);
+
         private static readonly File File = new File("filename",
                                                      "ext",
                                                      "path",
@@ -27,10 +32,24 @@ namespace Test.Hestia.DAL.EFCore.Entities
 
         private static readonly RepositorySnapshot Snapshot = new RepositorySnapshot("id",
             new List<IFile> { File },
-            Option<string>.None,
+            Some("path"),
             Some("hash"),
             Some(DateTime.MinValue),
             Some("name"));
+
+        private static readonly File FileWithNones = new File("filename",
+                                                              "ext",
+                                                              "path",
+                                                              new List<ISourceLine> { LineWithNones },
+                                                              None,
+                                                              None);
+
+        private static readonly RepositorySnapshot SnapshotWithNones = new RepositorySnapshot("id",
+            new List<IFile> { FileWithNones },
+            None,
+            None,
+            None,
+            None);
 
         [Fact]
         public void FileIsCorrectlyMappedToEntityTest()
@@ -58,6 +77,31 @@ namespace Test.Hestia.DAL.EFCore.Entities
         }
 
         [Fact]
+        public void FileWithNonesIsCorrectlyMappedToEntityTest()
+        {
+            var entity = FileWithNones.AsEntity();
+
+            entity.Path
+                  .Should()
+                  .Be(File.FullPath);
+            entity.LifetimeAuthors
+                  .Should()
+                  .Be(-1);
+            entity.LifetimeChanges
+                  .Should()
+                  .Be(-1);
+            entity.CoveragePercentage
+                  .Should()
+                  .Be(-1m);
+            entity.Id.Should()
+                  .BeNull();
+            entity.Lines.Should()
+                  .HaveCount(1);
+            entity.Parent.Should()
+                  .BeNull();
+        }
+
+        [Fact]
         public void RepositorySnapshotIsCorrectlyMappedToEntityTest()
         {
             var entity = Snapshot.AsEntity();
@@ -71,6 +115,22 @@ namespace Test.Hestia.DAL.EFCore.Entities
             entity.CommitDate
                   .Should()
                   .Be(Snapshot.CommitCreationDate.Match(x => x, DateTime.MaxValue));
+        }
+
+        [Fact]
+        public void RepositorySnapshotWithNonesIsCorrectlyMappedToEntityTest()
+        {
+            var entity = SnapshotWithNones.AsEntity();
+
+            entity.Files
+                  .Should()
+                  .HaveCount(Snapshot.Files.Count);
+            entity.AtHash
+                  .Should()
+                  .BeEmpty();
+            entity.CommitDate
+                  .Should()
+                  .Be(DateTime.MinValue);
         }
 
         [Fact]
@@ -90,6 +150,33 @@ namespace Test.Hestia.DAL.EFCore.Entities
                   .Be(3);
             entity.NumberOfChanges.Should()
                   .Be(2);
+            entity.Id.Should()
+                  .BeNull();
+            entity.Parent.Should()
+                  .BeNull();
+        }
+
+        [Fact]
+        public void LineWithNonesIsCorrectlyMappedToEntity()
+        {
+            var entity = LineWithNones.AsEntity();
+
+            entity.Content.Should()
+                  .Be("bla");
+            entity.LineNumber.Should()
+                  .Be(1);
+            entity.Parent.Should()
+                  .BeNull();
+            entity.IsCovered.Should()
+                  .BeFalse();
+            entity.NumberOfAuthors.Should()
+                  .Be(0);
+            entity.NumberOfChanges.Should()
+                  .Be(0);
+            entity.Id.Should()
+                  .BeNull();
+            entity.Parent.Should()
+                  .BeNull();
         }
     }
 }
