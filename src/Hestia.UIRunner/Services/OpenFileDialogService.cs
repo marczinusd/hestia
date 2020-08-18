@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using LanguageExt;
 
 namespace Hestia.UIRunner.Services
 {
@@ -13,11 +15,11 @@ namespace Hestia.UIRunner.Services
 
         public OpenFileDialogService(Func<Window> window) => _window = window;
 
-        public async Task<string[]> OpenFileDialog()
+        public async Task<string> OpenFileDialog()
         {
             var dialog = new OpenFileDialog { AllowMultiple = false };
 
-            return await dialog.ShowAsync(_window());
+            return await dialog.ShowAsync(_window()).Select(x => x.First());
         }
 
         public async Task<string> OpenFolderDialog()

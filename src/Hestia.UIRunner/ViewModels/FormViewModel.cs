@@ -63,15 +63,13 @@ namespace Hestia.UIRunner.ViewModels
                 ReactiveCommand.CreateFromTask<Unit, string>(_ => fileDialogService.OpenFolderDialog());
 
             OpenFileDialogCommand =
-                ReactiveCommand.CreateFromTask<Unit, string[]>(_ => fileDialogService.OpenFileDialog());
+                ReactiveCommand.CreateFromTask<Unit, string>(_ => fileDialogService.OpenFileDialog());
 
             OpenFileDialogCommand.AsObservable()
-                                 .Subscribe(result => CoverageOutputLocation =
-                                                          result.Any() ? result.Single() : CoverageOutputLocation);
+                                 .Subscribe(result => CoverageOutputLocation = result);
 
             OpenFolderDialogCommand.AsObservable()
-                                   .Subscribe(result => RepositoryPath =
-                                                            string.IsNullOrEmpty(result) ? RepositoryPath : result);
+                                   .Subscribe(result => RepositoryPath = result);
         }
 
         [Reactive] public string RepositoryPath { get; set; }
@@ -90,7 +88,7 @@ namespace Hestia.UIRunner.ViewModels
 
         public ReactiveCommand<Unit, string> OpenFolderDialogCommand { get; set; }
 
-        public ReactiveCommand<Unit, string[]> OpenFileDialogCommand { get; set; }
+        public ReactiveCommand<Unit, string> OpenFileDialogCommand { get; set; }
 
         public IObservable<IRepositorySnapshot> RepositoryCreationObservable => ProcessRepositoryCommand.AsObservable();
 
@@ -122,9 +120,9 @@ namespace Hestia.UIRunner.ViewModels
         {
             var newPath = _reportConverter
                           .Convert(CoverageOutputLocation,
-                                   Path.GetDirectoryName(CoverageOutputLocation) ??
-                                   throw new ArgumentException(nameof(CoverageOutputLocation)))
-                          .Match(val => val, () => null);
+                                   Path.GetDirectoryName(CoverageOutputLocation)!)
+                          .Some(x => x)
+                          .None(() => null);
 
             return snapshot.With(pathToCoverageResultFile: newPath);
         }

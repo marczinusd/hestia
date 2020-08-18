@@ -219,7 +219,7 @@ namespace Test.Hestia.UIRunner.ViewModel
             var scheduler = new TestScheduler();
             var fileDialogServiceMock = new Mock<IOpenFileDialogService>();
             fileDialogServiceMock.Setup(mock => mock.OpenFileDialog())
-                                 .Returns(Task.FromResult(new[] { "path" }));
+                                 .Returns(Task.FromResult("path"));
             var vm = new FormViewModel(Mock.Of<IDiskIOWrapper>(),
                                        Mock.Of<IStatsEnricher>(),
                                        Mock.Of<IPathValidator>(),
