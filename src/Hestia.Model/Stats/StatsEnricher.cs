@@ -113,22 +113,12 @@ namespace Hestia.Model.Stats
         {
             var path = repositorySnapshot.PathToCoverageResultFile.Some(x => x)
                                          .None(() => string.Empty);
-            if (path.ToLower()
-                    .Contains("coverage.json"))
-            {
-                return repositorySnapshot;
-            }
-
             var result = _converter.Convert(path,
                                             Path.GetDirectoryName(path) ??
                                             throw new DirectoryNotFoundException($"Invalid path provided: {path}"));
-            if (result.IsSome)
-            {
-                return repositorySnapshot.With(pathToCoverageResultFile: result.Some(x => x)
-                                                                               .None(string.Empty));
-            }
 
-            return repositorySnapshot;
+            return repositorySnapshot.With(pathToCoverageResultFile: result.Some(x => x)
+                                                                           .None(() => path));
         }
 
         private IEnumerable<IFile> EnrichWithCoverage(IEnumerable<IFile> files, IEnumerable<IFileCoverage> coverages) =>
