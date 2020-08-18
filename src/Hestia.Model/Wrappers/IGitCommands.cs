@@ -9,7 +9,7 @@ namespace Hestia.Model.Wrappers
 
         IEnumerable<int> NumberOfChangesForEachLine(string filePath, int lineCount);
 
-        int NumberOfDifferentAuthorsForFile(string filepath);
+        int NumberOfDifferentAuthorsForFile(string filePath);
 
         int NumberOfDifferentAuthorForLine(string filePath, int lineNumber);
 

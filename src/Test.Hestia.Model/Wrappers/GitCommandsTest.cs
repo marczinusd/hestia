@@ -31,6 +31,61 @@ namespace Test.Hestia.Model.Wrappers
         }
 
         [Fact]
+        public void NumberOfChangesForFileThrowsArgumentExceptionIfFilePathIsInvalid()
+        {
+            var gitCommands = new GitCommands(Mock.Of<ICommandLineExecutor>());
+
+            Action act = () => gitCommands.NumberOfChangesForFile(string.Empty);
+
+            act.Should()
+               .Throw<ArgumentException>();
+        }
+
+        [Fact]
+        public void NumberOfDifferentAuthorForLineThrowsArgumentExceptionIfFilePathIsInvalid()
+        {
+            var gitCommands = new GitCommands(Mock.Of<ICommandLineExecutor>());
+
+            Action act = () => gitCommands.NumberOfDifferentAuthorForLine(string.Empty, 1);
+
+            act.Should()
+               .Throw<ArgumentException>();
+        }
+
+        [Fact]
+        public void NumberOfDifferentAuthorsForFileThrowsArgumentExceptionIfFilePathIsInvalid()
+        {
+            var gitCommands = new GitCommands(Mock.Of<ICommandLineExecutor>());
+
+            Action act = () => gitCommands.NumberOfDifferentAuthorsForFile(string.Empty);
+
+            act.Should()
+               .Throw<ArgumentException>();
+        }
+
+        [Fact]
+        public void NumberOfDifferentAuthorsAndChangesForLineThrowsArgumentExceptionIfFilePathIsInvalid()
+        {
+            var gitCommands = new GitCommands(Mock.Of<ICommandLineExecutor>());
+
+            Action act = () => gitCommands.NumberOfDifferentAuthorsAndChangesForLine(string.Empty, 3);
+
+            act.Should()
+               .Throw<ArgumentException>();
+        }
+
+        [Fact]
+        public void NumberOfChangesForLineThrowsArgumentExceptionIfFilePathIsInvalid()
+        {
+            var gitCommands = new GitCommands(Mock.Of<ICommandLineExecutor>());
+
+            Action act = () => gitCommands.NumberOfChangesForLine(string.Empty, 2);
+
+            act.Should()
+               .Throw<ArgumentException>();
+        }
+
+        [Fact]
         public void SingleLineHistoryTest()
         {
             var lineHistory = Helpers.LoadResource(Paths.GitLineLogOutput, typeof(GitCommandsTest).Assembly);

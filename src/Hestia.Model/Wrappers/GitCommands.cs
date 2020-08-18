@@ -23,7 +23,8 @@ namespace Hestia.Model.Wrappers
 
         public int NumberOfChangesForFile(string filePath)
         {
-            var result = Exec(OnelineFileHistory(filePath), Path.GetDirectoryName(filePath) ?? string.Empty);
+            var result = Exec(OnelineFileHistory(filePath),
+                              Path.GetDirectoryName(filePath) ?? throw new ArgumentException(filePath));
             return result.Length;
         }
 
@@ -31,14 +32,16 @@ namespace Hestia.Model.Wrappers
             Enumerable.Range(1, lineCount)
                       .Select(lineNumber => NumberOfChangesForLine(filePath, lineNumber));
 
-        public int NumberOfDifferentAuthorsForFile(string filepath) =>
-            ParseShortLogForUniqueAuthors(Exec(AuthorsForFileCommand(filepath),
-                                               Path.GetDirectoryName(filepath) ?? string.Empty));
+        public int NumberOfDifferentAuthorsForFile(string filePath) =>
+            ParseShortLogForUniqueAuthors(Exec(AuthorsForFileCommand(filePath),
+                                               Path.GetDirectoryName(filePath) ??
+                                               throw new ArgumentException(filePath)));
 
         public int NumberOfDifferentAuthorForLine(string filePath, int lineNumber) =>
             ParseNumberOfUniqueAuthorsFromGitHistory(Exec(LineHistoryCommand(filePath,
                                                                              lineNumber),
-                                                          Path.GetDirectoryName(filePath) ?? string.Empty));
+                                                          Path.GetDirectoryName(filePath) ??
+                                                          throw new ArgumentException(filePath)));
 
         public DateTime DateOfLatestCommitOnBranch(string repoPath) =>
             DateTime.ParseExact(Exec(LatestCommitDateCommand, repoPath)
@@ -77,15 +80,19 @@ namespace Hestia.Model.Wrappers
         public IEnumerable<(int lineNumber, int numberOfAuthors, int numberOfCommits)>
             NumberOfDifferentAuthorsAndChangesForLine(
                 string filePath,
-                int lineCount) =>
-            Enumerable.Range(1, lineCount)
-                      .Select(line =>
-                                  (line,
-                                   Exec(LineHistoryCommand(filePath, line),
-                                        Path.GetDirectoryName(filePath) ?? string.Empty)))
-                      .Select(tuple => (tuple.line,
-                                        ParseLineHistoryForNumberOfChanges(tuple.Item2),
-                                        ParseNumberOfUniqueAuthorsFromGitHistory(tuple.Item2)));
+                int lineCount)
+        {
+            var path = Path.GetDirectoryName(filePath) ?? throw new ArgumentException(filePath);
+
+            return Enumerable.Range(1, lineCount)
+                             .Select(line =>
+                                         (line,
+                                          Exec(LineHistoryCommand(filePath, line),
+                                               path)))
+                             .Select(tuple => (tuple.line,
+                                               ParseLineHistoryForNumberOfChanges(tuple.Item2),
+                                               ParseNumberOfUniqueAuthorsFromGitHistory(tuple.Item2)));
+        }
 
         public string GetHashForNthCommit(string repoPath, int commitNumber)
         {
@@ -103,7 +110,8 @@ namespace Hestia.Model.Wrappers
 
         public int NumberOfChangesForLine(string filePath, int lineNumber) =>
             ParseLineHistoryForNumberOfChanges(Exec(LineHistoryCommand(filePath, lineNumber),
-                                                    Path.GetDirectoryName(filePath) ?? string.Empty));
+                                                    Path.GetDirectoryName(filePath) ??
+                                                    throw new ArgumentException(filePath)));
 
         private static string OnelineFileHistory(string filepath) =>
             $"log --pretty=oneline {filepath}";
@@ -136,7 +144,7 @@ namespace Hestia.Model.Wrappers
             commandOutput.Select(line => Regex.Match(line, AuthorPattern)
                                               .Captures.FirstOrDefault())
                          .Where(capture => capture != null && !string.IsNullOrWhiteSpace(capture.Value))
-                         .Select(capture => capture.Value)
+                         .Select(capture => capture?.Value)
                          .Distinct()
                          .Count();
 
