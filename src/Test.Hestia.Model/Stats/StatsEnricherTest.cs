@@ -207,9 +207,9 @@ namespace Test.Hestia.Model.Stats
             var enricher = fixture.Create<StatsEnricher>();
 
             Action act = () => enricher.EnrichWithCoverage(MockRepo.CreateSnapshot(new[] { ".cs" },
-                                                                   string.Empty,
-                                                                   ioMock.Object,
-                                                                   Mock.Of<IPathValidator>()));
+                                                               string.Empty,
+                                                               ioMock.Object,
+                                                               Mock.Of<IPathValidator>()));
 
             act.Should()
                .Throw<OptionIsNoneException>();
@@ -264,6 +264,48 @@ namespace Test.Hestia.Model.Stats
                                      "25",
                                      "37",
                                      "50");
+        }
+
+        [Fact]
+        public void IfInvalidCoveragePathIsProvidedItShouldNotBeConverted()
+        {
+            var args = new RepositoryStatsEnricherArguments("bla",
+                                                            "src",
+                                                            new[] { ".cs" },
+                                                            "dotnet cover",
+                                                            string.Empty,
+                                                            1,
+                                                            50,
+                                                            5);
+            var fixture = new Fixture();
+            var ioMock = MockRepo.CreateDiskIOWrapperMock();
+            var gitCommandsMock = MockRepo.CreateGitCommandsMock();
+            var executorMock = new Mock<ICommandLineExecutor>();
+            var converter = new Mock<ICoverageReportConverter>();
+            converter.Setup(mock => mock.Convert(It.IsAny<string>(), It.IsAny<string>()))
+                     .Returns(Option<string>.None);
+            gitCommandsMock.Setup(mock => mock.GetHashForNthCommit(It.IsAny<string>(), It.IsAny<int>()))
+                           .Returns<string, int>((_, i) => i.ToString());
+            fixture.Register(() => ioMock.Object);
+            fixture.Register(() => gitCommandsMock.Object);
+            fixture.Register(() => executorMock.Object);
+            fixture.Register(() => converter.Object);
+            fixture.Customize(new AutoMoqCustomization { ConfigureMembers = true });
+            var enricher = fixture.Create<StatsEnricher>();
+
+            var repo = enricher.Enrich(new Repository("bla",
+                                                      Option<IRepositorySnapshot[]>.None,
+                                                      Option<string>.None,
+                                                      Option<string>.None),
+                                       args);
+
+            var snapshots = repo.Snapshots.Match(x => x, Array.Empty<IRepositorySnapshot>);
+
+            snapshots.First()
+                     .PathToCoverageResultFile.Some(x => x)
+                     .None(() => "none")
+                     .Should()
+                     .Be(string.Empty);
         }
     }
 }
