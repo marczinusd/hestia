@@ -144,7 +144,7 @@ namespace Hestia.Model.Wrappers
             commandOutput.Select(line => Regex.Match(line, AuthorPattern)
                                               .Captures.FirstOrDefault())
                          .Where(capture => capture != null && !string.IsNullOrWhiteSpace(capture.Value))
-                         .Select(capture => capture?.Value)
+                         .Select(capture => capture!.Value)
                          .Distinct()
                          .Count();
 
