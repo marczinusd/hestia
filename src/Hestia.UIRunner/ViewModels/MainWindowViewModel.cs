@@ -28,8 +28,6 @@ namespace Hestia.UIRunner.ViewModels
             FileDetailsViewModel = new FileDetailsViewModel(RepositoryViewModel.SelectedItemObservable);
         }
 
-        public string Greeting => "Hello World!";
-
         public FormViewModel FormViewModel { get; }
 
         public RepositoryViewModel RepositoryViewModel { get; }

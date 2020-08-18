@@ -84,7 +84,6 @@ namespace Test.Hestia.UIRunner.ViewModel
                                        Mock.Of<IOpenFileDialogService>(),
                                        Mock.Of<ICoverageReportConverter>())
             {
-                CoverageCommand = "bla",
                 SourceExtensions = "bla",
                 CoverageOutputLocation = "bla",
                 RepositoryPath = input
@@ -108,7 +107,6 @@ namespace Test.Hestia.UIRunner.ViewModel
                                        Mock.Of<ICoverageReportConverter>())
             {
                 RepositoryPath = "bla",
-                CoverageCommand = "bla",
                 SourceExtensions = "bla",
                 CoverageOutputLocation = input
             };
@@ -131,7 +129,6 @@ namespace Test.Hestia.UIRunner.ViewModel
                                        Mock.Of<ICoverageReportConverter>())
             {
                 RepositoryPath = "bla",
-                CoverageCommand = "bla",
                 CoverageOutputLocation = "bla",
                 SourceExtensions = input
             };
@@ -168,7 +165,6 @@ namespace Test.Hestia.UIRunner.ViewModel
                                        converterMock.Object)
             {
                 RepositoryPath = "bla",
-                CoverageCommand = "bla",
                 SourceExtensions = "bla",
                 SourceRoot = "src",
                 CoverageOutputLocation = CoverageOutputLocation
@@ -233,6 +229,51 @@ namespace Test.Hestia.UIRunner.ViewModel
             vm.CoverageOutputLocation
               .Should()
               .Be("path");
+        }
+
+        [Fact]
+        public void ViewModelEmptiesCoverageOutputPathIfConversionWasUnsuccessful()
+        {
+            var scheduler = new TestScheduler();
+            var statsEnricherMock = new Mock<IStatsEnricher>();
+            var builderMock = new Mock<IRepositorySnapshotBuilderWrapper>();
+            var converterMock = new Mock<ICoverageReportConverter>();
+            var repositorySnapshot = new RepositorySnapshot(string.Empty,
+                                                            new List<IFile>(),
+                                                            Option<string>.None,
+                                                            Option<string>.None,
+                                                            Option<DateTime>.None,
+                                                            Option<string>.None);
+            converterMock.Setup(mock => mock.Convert(It.IsAny<string>(), It.IsAny<string>()))
+                         .Returns(Option<string>.None);
+            builderMock.Setup(mock => mock.Build(It.IsAny<RepositorySnapshotBuilderArguments>()))
+                       .Returns(repositorySnapshot);
+            var vm = new FormViewModel(Mock.Of<IDiskIOWrapper>(),
+                                       statsEnricherMock.Object,
+                                       Mock.Of<IPathValidator>(),
+                                       builderMock.Object,
+                                       Mock.Of<IOpenFileDialogService>(),
+                                       converterMock.Object)
+            {
+                RepositoryPath = "bla",
+                SourceExtensions = "bla",
+                SourceRoot = "src",
+                CoverageOutputLocation = CoverageOutputLocation
+            };
+
+            scheduler.Start(() => vm.ProcessRepositoryCommand
+                                    .Execute());
+
+            Helpers.After(TimeSpan.FromMilliseconds(WaitMs),
+                          () =>
+                          {
+                              repositorySnapshot.PathToCoverageResultFile
+                                                .Match(x => x, () => "expected")
+                                                .Should()
+                                                .Be("expected");
+                              vm.IsExecuting.Should()
+                                .BeFalse();
+                          });
         }
     }
 }

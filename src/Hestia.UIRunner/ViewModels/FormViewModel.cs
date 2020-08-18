@@ -78,8 +78,6 @@ namespace Hestia.UIRunner.ViewModels
 
         [Reactive] public string SourceRoot { get; set; }
 
-        [Reactive] public string CoverageCommand { get; set; }
-
         [Reactive] public string CoverageOutputLocation { get; set; }
 
         public bool IsExecuting => _isExecuting.Value;

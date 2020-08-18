@@ -13,7 +13,7 @@ namespace Test.Hestia.UIRunner.ViewModel
     public class MainViewModelTest
     {
         [Fact]
-        public void MainViewModelShowHaveExpectedGreeting() =>
+        public void MainViewModelShouldInitializeFileDetailsViewModel() =>
             new MainWindowViewModel(new DiskIOWrapper(),
                                     Mock.Of<IStatsEnricher>(),
                                     Mock.Of<IPathValidator>(),
@@ -21,8 +21,8 @@ namespace Test.Hestia.UIRunner.ViewModel
                                     Mock.Of<IOpenFileDialogService>(),
                                     Mock.Of<ICoverageReportConverter>(),
                                     Mock.Of<ISnapshotPersistence>())
-                .Greeting
+                .FileDetailsViewModel
                 .Should()
-                .Be("Hello World!");
+                .NotBeNull();
     }
 }
