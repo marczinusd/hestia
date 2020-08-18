@@ -23,6 +23,12 @@ namespace Test.Hestia.Model
         }
 
         [Fact]
+        public void IdShouldAlwaysBeEmptyString() =>
+            MockRepo.CreateFile()
+                    .Id.Should()
+                    .BeEmpty();
+
+        [Fact]
         public void WhenShouldCreateInstanceWithProvidedParams()
         {
             var file = MockRepo.CreateFile();

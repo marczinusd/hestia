@@ -38,7 +38,8 @@ namespace Test.Hestia.Model
             var newSnapshot = snapshot.With(MockRepo.CreateFiles(3),
                                             "hash",
                                             "path",
-                                            DateTime.Today);
+                                            DateTime.Today,
+                                            "newName");
 
             newSnapshot.AtHash
                        .Match(x => x, () => string.Empty)
@@ -52,6 +53,10 @@ namespace Test.Hestia.Model
                        .Match(x => x, () => default)
                        .Should()
                        .NotBe(default);
+            newSnapshot.RepositoryName
+                       .Match(x => x, () => default)
+                       .Should()
+                       .Be("newName");
             newSnapshot.Files
                        .Should()
                        .HaveCount(3);
