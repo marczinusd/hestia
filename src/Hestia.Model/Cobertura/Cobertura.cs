@@ -6,408 +6,302 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using System;
+using System.CodeDom.Compiler;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Xml.Serialization;
 
 #nullable disable
 namespace Hestia.Model.Cobertura
 {
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("XmlSchemaClassGenerator", "2.0.349.0")]
-    [System.SerializableAttribute]
-    [System.Xml.Serialization.XmlTypeAttribute("coverage", Namespace = "", AnonymousType = true)]
-    [System.Diagnostics.DebuggerStepThroughAttribute]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlRootAttribute("coverage", Namespace = "")]
+    [GeneratedCode("XmlSchemaClassGenerator", "2.0.349.0")]
+    [Serializable]
+    [XmlType("coverage", Namespace = "", AnonymousType = true)]
+    [DebuggerStepThrough]
+    [DesignerCategory("code")]
+    [XmlRoot("coverage", Namespace = "")]
     [ExcludeFromCodeCoverage]
     public partial class Coverage
     {
-        [System.Xml.Serialization.XmlElementAttribute("sources")]
-        public Sources Sources { get; set; }
-
-        [System.Xml.Serialization.XmlIgnoreAttribute]
-        private System.Collections.ObjectModel.Collection<Package> _packages;
-
-        [System.Xml.Serialization.XmlArrayAttribute("packages")]
-        [System.Xml.Serialization.XmlArrayItemAttribute("package")]
-        public System.Collections.ObjectModel.Collection<Package> Packages
-        {
-            get
-            {
-                return this._packages;
-            }
-            private set
-            {
-                this._packages = value;
-            }
-        }
+        [XmlIgnore] private Collection<Package> _packages;
 
         /// <summary>
-        /// <para xml:lang="en">Initializes a new instance of the <see cref="Coverage" /> class.</para>
+        ///     <para xml:lang="en">Initializes a new instance of the <see cref="Coverage" /> class.</para>
         /// </summary>
-        public Coverage()
+        public Coverage() => _packages = new Collection<Package>();
+
+        [XmlElement("sources")] public Sources Sources { get; set; }
+
+        [XmlArray("packages")]
+        [XmlArrayItem("package")]
+        public Collection<Package> Packages
         {
-            this._packages = new System.Collections.ObjectModel.Collection<Package>();
+            get => _packages;
+            private set => _packages = value;
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute("branch-rate")]
-        public decimal BranchRate { get; set; }
+        [XmlAttribute("branch-rate")] public decimal BranchRate { get; set; }
 
-        [System.Xml.Serialization.XmlAttributeAttribute("branches-covered")]
-        public string BranchesCovered { get; set; }
+        [XmlAttribute("branches-covered")] public string BranchesCovered { get; set; }
 
-        [System.Xml.Serialization.XmlAttributeAttribute("branches-valid")]
-        public string BranchesValid { get; set; }
+        [XmlAttribute("branches-valid")] public string BranchesValid { get; set; }
 
-        [System.Xml.Serialization.XmlAttributeAttribute("complexity")]
-        public double Complexity { get; set; }
+        [XmlAttribute("complexity")] public double Complexity { get; set; }
 
-        [System.Xml.Serialization.XmlAttributeAttribute("line-rate")]
-        public decimal LineRate { get; set; }
+        [XmlAttribute("line-rate")] public decimal LineRate { get; set; }
 
-        [System.Xml.Serialization.XmlAttributeAttribute("lines-covered")]
-        public string LinesCovered { get; set; }
+        [XmlAttribute("lines-covered")] public string LinesCovered { get; set; }
 
-        [System.Xml.Serialization.XmlAttributeAttribute("lines-valid")]
-        public string LinesValid { get; set; }
+        [XmlAttribute("lines-valid")] public string LinesValid { get; set; }
 
-        [System.Xml.Serialization.XmlAttributeAttribute("timestamp")]
-        public string Timestamp { get; set; }
+        [XmlAttribute("timestamp")] public string Timestamp { get; set; }
 
-        [System.Xml.Serialization.XmlAttributeAttribute("version")]
-        public string Version { get; set; }
+        [XmlAttribute("version")] public string Version { get; set; }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("XmlSchemaClassGenerator", "2.0.349.0")]
-    [System.SerializableAttribute]
-    [System.Xml.Serialization.XmlTypeAttribute("sources", Namespace = "", AnonymousType = true)]
-    [System.Diagnostics.DebuggerStepThroughAttribute]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlRootAttribute("sources", Namespace = "")]
+    [GeneratedCode("XmlSchemaClassGenerator", "2.0.349.0")]
+    [Serializable]
+    [XmlType("sources", Namespace = "", AnonymousType = true)]
+    [DebuggerStepThrough]
+    [DesignerCategory("code")]
+    [XmlRoot("sources", Namespace = "")]
     [ExcludeFromCodeCoverage]
     public partial class Sources
     {
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("XmlSchemaClassGenerator", "2.0.349.0")]
-    [System.SerializableAttribute]
-    [System.Xml.Serialization.XmlTypeAttribute("packages", Namespace = "", AnonymousType = true)]
-    [System.Diagnostics.DebuggerStepThroughAttribute]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlRootAttribute("packages", Namespace = "")]
+    [GeneratedCode("XmlSchemaClassGenerator", "2.0.349.0")]
+    [Serializable]
+    [XmlType("packages", Namespace = "", AnonymousType = true)]
+    [DebuggerStepThrough]
+    [DesignerCategory("code")]
+    [XmlRoot("packages", Namespace = "")]
     [ExcludeFromCodeCoverage]
     public partial class Packages
     {
-        [System.Xml.Serialization.XmlIgnoreAttribute]
-        private System.Collections.ObjectModel.Collection<Package> _package;
-
-        [System.Xml.Serialization.XmlElementAttribute("package")]
-        public System.Collections.ObjectModel.Collection<Package> Package
-        {
-            get
-            {
-                return this._package;
-            }
-            private set
-            {
-                this._package = value;
-            }
-        }
+        [XmlIgnore] private Collection<Package> _package;
 
         /// <summary>
-        /// <para xml:lang="en">Initializes a new instance of the <see cref="Packages" /> class.</para>
+        ///     <para xml:lang="en">Initializes a new instance of the <see cref="Packages" /> class.</para>
         /// </summary>
-        public Packages()
+        public Packages() => _package = new Collection<Package>();
+
+        [XmlElement("package")]
+        public Collection<Package> Package
         {
-            this._package = new System.Collections.ObjectModel.Collection<Package>();
+            get => _package;
+            private set => _package = value;
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("XmlSchemaClassGenerator", "2.0.349.0")]
-    [System.SerializableAttribute]
-    [System.Xml.Serialization.XmlTypeAttribute("package", Namespace = "", AnonymousType = true)]
-    [System.Diagnostics.DebuggerStepThroughAttribute]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlRootAttribute("package", Namespace = "")]
+    [GeneratedCode("XmlSchemaClassGenerator", "2.0.349.0")]
+    [Serializable]
+    [XmlType("package", Namespace = "", AnonymousType = true)]
+    [DebuggerStepThrough]
+    [DesignerCategory("code")]
+    [XmlRoot("package", Namespace = "")]
     [ExcludeFromCodeCoverage]
     public partial class Package
     {
-        [System.Xml.Serialization.XmlIgnoreAttribute]
-        private System.Collections.ObjectModel.Collection<Class> _classes;
-
-        [System.Xml.Serialization.XmlArrayAttribute("classes")]
-        [System.Xml.Serialization.XmlArrayItemAttribute("class")]
-        public System.Collections.ObjectModel.Collection<Class> Classes
-        {
-            get
-            {
-                return this._classes;
-            }
-            private set
-            {
-                this._classes = value;
-            }
-        }
+        [XmlIgnore] private Collection<Class> _classes;
 
         /// <summary>
-        /// <para xml:lang="en">Initializes a new instance of the <see cref="Package" /> class.</para>
+        ///     <para xml:lang="en">Initializes a new instance of the <see cref="Package" /> class.</para>
         /// </summary>
-        public Package()
+        public Package() => _classes = new Collection<Class>();
+
+        [XmlArray("classes")]
+        [XmlArrayItem("class")]
+        public Collection<Class> Classes
         {
-            this._classes = new System.Collections.ObjectModel.Collection<Class>();
+            get => _classes;
+            private set => _classes = value;
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute("branch-rate")]
-        public decimal BranchRate { get; set; }
+        [XmlAttribute("branch-rate")] public decimal BranchRate { get; set; }
 
-        [System.Xml.Serialization.XmlAttributeAttribute("complexity")]
-        public double Complexity { get; set; }
+        [XmlAttribute("complexity")] public double Complexity { get; set; }
 
-        [System.Xml.Serialization.XmlAttributeAttribute("line-rate")]
-        public decimal LineRate { get; set; }
+        [XmlAttribute("line-rate")] public decimal LineRate { get; set; }
 
-        [System.Xml.Serialization.XmlAttributeAttribute("name")]
-        public string Name { get; set; }
+        [XmlAttribute("name")] public string Name { get; set; }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("XmlSchemaClassGenerator", "2.0.349.0")]
-    [System.SerializableAttribute]
-    [System.Xml.Serialization.XmlTypeAttribute("classes", Namespace = "", AnonymousType = true)]
-    [System.Diagnostics.DebuggerStepThroughAttribute]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlRootAttribute("classes", Namespace = "")]
+    [GeneratedCode("XmlSchemaClassGenerator", "2.0.349.0")]
+    [Serializable]
+    [XmlType("classes", Namespace = "", AnonymousType = true)]
+    [DebuggerStepThrough]
+    [DesignerCategory("code")]
+    [XmlRoot("classes", Namespace = "")]
     [ExcludeFromCodeCoverage]
     public partial class Classes
     {
-        [System.Xml.Serialization.XmlIgnoreAttribute]
-        private System.Collections.ObjectModel.Collection<Class> _class;
-
-        [System.Xml.Serialization.XmlElementAttribute("class")]
-        public System.Collections.ObjectModel.Collection<Class> Class
-        {
-            get
-            {
-                return this._class;
-            }
-            private set
-            {
-                this._class = value;
-            }
-        }
+        [XmlIgnore] private Collection<Class> _class;
 
         /// <summary>
-        /// <para xml:lang="en">Initializes a new instance of the <see cref="Classes" /> class.</para>
+        ///     <para xml:lang="en">Initializes a new instance of the <see cref="Classes" /> class.</para>
         /// </summary>
-        public Classes()
+        public Classes() => _class = new Collection<Class>();
+
+        [XmlElement("class")]
+        public Collection<Class> Class
         {
-            this._class = new System.Collections.ObjectModel.Collection<Class>();
+            get => _class;
+            private set => _class = value;
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("XmlSchemaClassGenerator", "2.0.349.0")]
-    [System.SerializableAttribute]
-    [System.Xml.Serialization.XmlTypeAttribute("class", Namespace = "", AnonymousType = true)]
-    [System.Diagnostics.DebuggerStepThroughAttribute]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlRootAttribute("class", Namespace = "")]
+    [GeneratedCode("XmlSchemaClassGenerator", "2.0.349.0")]
+    [Serializable]
+    [XmlType("class", Namespace = "", AnonymousType = true)]
+    [DebuggerStepThrough]
+    [DesignerCategory("code")]
+    [XmlRoot("class", Namespace = "")]
     [ExcludeFromCodeCoverage]
     public partial class Class
     {
-        [System.Xml.Serialization.XmlIgnoreAttribute]
-        private System.Collections.ObjectModel.Collection<Method> _methods;
+        [XmlIgnore] private Collection<Line> _lines;
 
-        [System.Xml.Serialization.XmlArrayAttribute("methods")]
-        [System.Xml.Serialization.XmlArrayItemAttribute("method")]
-        public System.Collections.ObjectModel.Collection<Method> Methods
-        {
-            get
-            {
-                return this._methods;
-            }
-            private set
-            {
-                this._methods = value;
-            }
-        }
+        [XmlIgnore] private Collection<Method> _methods;
 
         /// <summary>
-        /// <para xml:lang="en">Initializes a new instance of the <see cref="Class" /> class.</para>
+        ///     <para xml:lang="en">Initializes a new instance of the <see cref="Class" /> class.</para>
         /// </summary>
         public Class()
         {
-            this._methods = new System.Collections.ObjectModel.Collection<Method>();
-            this._lines = new System.Collections.ObjectModel.Collection<Line>();
+            _methods = new Collection<Method>();
+            _lines = new Collection<Line>();
         }
 
-        [System.Xml.Serialization.XmlIgnoreAttribute]
-        private System.Collections.ObjectModel.Collection<Line> _lines;
-
-        [System.Xml.Serialization.XmlArrayAttribute("lines")]
-        [System.Xml.Serialization.XmlArrayItemAttribute("line")]
-        public System.Collections.ObjectModel.Collection<Line> Lines
+        [XmlArray("methods")]
+        [XmlArrayItem("method")]
+        public Collection<Method> Methods
         {
-            get
-            {
-                return this._lines;
-            }
-            private set
-            {
-                this._lines = value;
-            }
+            get => _methods;
+            private set => _methods = value;
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute("branch-rate")]
-        public decimal BranchRate { get; set; }
+        [XmlArray("lines")]
+        [XmlArrayItem("line")]
+        public Collection<Line> Lines
+        {
+            get => _lines;
+            private set => _lines = value;
+        }
 
-        [System.Xml.Serialization.XmlAttributeAttribute("complexity")]
-        public double Complexity { get; set; }
+        [XmlAttribute("branch-rate")] public decimal BranchRate { get; set; }
 
-        [System.Xml.Serialization.XmlAttributeAttribute("filename")]
-        public string Filename { get; set; }
+        [XmlAttribute("complexity")] public double Complexity { get; set; }
 
-        [System.Xml.Serialization.XmlAttributeAttribute("line-rate")]
-        public decimal LineRate { get; set; }
+        [XmlAttribute("filename")] public string Filename { get; set; }
 
-        [System.Xml.Serialization.XmlAttributeAttribute("name")]
-        public string Name { get; set; }
+        [XmlAttribute("line-rate")] public decimal LineRate { get; set; }
+
+        [XmlAttribute("name")] public string Name { get; set; }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("XmlSchemaClassGenerator", "2.0.349.0")]
-    [System.SerializableAttribute]
-    [System.Xml.Serialization.XmlTypeAttribute("methods", Namespace = "", AnonymousType = true)]
-    [System.Diagnostics.DebuggerStepThroughAttribute]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlRootAttribute("methods", Namespace = "")]
+    [GeneratedCode("XmlSchemaClassGenerator", "2.0.349.0")]
+    [Serializable]
+    [XmlType("methods", Namespace = "", AnonymousType = true)]
+    [DebuggerStepThrough]
+    [DesignerCategory("code")]
+    [XmlRoot("methods", Namespace = "")]
     [ExcludeFromCodeCoverage]
     public partial class Methods
     {
-        [System.Xml.Serialization.XmlIgnoreAttribute]
-        private System.Collections.ObjectModel.Collection<Method> _method;
-
-        [System.Xml.Serialization.XmlElementAttribute("method")]
-        public System.Collections.ObjectModel.Collection<Method> Method
-        {
-            get
-            {
-                return this._method;
-            }
-            private set
-            {
-                this._method = value;
-            }
-        }
+        [XmlIgnore] private Collection<Method> _method;
 
         /// <summary>
-        /// <para xml:lang="en">Initializes a new instance of the <see cref="Methods" /> class.</para>
+        ///     <para xml:lang="en">Initializes a new instance of the <see cref="Methods" /> class.</para>
         /// </summary>
-        public Methods()
+        public Methods() => _method = new Collection<Method>();
+
+        [XmlElement("method")]
+        public Collection<Method> Method
         {
-            this._method = new System.Collections.ObjectModel.Collection<Method>();
+            get => _method;
+            private set => _method = value;
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("XmlSchemaClassGenerator", "2.0.349.0")]
-    [System.SerializableAttribute]
-    [System.Xml.Serialization.XmlTypeAttribute("method", Namespace = "", AnonymousType = true)]
-    [System.Diagnostics.DebuggerStepThroughAttribute]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlRootAttribute("method", Namespace = "")]
+    [GeneratedCode("XmlSchemaClassGenerator", "2.0.349.0")]
+    [Serializable]
+    [XmlType("method", Namespace = "", AnonymousType = true)]
+    [DebuggerStepThrough]
+    [DesignerCategory("code")]
+    [XmlRoot("method", Namespace = "")]
     [ExcludeFromCodeCoverage]
     public partial class Method
     {
-        [System.Xml.Serialization.XmlIgnoreAttribute]
-        private System.Collections.ObjectModel.Collection<Line> _lines;
-
-        [System.Xml.Serialization.XmlArrayAttribute("lines")]
-        [System.Xml.Serialization.XmlArrayItemAttribute("line")]
-        public System.Collections.ObjectModel.Collection<Line> Lines
-        {
-            get
-            {
-                return this._lines;
-            }
-            private set
-            {
-                this._lines = value;
-            }
-        }
+        [XmlIgnore] private Collection<Line> _lines;
 
         /// <summary>
-        /// <para xml:lang="en">Initializes a new instance of the <see cref="Method" /> class.</para>
+        ///     <para xml:lang="en">Initializes a new instance of the <see cref="Method" /> class.</para>
         /// </summary>
-        public Method()
+        public Method() => _lines = new Collection<Line>();
+
+        [XmlArray("lines")]
+        [XmlArrayItem("line")]
+        public Collection<Line> Lines
         {
-            this._lines = new System.Collections.ObjectModel.Collection<Line>();
+            get => _lines;
+            private set => _lines = value;
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute("branch-rate")]
-        public decimal BranchRate { get; set; }
+        [XmlAttribute("branch-rate")] public decimal BranchRate { get; set; }
 
-        [System.Xml.Serialization.XmlAttributeAttribute("complexity")]
-        public double Complexity { get; set; }
+        [XmlAttribute("complexity")] public double Complexity { get; set; }
 
-        [System.Xml.Serialization.XmlAttributeAttribute("line-rate")]
-        public decimal LineRate { get; set; }
+        [XmlAttribute("line-rate")] public decimal LineRate { get; set; }
 
-        [System.Xml.Serialization.XmlAttributeAttribute("name")]
-        public string Name { get; set; }
+        [XmlAttribute("name")] public string Name { get; set; }
 
-        [System.Xml.Serialization.XmlAttributeAttribute("signature")]
-        public string Signature { get; set; }
+        [XmlAttribute("signature")] public string Signature { get; set; }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("XmlSchemaClassGenerator", "2.0.349.0")]
-    [System.SerializableAttribute]
-    [System.Xml.Serialization.XmlTypeAttribute("lines", Namespace = "", AnonymousType = true)]
-    [System.Diagnostics.DebuggerStepThroughAttribute]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlRootAttribute("lines", Namespace = "")]
+    [GeneratedCode("XmlSchemaClassGenerator", "2.0.349.0")]
+    [Serializable]
+    [XmlType("lines", Namespace = "", AnonymousType = true)]
+    [DebuggerStepThrough]
+    [DesignerCategory("code")]
+    [XmlRoot("lines", Namespace = "")]
     [ExcludeFromCodeCoverage]
     public partial class Lines
     {
-        [System.Xml.Serialization.XmlIgnoreAttribute]
-        private System.Collections.ObjectModel.Collection<Line> _line;
-
-        [System.Xml.Serialization.XmlElementAttribute("line")]
-        public System.Collections.ObjectModel.Collection<Line> Line
-        {
-            get
-            {
-                return this._line;
-            }
-            private set
-            {
-                this._line = value;
-            }
-        }
+        [XmlIgnore] private Collection<Line> _line;
 
         /// <summary>
-        /// <para xml:lang="en">Initializes a new instance of the <see cref="Lines" /> class.</para>
+        ///     <para xml:lang="en">Initializes a new instance of the <see cref="Lines" /> class.</para>
         /// </summary>
-        public Lines()
+        public Lines() => _line = new Collection<Line>();
+
+        [XmlElement("line")]
+        public Collection<Line> Line
         {
-            this._line = new System.Collections.ObjectModel.Collection<Line>();
+            get => _line;
+            private set => _line = value;
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("XmlSchemaClassGenerator", "2.0.349.0")]
-    [System.SerializableAttribute]
-    [System.Xml.Serialization.XmlTypeAttribute("line", Namespace = "", AnonymousType = true)]
-    [System.Diagnostics.DebuggerStepThroughAttribute]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlRootAttribute("line", Namespace = "")]
+    [GeneratedCode("XmlSchemaClassGenerator", "2.0.349.0")]
+    [Serializable]
+    [XmlType("line", Namespace = "", AnonymousType = true)]
+    [DebuggerStepThrough]
+    [DesignerCategory("code")]
+    [XmlRoot("line", Namespace = "")]
     [ExcludeFromCodeCoverage]
     public partial class Line
     {
-        [System.Xml.Serialization.XmlAttributeAttribute("branch")]
-        public bool Branch { get; set; }
+        [XmlAttribute("branch")] public bool Branch { get; set; }
 
-        [System.Xml.Serialization.XmlAttributeAttribute("condition-coverage")]
-        public string ConditionCoverage { get; set; }
+        [XmlAttribute("condition-coverage")] public string ConditionCoverage { get; set; }
 
-        [System.Xml.Serialization.XmlAttributeAttribute("hits")]
-        public int Hits { get; set; }
+        [XmlAttribute("hits")] public int Hits { get; set; }
 
-        [System.Xml.Serialization.XmlAttributeAttribute("number")]
-        public int Number { get; set; }
+        [XmlAttribute("number")] public int Number { get; set; }
     }
 }
 #nullable enable

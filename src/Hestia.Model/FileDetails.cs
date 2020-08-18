@@ -11,10 +11,7 @@ namespace Hestia.Model
     {
         private readonly IFile _file;
 
-        public FileDetails(IFile file)
-        {
-            _file = file;
-        }
+        public FileDetails(IFile file) => _file = file;
 
         public IList<ISourceLine> Content => _file.Content;
 

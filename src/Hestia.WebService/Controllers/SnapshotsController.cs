@@ -10,8 +10,8 @@ namespace Hestia.WebService.Controllers
     [Route("[controller]")]
     public class SnapshotsController : ControllerBase
     {
-        private readonly ISnapshotRetrieval _snapshotRetrieval;
         private readonly IFileRetrieval _fileRetrieval;
+        private readonly ISnapshotRetrieval _snapshotRetrieval;
 
         public SnapshotsController(ISnapshotRetrieval snapshotRetrieval,
                                    IFileRetrieval fileRetrieval)

@@ -11,10 +11,7 @@ namespace Hestia.Model.Stats
     {
         private readonly IDiskIOWrapper _diskIoWrapper;
 
-        public JsonCovCoverageProvider(IDiskIOWrapper diskIoWrapper)
-        {
-            _diskIoWrapper = diskIoWrapper;
-        }
+        public JsonCovCoverageProvider(IDiskIOWrapper diskIoWrapper) => _diskIoWrapper = diskIoWrapper;
 
         // JSON structure: Assembly[] -> File[] -> Class[] -> Method[] -> Lines & Branches
         // See example json in Test.Hestia.Model.Resources -> coverage.json
@@ -41,11 +38,9 @@ namespace Hestia.Model.Stats
             => Task.Run(() => ParseFileCoveragesFromFilePath(filePath));
 
         private static IEnumerable<(int lineNumber, int hitCount)> ParseLineCoverageJObject(
-            JToken? token)
-        {
-            return token!.Children<JProperty>()
-                         .Select(prop => (int.Parse(prop.Name),
-                                          int.Parse(prop.Value.ToString())));
-        }
+            JToken? token) =>
+            token!.Children<JProperty>()
+                  .Select(prop => (int.Parse(prop.Name),
+                                   int.Parse(prop.Value.ToString())));
     }
 }

@@ -7,10 +7,7 @@ namespace Hestia.DAL.EFCore.Adapters
     {
         private readonly LineEntity _entity;
 
-        public LineEntityAdapter(LineEntity entity)
-        {
-            _entity = entity;
-        }
+        public LineEntityAdapter(LineEntity entity) => _entity = entity;
 
         public string Content => _entity.Content;
 

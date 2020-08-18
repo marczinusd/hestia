@@ -24,7 +24,7 @@ namespace Test.Hestia.Model.Stats
         public static TheoryData<string, string> FileEnricherInvalidInput =>
             new TheoryData<string, string>
             {
-                { string.Empty, string.Empty }, { string.Empty, null }, { null, string.Empty }, { null, null },
+                { string.Empty, string.Empty }, { string.Empty, null }, { null, string.Empty }, { null, null }
             };
 
         [Fact]
@@ -88,9 +88,9 @@ namespace Test.Hestia.Model.Stats
             var enricher = fixture.Create<StatsEnricher>();
 
             var enrichedSnapshot = enricher.EnrichWithGitStats(MockRepo.CreateSnapshot(new[] { ".cs" },
-                                                                                       "lcov.info",
-                                                                                       ioMock.Object,
-                                                                                       Mock.Of<IPathValidator>()),
+                                                                   "lcov.info",
+                                                                   ioMock.Object,
+                                                                   Mock.Of<IPathValidator>()),
                                                                GitStatGranularity.Full);
 
             enrichedSnapshot.Files
@@ -140,7 +140,7 @@ namespace Test.Hestia.Model.Stats
                             .Returns(new[]
                             {
                                 new FileCoverage(Path.GetFileName(MockRepo.FirstIncludedFilePath) ?? string.Empty,
-                                                 lineCoverages),
+                                                 lineCoverages)
                             });
             var ioMock = MockRepo.CreateDiskIOWrapperMock();
             fixture.Register(() => ioMock.Object);
@@ -149,9 +149,9 @@ namespace Test.Hestia.Model.Stats
             var enricher = fixture.Create<StatsEnricher>();
 
             var enrichedSnapshot = enricher.EnrichWithCoverage(MockRepo.CreateSnapshot(new[] { ".cs" },
-                                                                                       "lcov.info",
-                                                                                       ioMock.Object,
-                                                                                       Mock.Of<IPathValidator>()));
+                                                                   "lcov.info",
+                                                                   ioMock.Object,
+                                                                   Mock.Of<IPathValidator>()));
 
             enrichedSnapshot.Files
                             .Should()
@@ -225,7 +225,11 @@ namespace Test.Hestia.Model.Stats
                      .HaveCount(5);
             snapshots.Select(s => s.AtHash.Match(x => x, string.Empty))
                      .Should()
-                     .BeEquivalentTo(new[] { "1", "13", "25", "37", "50" });
+                     .BeEquivalentTo("1",
+                                     "13",
+                                     "25",
+                                     "37",
+                                     "50");
         }
     }
 }

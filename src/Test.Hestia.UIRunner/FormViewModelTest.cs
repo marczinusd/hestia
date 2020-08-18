@@ -43,7 +43,7 @@ namespace Test.Hestia.UIRunner
                                        Mock.Of<IPathValidator>(),
                                        Mock.Of<IRepositorySnapshotBuilderWrapper>(),
                                        Mock.Of<IOpenFileDialogService>(),
-                                       Mock.Of<ICoverageReportConverter>()) { RepositoryPath = RepoPath, };
+                                       Mock.Of<ICoverageReportConverter>()) { RepositoryPath = RepoPath };
             Helpers.After(TimeSpan.FromMilliseconds(WaitMs),
                           () => vm.ValidationContext.Text
                                   .First()
@@ -65,7 +65,7 @@ namespace Test.Hestia.UIRunner
                                        Mock.Of<IPathValidator>(),
                                        Mock.Of<IRepositorySnapshotBuilderWrapper>(),
                                        Mock.Of<IOpenFileDialogService>(),
-                                       Mock.Of<ICoverageReportConverter>()) { RepositoryPath = RepoPath, };
+                                       Mock.Of<ICoverageReportConverter>()) { RepositoryPath = RepoPath };
             Helpers.After(TimeSpan.FromMilliseconds(WaitMs),
                           () => vm.ValidationContext.Text
                                   .First()
@@ -87,7 +87,7 @@ namespace Test.Hestia.UIRunner
                 CoverageCommand = "bla",
                 SourceExtensions = "bla",
                 CoverageOutputLocation = "bla",
-                RepositoryPath = input,
+                RepositoryPath = input
             };
             Helpers.After(TimeSpan.FromMilliseconds(WaitMs),
                           () => vm.ValidationContext.Text
@@ -110,7 +110,7 @@ namespace Test.Hestia.UIRunner
                 RepositoryPath = "bla",
                 CoverageCommand = "bla",
                 SourceExtensions = "bla",
-                CoverageOutputLocation = input,
+                CoverageOutputLocation = input
             };
             Helpers.After(TimeSpan.FromMilliseconds(WaitMs),
                           () => vm.ValidationContext.Text
@@ -133,7 +133,7 @@ namespace Test.Hestia.UIRunner
                 RepositoryPath = "bla",
                 CoverageCommand = "bla",
                 CoverageOutputLocation = "bla",
-                SourceExtensions = input,
+                SourceExtensions = input
             };
 
             Helpers.After(TimeSpan.FromMilliseconds(WaitMs),
@@ -171,7 +171,7 @@ namespace Test.Hestia.UIRunner
                 CoverageCommand = "bla",
                 SourceExtensions = "bla",
                 SourceRoot = "src",
-                CoverageOutputLocation = CoverageOutputLocation,
+                CoverageOutputLocation = CoverageOutputLocation
             };
 
             scheduler.Start(() => vm.ProcessRepositoryCommand

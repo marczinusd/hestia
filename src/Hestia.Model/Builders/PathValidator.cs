@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 
 namespace Hestia.Model.Builders
 {
@@ -11,7 +12,7 @@ namespace Hestia.Model.Builders
                 throw new ArgumentException("Root path cannot be null or empty", nameof(path));
             }
 
-            if (!System.IO.Directory.Exists(path))
+            if (!Directory.Exists(path))
             {
                 throw new
                     InvalidOperationException($"Repository cannot be built because the path ({path}) provided is invalid. ");

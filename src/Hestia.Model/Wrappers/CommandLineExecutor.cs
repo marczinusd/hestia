@@ -8,14 +8,14 @@ namespace Hestia.Model.Wrappers
     public enum ExecutorEchoMode
     {
         /// <summary>
-        /// command results and the command executed will be echoed.
+        ///     command results and the command executed will be echoed.
         /// </summary>
         Echo,
 
         /// <summary>
-        /// only command results will get echoed.
+        ///     only command results will get echoed.
         /// </summary>
-        NoEcho,
+        NoEcho
     }
 
     [ExcludeFromCodeCoverage]
@@ -23,10 +23,7 @@ namespace Hestia.Model.Wrappers
     {
         private readonly bool _noEcho;
 
-        public CommandLineExecutor(ExecutorEchoMode echoMode)
-        {
-            _noEcho = echoMode == ExecutorEchoMode.NoEcho;
-        }
+        public CommandLineExecutor(ExecutorEchoMode echoMode) => _noEcho = echoMode == ExecutorEchoMode.NoEcho;
 
         public string[] Execute(string commandToExecute, string args, string workingDirectory)
         {

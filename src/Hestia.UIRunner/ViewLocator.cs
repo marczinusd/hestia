@@ -17,22 +17,18 @@ namespace Hestia.UIRunner
         public IControl Build(object param)
         {
             // ReSharper disable once PossibleNullReferenceException
-            var name = param.GetType().FullName.Replace("ViewModel", "View");
+            var name = param.GetType()
+                            .FullName.Replace("ViewModel", "View");
             var type = Type.GetType(name);
 
             if (type != null)
             {
                 return (Control)Activator.CreateInstance(type);
             }
-            else
-            {
-                return new TextBlock { Text = "Not Found: " + name };
-            }
+
+            return new TextBlock { Text = "Not Found: " + name };
         }
 
-        public bool Match(object data)
-        {
-            return data is ReactiveObject;
-        }
+        public bool Match(object data) => data is ReactiveObject;
     }
 }

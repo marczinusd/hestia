@@ -13,10 +13,8 @@ namespace Hestia.Model.Cobertura
     {
         private readonly IXmlFileSerializationWrapper _xmlFileSerializationWrapper;
 
-        public CoberturaCoverageProvider(IXmlFileSerializationWrapper xmlFileSerializationWrapper)
-        {
+        public CoberturaCoverageProvider(IXmlFileSerializationWrapper xmlFileSerializationWrapper) =>
             _xmlFileSerializationWrapper = xmlFileSerializationWrapper;
-        }
 
         public IEnumerable<IFileCoverage> ParseFileCoveragesFromFilePath(string filePath)
         {

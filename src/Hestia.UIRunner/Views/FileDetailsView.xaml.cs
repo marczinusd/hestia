@@ -8,14 +8,8 @@ namespace Hestia.UIRunner.Views
     [ExcludeFromCodeCoverage]
     public class FileDetailsView : ReactiveUserControl<FileDetailsViewModel>
     {
-        public FileDetailsView()
-        {
-            InitializeComponent();
-        }
+        public FileDetailsView() => InitializeComponent();
 
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
-        }
+        private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
     }
 }

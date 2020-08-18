@@ -48,7 +48,7 @@ namespace Test.Hestia.Utils.TestData
                          Path.Join(DirPath,
                                    "src",
                                    "server",
-                                   "bla2.js"),
+                                   "bla2.js")
                      });
             ioWrapper.Setup(mock => mock.ReadAllLinesFromFile(It.IsAny<string>()))
                      .Returns(new List<string> { "bla", "bla", "bla" });
@@ -74,7 +74,7 @@ namespace Test.Hestia.Utils.TestData
                          new SourceLine(5,
                                         "bla",
                                         Option<ILineCoverageStats>.None,
-                                        Option<ILineGitStats>.None),
+                                        Option<ILineGitStats>.None)
                      });
 
             return ioWrapper;
@@ -132,15 +132,15 @@ namespace Test.Hestia.Utils.TestData
                                                   f.Lorem.Lines(10, Environment.NewLine)
                                                    .Split(Environment.NewLine)
                                                    .Select((l, i) => new SourceLine(i + 1,
-                                                                                    l,
-                                                                                    Option<ILineCoverageStats>
-                                                                                        .None,
-                                                                                    Option<ILineGitStats>.None) as
+                                                                             l,
+                                                                             Option<ILineCoverageStats>
+                                                                                 .None,
+                                                                             Option<ILineGitStats>.None) as
                                                                          ISourceLine)
                                                    .ToList(),
                                                   new FileGitStats(1, 1),
                                                   new FileCoverageStats(new FileCoverage(string.Empty,
-                                                                                         new[] { (1, 2) }))))
+                                                                            new[] { (1, 2) }))))
                 .RuleFor(file => file.Content,
                          f => f.Lorem.Lines(10, Environment.NewLine)
                                .Split(Environment.NewLine)

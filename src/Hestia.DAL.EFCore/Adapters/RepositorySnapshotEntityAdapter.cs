@@ -10,10 +10,7 @@ namespace Hestia.DAL.EFCore.Adapters
     {
         private readonly RepositorySnapshotEntity _entity;
 
-        public RepositorySnapshotEntityAdapter(RepositorySnapshotEntity entity)
-        {
-            _entity = entity;
-        }
+        public RepositorySnapshotEntityAdapter(RepositorySnapshotEntity entity) => _entity = entity;
 
         public string Id => _entity.Id;
 

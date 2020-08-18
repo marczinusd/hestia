@@ -5,8 +5,8 @@ using FluentAssertions;
 using Hestia.ConsoleRunner;
 using Hestia.Model.Stats;
 using Moq;
+using Serilog;
 using Xunit;
-using ILogger = Serilog.ILogger;
 
 namespace Test.Hestia.ConsoleRunner
 {

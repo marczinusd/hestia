@@ -8,10 +8,8 @@ namespace Hestia.UIRunner.ViewModels
     {
         private readonly ObservableAsPropertyHelper<IFile> _fileObservableAsPropertyHelper;
 
-        public FileDetailsViewModel(IObservable<IFile> observable)
-        {
+        public FileDetailsViewModel(IObservable<IFile> observable) =>
             _fileObservableAsPropertyHelper = observable.ToProperty(this, nameof(File));
-        }
 
         public IFile File => _fileObservableAsPropertyHelper.Value;
     }

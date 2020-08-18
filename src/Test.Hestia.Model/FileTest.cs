@@ -32,7 +32,7 @@ namespace Test.Hestia.Model
                                         new SourceLine(1,
                                                        string.Empty,
                                                        Option<ILineCoverageStats>.None,
-                                                       Option<ILineGitStats>.None),
+                                                       Option<ILineGitStats>.None)
                                     },
                                     new FileGitStats(1, 1),
                                     new FileCoverageStats(new FileCoverage(string.Empty,

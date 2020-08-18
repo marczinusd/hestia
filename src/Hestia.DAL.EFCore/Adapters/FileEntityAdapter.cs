@@ -9,10 +9,7 @@ namespace Hestia.DAL.EFCore.Adapters
     {
         private readonly FileEntity _entity;
 
-        public FileEntityAdapter(FileEntity entity)
-        {
-            _entity = entity;
-        }
+        public FileEntityAdapter(FileEntity entity) => _entity = entity;
 
         public string Id => _entity.Id;
 

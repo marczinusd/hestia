@@ -3,6 +3,7 @@ using System.Linq;
 using FluentAssertions;
 using Hestia.Model.Wrappers;
 using Moq;
+using Test.Hestia.Model.Resources;
 using Test.Hestia.Utils;
 using Xunit;
 
@@ -14,7 +15,7 @@ namespace Test.Hestia.Model.Wrappers
         public void FileHistoryTest()
         {
             var gitLogOutput =
-                Helpers.LoadResource(Resources.Paths.GitPrettyLogOutput, typeof(GitCommandsTest).Assembly);
+                Helpers.LoadResource(Paths.GitPrettyLogOutput, typeof(GitCommandsTest).Assembly);
             var executorMock = new Mock<ICommandLineExecutor>();
             var fileName = "dir/bla.js";
             var gitCommand = $"log --pretty=oneline {fileName}";
@@ -32,7 +33,7 @@ namespace Test.Hestia.Model.Wrappers
         [Fact]
         public void SingleLineHistoryTest()
         {
-            var lineHistory = Helpers.LoadResource(Resources.Paths.GitLineLogOutput, typeof(GitCommandsTest).Assembly);
+            var lineHistory = Helpers.LoadResource(Paths.GitLineLogOutput, typeof(GitCommandsTest).Assembly);
             var executorMock = new Mock<ICommandLineExecutor>();
             var fileName = "dir/bla.js";
             var lineNumber = 2;
@@ -51,7 +52,7 @@ namespace Test.Hestia.Model.Wrappers
         [Fact]
         public void AllLinesHistoryTest()
         {
-            var lineHistory = Helpers.LoadResource(Resources.Paths.GitLineLogOutput, typeof(GitCommandsTest).Assembly);
+            var lineHistory = Helpers.LoadResource(Paths.GitLineLogOutput, typeof(GitCommandsTest).Assembly);
             var executorMock = new Mock<ICommandLineExecutor>();
             var fileName = "dir/bla.js";
             var gitCommandFirstLine = $"log -L 1,1:\"{fileName}\"";
@@ -78,7 +79,7 @@ namespace Test.Hestia.Model.Wrappers
         [Fact]
         public void LineAuthorsTest()
         {
-            var lineHistory = Helpers.LoadResource(Resources.Paths.GitLineLogOutput, typeof(GitCommandsTest).Assembly);
+            var lineHistory = Helpers.LoadResource(Paths.GitLineLogOutput, typeof(GitCommandsTest).Assembly);
             var executorMock = new Mock<ICommandLineExecutor>();
             var fileName = "dir/bla.js";
             var lineNumber = 2;
@@ -97,7 +98,7 @@ namespace Test.Hestia.Model.Wrappers
         [Fact]
         public void FileAuthorsTest()
         {
-            var fileAuthors = Helpers.LoadResource(Resources.Paths.GitShortlogOutput, typeof(GitCommandsTest).Assembly);
+            var fileAuthors = Helpers.LoadResource(Paths.GitShortlogOutput, typeof(GitCommandsTest).Assembly);
             var executorMock = new Mock<ICommandLineExecutor>();
             var fileName = "dir/bla.js";
             var gitCommand = $"shortlog -c -s {fileName}";
@@ -149,7 +150,7 @@ namespace Test.Hestia.Model.Wrappers
         [Fact]
         public void HashForNthCommit()
         {
-            var output = Helpers.LoadResource(Resources.Paths.GitSingleCommitOutput, typeof(GitCommandsTest).Assembly);
+            var output = Helpers.LoadResource(Paths.GitSingleCommitOutput, typeof(GitCommandsTest).Assembly);
             var executorMock = new Mock<ICommandLineExecutor>();
             const string repoPath = "dir";
             const int nthCommit = 5;
@@ -175,7 +176,7 @@ namespace Test.Hestia.Model.Wrappers
         [Fact]
         public void CheckoutNthCommitOnBranch()
         {
-            var output = Helpers.LoadResource(Resources.Paths.GitSingleCommitOutput, typeof(GitCommandsTest).Assembly);
+            var output = Helpers.LoadResource(Paths.GitSingleCommitOutput, typeof(GitCommandsTest).Assembly);
             var executorMock = new Mock<ICommandLineExecutor>();
             const string repoPath = "dir";
             const string commitCountCommand = "rev-list --count HEAD";
@@ -224,7 +225,7 @@ namespace Test.Hestia.Model.Wrappers
         public void NumberOfDifferentAuthorsAndChangesForLine()
         {
             var executorMock = new Mock<ICommandLineExecutor>();
-            var lineHistory = Helpers.LoadResource(Resources.Paths.GitLineLogOutput, typeof(GitCommandsTest).Assembly);
+            var lineHistory = Helpers.LoadResource(Paths.GitLineLogOutput, typeof(GitCommandsTest).Assembly);
             const string repoPath = "dir";
             const string filePath = "dir/file.js";
             const string gitCommand = "log -L {0},{0}:\"{1}\"";
@@ -236,7 +237,8 @@ namespace Test.Hestia.Model.Wrappers
                             .Returns(lineHistory.Split(Environment.NewLine));
             }
 
-            var result = gitCommands.NumberOfDifferentAuthorsAndChangesForLine(filePath, 3).ToList();
+            var result = gitCommands.NumberOfDifferentAuthorsAndChangesForLine(filePath, 3)
+                                    .ToList();
 
             executorMock.Verify(mock => mock.Execute("git", It.IsAny<string>(), repoPath),
                                 Times.Exactly(3));

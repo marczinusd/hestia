@@ -8,9 +8,8 @@ namespace Hestia.Model.Extensions
     [ExcludeFromCodeCoverage]
     public static class ObservableExt
     {
-        public static IObservable<T> CreateSingle<T>(Func<T> valueFactory)
-        {
-            return Observable.Create<T>(observer =>
+        public static IObservable<T> CreateSingle<T>(Func<T> valueFactory) =>
+            Observable.Create<T>(observer =>
             {
                 try
                 {
@@ -25,6 +24,5 @@ namespace Hestia.Model.Extensions
 
                 return Disposable.Empty;
             });
-        }
     }
 }

@@ -45,7 +45,7 @@
         <ProgressBar Grid.Row="4" IsIndeterminate="True" IsVisible="{Binding IsExecuting}" />
         <Button Grid.Row="5" Command="{Binding ProcessRepositoryCommand}">Process Repository</Button>
     </Grid>
-    
+
     <!-- ReSharper restore Xaml.ConstructorWarning -->
     <!-- ReSharper restore Xaml.UnexpectedTextToken -->
 </UserControl>

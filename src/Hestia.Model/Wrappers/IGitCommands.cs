@@ -23,7 +23,7 @@ namespace Hestia.Model.Wrappers
         int NumberOfCommitsOnCurrentBranch(string repoPath);
 
         /// <summary>
-        /// Checks out the nth commit (where 1 is the initial commit) of a git repository.
+        ///     Checks out the nth commit (where 1 is the initial commit) of a git repository.
         /// </summary>
         /// <param name="repoPath">Path to the repo.</param>
         /// <param name="commitNumber">Number of the commit.</param>

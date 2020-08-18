@@ -5,6 +5,7 @@ using FluentAssertions;
 using Hestia.Model.Cobertura;
 using Hestia.Model.Wrappers;
 using Moq;
+using Test.Hestia.Model.Resources;
 using Test.Hestia.Utils;
 using Xunit;
 
@@ -18,7 +19,7 @@ namespace Test.Hestia.Model.Cobertura
         public async Task CoberturaXmlDeserializesCorrectly()
         {
             var coverage =
-                Helpers.LoadAndDeserializeXmlResource<Coverage>(Resources.Paths.CoberturaXml,
+                Helpers.LoadAndDeserializeXmlResource<Coverage>(Paths.CoberturaXml,
                                                                 typeof(CoberturaCoverageProviderTest).Assembly);
             var fileStreamWrapperMock = new Mock<IXmlFileSerializationWrapper>();
             fileStreamWrapperMock.Setup(mock => mock.Deserialize<Coverage>(It.IsAny<string>(), FileMode.Open))

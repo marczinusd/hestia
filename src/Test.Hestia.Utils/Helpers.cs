@@ -43,7 +43,7 @@ namespace Test.Hestia.Utils
             var resourcePath = name;
 
             // ReSharper disable once RedundantNameQualifier
-            if (!name.StartsWith(nameof(Test.Hestia.Utils)))
+            if (!name.StartsWith(nameof(Utils)))
             {
                 resourcePath = assembly.GetManifestResourceNames()
                                        .Single(str => str.EndsWith(name));

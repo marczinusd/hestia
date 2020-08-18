@@ -8,14 +8,8 @@ namespace Hestia.UIRunner.Views
     [ExcludeFromCodeCoverage]
     public class RepositoryView : ReactiveUserControl<RepositoryViewModel>
     {
-        public RepositoryView()
-        {
-            InitializeComponent();
-        }
+        public RepositoryView() => InitializeComponent();
 
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
-        }
+        private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
     }
 }

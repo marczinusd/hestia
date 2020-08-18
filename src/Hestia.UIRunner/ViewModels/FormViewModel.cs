@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reactive.Linq;
@@ -12,19 +13,18 @@ using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using ReactiveUI.Validation.Extensions;
 using ReactiveUI.Validation.Helpers;
-using Path = System.IO.Path;
 using Unit = System.Reactive.Unit;
 
 namespace Hestia.UIRunner.ViewModels
 {
     public class FormViewModel : ReactiveValidationObject<FormViewModel>
     {
-        private readonly IStatsEnricher _statsEnricher;
-        private readonly IPathValidator _pathValidator;
         private readonly IRepositorySnapshotBuilderWrapper _builder;
-        private readonly ICoverageReportConverter _reportConverter;
         private readonly IDiskIOWrapper _ioWrapper;
         private readonly ObservableAsPropertyHelper<bool> _isExecuting;
+        private readonly IPathValidator _pathValidator;
+        private readonly ICoverageReportConverter _reportConverter;
+        private readonly IStatsEnricher _statsEnricher;
 
         public FormViewModel(IDiskIOWrapper ioWrapper,
                              IStatsEnricher statsEnricher,

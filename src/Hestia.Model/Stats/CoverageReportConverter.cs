@@ -32,7 +32,9 @@ namespace Hestia.Model.Stats
                 return inputFilePath;
             }
 
-            return _reportGeneratorWrapper.Generate(inputFilePath, outputLocation) ? Path.Join(outputLocation, "Cobertura.xml") : Option<string>.None;
+            return _reportGeneratorWrapper.Generate(inputFilePath, outputLocation)
+                       ? Path.Join(outputLocation, "Cobertura.xml")
+                       : Option<string>.None;
         }
     }
 }

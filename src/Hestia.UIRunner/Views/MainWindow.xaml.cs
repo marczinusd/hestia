@@ -17,9 +17,6 @@ namespace Hestia.UIRunner.Views
 #endif
         }
 
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
-        }
+        private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
     }
 }

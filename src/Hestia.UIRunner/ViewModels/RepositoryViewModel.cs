@@ -10,8 +10,8 @@ namespace Hestia.UIRunner.ViewModels
 {
     public class RepositoryViewModel : ReactiveObject
     {
-        private readonly ObservableAsPropertyHelper<IRepositorySnapshot> _selectedRepository;
         private readonly ObservableAsPropertyHelper<bool> _isExecuting;
+        private readonly ObservableAsPropertyHelper<IRepositorySnapshot> _selectedRepository;
 
         public RepositoryViewModel(IObservable<IRepositorySnapshot> selectedRepositoryObservable,
                                    ISnapshotPersistence snapshotPersistence)
@@ -21,7 +21,7 @@ namespace Hestia.UIRunner.ViewModels
             CommitToDatabaseCommand =
                 ReactiveCommand.CreateFromObservable<Unit, Unit>(_ => snapshotPersistence
                                                                      .InsertSnapshot(_selectedRepository
-                                                                                         .Value));
+                                                                         .Value));
             CommitToDatabaseCommand.IsExecuting.ToProperty(this, x => x.IsInsertionInProgress, out _isExecuting);
         }
 

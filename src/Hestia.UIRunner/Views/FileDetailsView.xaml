@@ -10,13 +10,13 @@
 
     <!-- Disable so bindings don't show resharper warnings -->
     <!-- ReSharper disable Xaml.ConstructorWarning -->
-    
+
     <Design.DataContext>
         <vm:FileDetailsViewModel />
     </Design.DataContext>
-    
+
     <DockPanel>
-        <DataGrid AutoGenerateColumns="True" Items="{Binding File.Content}"></DataGrid>
+        <DataGrid AutoGenerateColumns="True" Items="{Binding File.Content}" />
     </DockPanel>
     <!-- ReSharper restore Xaml.ConstructorWarning -->
     <!-- ReSharper restore Xaml.UnexpectedTextToken -->

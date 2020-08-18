@@ -27,10 +27,6 @@ namespace Hestia.Model.Wrappers
             return result.Length;
         }
 
-        public int NumberOfChangesForLine(string filePath, int lineNumber) =>
-            ParseLineHistoryForNumberOfChanges(Exec(LineHistoryCommand(filePath, lineNumber),
-                                                    Path.GetDirectoryName(filePath) ?? string.Empty));
-
         public IEnumerable<int> NumberOfChangesForEachLine(string filePath, int lineCount) =>
             Enumerable.Range(1, lineCount)
                       .Select(lineNumber => NumberOfChangesForLine(filePath, lineNumber));
@@ -57,7 +53,7 @@ namespace Hestia.Model.Wrappers
                       .Trim());
 
         /// <summary>
-        /// Checks out the nth commit (where 1 is the initial commit) of a git repository.
+        ///     Checks out the nth commit (where 1 is the initial commit) of a git repository.
         /// </summary>
         /// <param name="repoPath">Path to the repo.</param>
         /// <param name="commitNumber">Number of the commit.</param>
@@ -104,6 +100,10 @@ namespace Hestia.Model.Wrappers
 
         public void Checkout(string hash, string repoPath) =>
             Exec(CheckoutCommand(hash), repoPath);
+
+        public int NumberOfChangesForLine(string filePath, int lineNumber) =>
+            ParseLineHistoryForNumberOfChanges(Exec(LineHistoryCommand(filePath, lineNumber),
+                                                    Path.GetDirectoryName(filePath) ?? string.Empty));
 
         private static string OnelineFileHistory(string filepath) =>
             $"log --pretty=oneline {filepath}";

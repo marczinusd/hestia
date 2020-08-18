@@ -19,13 +19,13 @@ namespace Hestia.Model.Stats
     /// </remarks>
     public class StatsEnricher : IStatsEnricher
     {
-        private readonly ICommandLineExecutor _executor;
-        private readonly ICoverageProviderFactory _providerFactory;
-        private readonly IPathValidator _pathValidator;
         private readonly ICoverageReportConverter _converter;
+        private readonly ICommandLineExecutor _executor;
         private readonly IGitCommands _gitCommands;
         private readonly IDiskIOWrapper _ioWrapper;
         private readonly ILogger _logger;
+        private readonly IPathValidator _pathValidator;
+        private readonly ICoverageProviderFactory _providerFactory;
 
         public StatsEnricher(IDiskIOWrapper ioWrapper,
                              IGitCommands gitCommands,

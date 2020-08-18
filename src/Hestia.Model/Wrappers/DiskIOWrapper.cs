@@ -10,15 +10,13 @@ namespace Hestia.Model.Wrappers
     [ExcludeFromCodeCoverage]
     public class DiskIOWrapper : IDiskIOWrapper
     {
-        public ISourceLine[] ReadAllLinesFromFileAsSourceModel(string filePath)
-        {
-            return ReadAllLinesFromFile(filePath)
-                   .Select((line, i) => new SourceLine(i + 1,
-                                                       line,
-                                                       Option<ILineCoverageStats>.None,
-                                                       Option<ILineGitStats>.None) as ISourceLine)
-                   .ToArray();
-        }
+        public ISourceLine[] ReadAllLinesFromFileAsSourceModel(string filePath) =>
+            ReadAllLinesFromFile(filePath)
+                .Select((line, i) => new SourceLine(i + 1,
+                                                    line,
+                                                    Option<ILineCoverageStats>.None,
+                                                    Option<ILineGitStats>.None) as ISourceLine)
+                .ToArray();
 
         public IEnumerable<string> ReadAllLinesFromFile(string filePath) => System.IO.File.ReadAllLines(filePath);
 

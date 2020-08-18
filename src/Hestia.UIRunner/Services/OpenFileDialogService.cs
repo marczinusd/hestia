@@ -11,17 +11,11 @@ namespace Hestia.UIRunner.Services
     {
         private readonly Func<Window> _window;
 
-        public OpenFileDialogService(Func<Window> window)
-        {
-            _window = window;
-        }
+        public OpenFileDialogService(Func<Window> window) => _window = window;
 
         public async Task<string[]> OpenFileDialog()
         {
-            var dialog = new OpenFileDialog
-            {
-                AllowMultiple = false,
-            };
+            var dialog = new OpenFileDialog { AllowMultiple = false };
 
             return await dialog.ShowAsync(_window());
         }

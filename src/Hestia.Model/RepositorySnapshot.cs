@@ -23,6 +23,8 @@ namespace Hestia.Model
             Id = id;
         }
 
+        public string Id { get; }
+
         public Option<string> PathToCoverageResultFile { get; }
 
         public Option<DateTime> CommitCreationDate { get; }
@@ -32,8 +34,6 @@ namespace Hestia.Model
         public Option<string> RepositoryName { get; }
 
         public IList<IFile> Files { get; }
-
-        public string Id { get; }
 
         public IRepositorySnapshot With(IEnumerable<IFile>? files = null,
                                         string? atHash = null,

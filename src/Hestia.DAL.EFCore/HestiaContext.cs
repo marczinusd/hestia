@@ -13,14 +13,11 @@ namespace Hestia.DAL.EFCore
         {
         }
 
-        [UsedImplicitly]
-        public DbSet<RepositorySnapshotEntity> Snapshots { get; set; }
+        [UsedImplicitly] public DbSet<RepositorySnapshotEntity> Snapshots { get; set; }
 
-        [UsedImplicitly]
-        public DbSet<FileEntity> Files { get; set; }
+        [UsedImplicitly] public DbSet<FileEntity> Files { get; set; }
 
-        [UsedImplicitly]
-        public DbSet<LineEntity> SourceLines { get; set; }
+        [UsedImplicitly] public DbSet<LineEntity> SourceLines { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

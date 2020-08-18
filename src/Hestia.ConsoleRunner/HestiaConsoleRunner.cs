@@ -13,18 +13,17 @@ using Hestia.Model.Stats;
 using Hestia.Model.Wrappers;
 using LanguageExt;
 using Serilog;
-using File = System.IO.File;
 
 namespace Hestia.ConsoleRunner
 {
     public class HestiaConsoleRunner
     {
+        private readonly IJsonConfigurationProvider _configurationProvider;
+        private readonly ICoverageReportConverter _converter;
+        private readonly IDiskIOWrapper _ioWrapper;
         private readonly ILogger _logger;
         private readonly IStatsEnricher _statsEnricher;
-        private readonly IJsonConfigurationProvider _configurationProvider;
-        private readonly IDiskIOWrapper _ioWrapper;
         private readonly IPathValidator _validator;
-        private readonly ICoverageReportConverter _converter;
 
         public HestiaConsoleRunner(ILogger logger,
                                    IStatsEnricher statsEnricher,
@@ -42,12 +41,10 @@ namespace Hestia.ConsoleRunner
             _converter = converter;
         }
 
-        public void Run(IEnumerable<string> args)
-        {
+        public void Run(IEnumerable<string> args) =>
             Parser.Default
                   .ParseArguments<Options>(args)
                   .WithParsed(async x => await Execute(x));
-        }
 
         private static IRepositorySnapshot BuildRepositoryWithOptions(Options options,
                                                                       ConsoleRunnerConfig config,
@@ -72,7 +69,7 @@ namespace Hestia.ConsoleRunner
             // ReSharper disable once PossibleNullReferenceException
             if (!string.IsNullOrWhiteSpace(config.CoverageReportLocation) && !Path
                                                                               .GetFileName(config
-                                                                                               .CoverageReportLocation)
+                                                                                  .CoverageReportLocation)
                                                                               .ToLower()
                                                                               .Contains("coverage.json"))
             {
@@ -91,12 +88,12 @@ namespace Hestia.ConsoleRunner
 
             var enrichedRepository = repository.Apply(_statsEnricher.EnrichWithCoverage)
                                                .Apply(x => _statsEnricher.EnrichWithGitStats(x,
-                                                                                             GitStatGranularity.File));
+                                                          GitStatGranularity.File));
 
             _logger.Information("Writing results to output...");
             File.WriteAllText(options.OutputPath,
                               JsonSerializer.Serialize(enrichedRepository,
-                                                       new JsonSerializerOptions { WriteIndented = true, }));
+                                                       new JsonSerializerOptions { WriteIndented = true }));
             _logger.Information($"Output created at {options.OutputPath}");
         }
 

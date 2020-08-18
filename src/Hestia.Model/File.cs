@@ -61,9 +61,9 @@ namespace Hestia.Model
 
         public FileDetails AsFileDetails()
         {
-            var hardCopy = new File(this.Filename,
-                                    this.Extension,
-                                    this.Path,
+            var hardCopy = new File(Filename,
+                                    Extension,
+                                    Path,
                                     Content,
                                     GitStats,
                                     CoverageStats);

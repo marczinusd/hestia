@@ -9,13 +9,11 @@ namespace Hestia.WebService
     [ExcludeFromCodeCoverage]
     public static class Program
     {
-        public static void Main(string[] args)
-        {
+        public static void Main(string[] args) =>
             CreateHostBuilder(args)
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .Build()
                 .Run();
-        }
 
         // ReSharper disable once MemberCanBePrivate.Global
         public static IHostBuilder CreateHostBuilder(string[] args) =>

@@ -22,7 +22,8 @@ namespace Test.Hestia.Model.Builders
                                                               "lcov.info",
                                                               "hash",
                                                               default(DateTime),
-                                                              MockRepo.CreateDiskIOWrapperMock().Object,
+                                                              MockRepo.CreateDiskIOWrapperMock()
+                                                                      .Object,
                                                               Mock.Of<IPathValidator>());
 
             var snapshot = args.Build();

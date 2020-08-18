@@ -16,7 +16,7 @@ namespace Hestia.Model.Builders
             return new RepositorySnapshot(args.SnapshotId,
                                           args.DiskIoWrapper
                                               .EnumerateAllFilesForPathRecursively(Path.Join(args.RootPath,
-                                                                                             args.SourceRoot))
+                                                  args.SourceRoot))
                                               .Select(filePath =>
                                                           FileBuilder.BuildFileFromPath(filePath, args.DiskIoWrapper))
                                               .Where(f => !args.SourceExtensions.Any() ||

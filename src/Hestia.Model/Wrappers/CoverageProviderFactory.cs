@@ -12,7 +12,8 @@ namespace Hestia.Model.Wrappers
         private readonly IDiskIOWrapper _ioWrapper;
         private readonly IXmlFileSerializationWrapper _xmlFileSerializationWrapper;
 
-        public CoverageProviderFactory(IDiskIOWrapper ioWrapper, IXmlFileSerializationWrapper xmlFileSerializationWrapper)
+        public CoverageProviderFactory(IDiskIOWrapper ioWrapper,
+                                       IXmlFileSerializationWrapper xmlFileSerializationWrapper)
         {
             _ioWrapper = ioWrapper;
             _xmlFileSerializationWrapper = xmlFileSerializationWrapper;
@@ -20,12 +21,14 @@ namespace Hestia.Model.Wrappers
 
         public ICoverageProvider CreateProviderForFile(string filePath)
         {
-            if (Path.GetFileName(filePath).Contains("coverage.json", StringComparison.OrdinalIgnoreCase))
+            if (Path.GetFileName(filePath)
+                    .Contains("coverage.json", StringComparison.OrdinalIgnoreCase))
             {
                 return new JsonCovCoverageProvider(_ioWrapper);
             }
 
-            if (Path.GetFileName(filePath).Contains("cobertura.xml", StringComparison.OrdinalIgnoreCase))
+            if (Path.GetFileName(filePath)
+                    .Contains("cobertura.xml", StringComparison.OrdinalIgnoreCase))
             {
                 return new CoberturaCoverageProvider(_xmlFileSerializationWrapper);
             }

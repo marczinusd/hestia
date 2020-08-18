@@ -28,8 +28,8 @@ namespace Test.Hestia.Model.Stats
             result.Should()
                   .HaveCount(21);
             result[0]
-                  .FileName.Should()
-                  .Contain("Directory.cs");
+                .FileName.Should()
+                .Contain("Directory.cs");
             result[0]
                 .LineCoverages.Should()
                 .BeEquivalentTo(new LineCoverage(15, 0),

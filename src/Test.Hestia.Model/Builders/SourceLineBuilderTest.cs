@@ -10,12 +10,10 @@ namespace Test.Hestia.Model.Builders
         private const string SecondLine = "second line";
 
         [Fact]
-        public void SourceLineBuilderShouldReturnEmptyArrayForNoInputs()
-        {
+        public void SourceLineBuilderShouldReturnEmptyArrayForNoInputs() =>
             SourceLineBuilder.BuildSourceLineFromLineOfCode(new string[0])
                              .Should()
                              .BeEmpty();
-        }
 
         [Fact]
         public void SourceLineBuilderShouldReturnTwoDistinctLinesForTwoLinesOfCode()

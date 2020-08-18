@@ -14,7 +14,7 @@ namespace Hestia.Model.Wrappers
             {
                 { "Reports", $"{inputFilePath}" },
                 { "TargetDir", $"{outputLocation}" },
-                { "ReportTypes", "Cobertura" },
+                { "ReportTypes", "Cobertura" }
             });
             IReportGenerator generator = new Generator();
 

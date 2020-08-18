@@ -23,7 +23,8 @@ namespace Hestia.UIRunner.ViewModels
                                               builderWrapper,
                                               fileDialogService,
                                               converter);
-            RepositoryViewModel = new RepositoryViewModel(FormViewModel.RepositoryCreationObservable, snapshotPersistence);
+            RepositoryViewModel =
+                new RepositoryViewModel(FormViewModel.RepositoryCreationObservable, snapshotPersistence);
             FileDetailsViewModel = new FileDetailsViewModel(RepositoryViewModel.SelectedItemObservable);
         }
 

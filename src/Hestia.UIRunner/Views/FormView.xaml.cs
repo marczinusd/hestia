@@ -18,14 +18,8 @@ namespace Hestia.UIRunner.Views
         // ReSharper disable once MemberCanBePrivate.Global
         public TextBlock RepositoryPathValidation => this.FindControl<TextBlock>("RepositoryTextValidation");
 
-        private void SetupValidation()
-        {
-            this.DataContext = this;
-        }
+        private void SetupValidation() => DataContext = this;
 
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
-        }
+        private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
     }
 }
