@@ -133,6 +133,18 @@ namespace Test.Hestia.DAL.EFCore
                   .BeTrue();
         }
 
+        [Fact]
+        public void ClientShouldDisposeDbContext()
+        {
+            var context = new HestiaContextSpy(Options);
+            var client = new SnapshotEFClient(context);
+
+            client.Dispose();
+
+            context.IsDisposed.Should()
+                   .BeTrue();
+        }
+
         private void SeedDb()
         {
             using var context = new HestiaContext(Options);
@@ -141,6 +153,18 @@ namespace Test.Hestia.DAL.EFCore
             context.Snapshots.Add(SeededRepo);
 
             context.SaveChanges();
+        }
+
+        private class HestiaContextSpy : HestiaContext
+        {
+            public HestiaContextSpy(DbContextOptions options)
+                : base(options)
+            {
+            }
+
+            public bool IsDisposed { get; set; }
+
+            public override void Dispose() => IsDisposed = true;
         }
     }
 }
