@@ -20,8 +20,6 @@ namespace Hestia.DAL.EFCore
             _dbContext = dbContext;
         }
 
-        public void Dispose() => _dbContext?.Dispose();
-
         public Option<IFileEntity> GetFileDetails(string fileId, string snapshotId) =>
             _dbContext.Files.FirstOrDefault(f => f.Id == fileId && f.Parent.Id == snapshotId) is { } result
                 ? Some<IFileEntity>(new FileEntityAdapter(result))
@@ -43,5 +41,19 @@ namespace Hestia.DAL.EFCore
             _dbContext.Snapshots.SingleOrDefault(s => s.Id == id) is { } entity
                 ? Some<IRepositorySnapshotEntity>(new RepositorySnapshotEntityAdapter(entity))
                 : None;
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _dbContext?.Dispose();
+            }
+        }
     }
 }
