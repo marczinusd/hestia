@@ -33,6 +33,8 @@ namespace Hestia.Model.Wrappers
 
         string GetHashForNthCommit(string repoPath, int commitNumber);
 
+        string GetHashForLatestCommit(string repoPath);
+
         void Checkout(string hash, string repoPath);
     }
 }

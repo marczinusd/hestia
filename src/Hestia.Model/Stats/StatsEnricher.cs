@@ -69,7 +69,9 @@ namespace Hestia.Model.Stats
             return repositorySnapshot.With(repositorySnapshot
                                            .Files
                                            .Apply(x => x.Select(f => EnrichWithGitStats(f, granularity)))
-                                           .ToList());
+                                           .ToList(),
+                                           _gitCommands.GetHashForLatestCommit(repositorySnapshot.RootPath),
+                                           commitCreationDate: _gitCommands.DateOfLatestCommitOnBranch(repositorySnapshot.RootPath));
         }
 
         public Repository Enrich(Repository repository,

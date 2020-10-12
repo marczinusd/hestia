@@ -229,6 +229,23 @@ namespace Test.Hestia.Model.Wrappers
         }
 
         [Fact]
+        public void HashForLatestCommit()
+        {
+            var executorMock = new Mock<ICommandLineExecutor>();
+            const string repoPath = "dir";
+            const string command = "rev-parse HEAD";
+            executorMock
+                .Setup(mock => mock.Execute("git", It.Is<string>(c => c == command), repoPath))
+                .Returns(new[] { "23d81a11e8deb30d2f004cfc5ed2d7430581e70a" });
+            var gitCommands = new GitCommands(executorMock.Object);
+
+            var result = gitCommands.GetHashForLatestCommit(repoPath);
+
+            result.Should()
+                  .Be("23d81a11e8deb30d2f004cfc5ed2d7430581e70a");
+        }
+
+        [Fact]
         public void CheckoutNthCommitOnBranch()
         {
             var output = Helpers.LoadResource(Paths.GitSingleCommitOutput, typeof(GitCommandsTest).Assembly);

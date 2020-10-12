@@ -152,7 +152,8 @@ namespace Test.Hestia.UIRunner.ViewModel
                                                             Option<string>.None,
                                                             Option<string>.None,
                                                             Option<DateTime>.None,
-                                                            Option<string>.None);
+                                                            Option<string>.None,
+                                                            string.Empty);
             converterMock.Setup(mock => mock.Convert(It.IsAny<string>(), It.IsAny<string>()))
                          .Returns(CoverageOutputLocation);
             builderMock.Setup(mock => mock.Build(It.IsAny<RepositorySnapshotBuilderArguments>()))
@@ -243,7 +244,8 @@ namespace Test.Hestia.UIRunner.ViewModel
                                                             Option<string>.None,
                                                             Option<string>.None,
                                                             Option<DateTime>.None,
-                                                            Option<string>.None);
+                                                            Option<string>.None,
+                                                            string.Empty);
             converterMock.Setup(mock => mock.Convert(It.IsAny<string>(), It.IsAny<string>()))
                          .Returns(Option<string>.None);
             builderMock.Setup(mock => mock.Build(It.IsAny<RepositorySnapshotBuilderArguments>()))

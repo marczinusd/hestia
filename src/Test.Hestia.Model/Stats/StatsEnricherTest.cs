@@ -48,6 +48,7 @@ namespace Test.Hestia.Model.Stats
                                                           "coverage.json",
                                                           Option<string>.None,
                                                           Option<DateTime>.None,
+                                                          string.Empty,
                                                           string.Empty);
 
             var enrichedSnapshot = enricher.EnrichWithCoverage(snapshotToEnrich);
@@ -66,6 +67,7 @@ namespace Test.Hestia.Model.Stats
                                                   Option<string>.None,
                                                   "hash",
                                                   Option<DateTime>.None,
+                                                  string.Empty,
                                                   string.Empty);
             var enricher = fixture.Create<StatsEnricher>();
 

@@ -27,7 +27,8 @@ namespace Test.Hestia.UIRunner.ViewModel
                                                   Option<string>.None,
                                                   Option<string>.None,
                                                   Option<DateTime>.None,
-                                                  Option<string>.None);
+                                                  Option<string>.None,
+                                                  string.Empty);
             var vm = new RepositoryViewModel(scheduler.CreateColdObservable(snapshot.AsNotification()),
                                              Mock.Of<ISnapshotPersistence>());
 
@@ -47,7 +48,8 @@ namespace Test.Hestia.UIRunner.ViewModel
                                                   Option<string>.None,
                                                   Option<string>.None,
                                                   Option<DateTime>.None,
-                                                  Option<string>.None);
+                                                  Option<string>.None,
+                                                  string.Empty);
             var snapshotPersistence = new Mock<ISnapshotPersistence>();
             var vm = new RepositoryViewModel(Observable.Return(snapshot),
                                              snapshotPersistence.Object);
@@ -70,7 +72,8 @@ namespace Test.Hestia.UIRunner.ViewModel
                                                   Option<string>.None,
                                                   Option<string>.None,
                                                   Option<DateTime>.None,
-                                                  Option<string>.None);
+                                                  Option<string>.None,
+                                                  string.Empty);
             var vm = new RepositoryViewModel(scheduler.CreateColdObservable(snapshot.AsNotification()),
                                              Mock.Of<ISnapshotPersistence>());
             var publishedValues = new List<IFile>();
@@ -97,7 +100,8 @@ namespace Test.Hestia.UIRunner.ViewModel
                                                   Option<string>.None,
                                                   Option<string>.None,
                                                   Option<DateTime>.None,
-                                                  Option<string>.None);
+                                                  Option<string>.None,
+                                                  string.Empty);
             var persistence = new Mock<ISnapshotPersistence>();
             var commitObservable = Observable.Return(Unit.Default)
                                              .Delay(TimeSpan.FromSeconds(1), scheduler);

@@ -27,7 +27,8 @@ namespace Hestia.Model.Builders
                                               : Some(args.CoveragePath),
                                           args.AtHash,
                                           args.CommitCreationDate,
-                                          string.Empty);
+                                          new DirectoryInfo(args.RootPath).Name,
+                                          args.RootPath);
         }
     }
 }

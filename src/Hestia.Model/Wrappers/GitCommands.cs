@@ -105,6 +105,8 @@ namespace Hestia.Model.Wrappers
                                     .Value);
         }
 
+        public string GetHashForLatestCommit(string repoPath) => Exec("rev-parse HEAD", repoPath).First();
+
         public void Checkout(string hash, string repoPath) =>
             Exec(CheckoutCommand(hash), repoPath);
 

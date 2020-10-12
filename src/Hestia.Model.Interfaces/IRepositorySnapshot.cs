@@ -14,12 +14,15 @@ namespace Hestia.Model.Interfaces
 
         Option<string> RepositoryName { get; }
 
+        string RootPath { get; }
+
         IList<IFile> Files { get; }
 
         IRepositorySnapshot With(IEnumerable<IFile>? files = null,
                                  string? atHash = null,
                                  string? pathToCoverageResultFile = null,
                                  DateTime? commitCreationDate = null,
-                                 string? name = null);
+                                 string? name = null,
+                                 string? rootPath = null);
     }
 }

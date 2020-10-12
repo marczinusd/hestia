@@ -13,12 +13,14 @@ namespace Hestia.Model
                                   Option<string> pathToCoverageResultFile,
                                   Option<string> atHash,
                                   Option<DateTime> commitCreationDate,
-                                  Option<string> repositoryName)
+                                  Option<string> repositoryName,
+                                  string rootPath)
         {
             PathToCoverageResultFile = pathToCoverageResultFile;
             AtHash = atHash;
             CommitCreationDate = commitCreationDate;
             RepositoryName = repositoryName;
+            RootPath = rootPath;
             Files = files;
             Id = id;
         }
@@ -33,19 +35,23 @@ namespace Hestia.Model
 
         public Option<string> RepositoryName { get; }
 
+        public string RootPath { get; }
+
         public IList<IFile> Files { get; }
 
         public IRepositorySnapshot With(IEnumerable<IFile>? files = null,
                                         string? atHash = null,
                                         string? pathToCoverageResultFile = null,
                                         DateTime? commitCreationDate = null,
-                                        string? name = null) =>
+                                        string? name = null,
+                                        string? rootPath = null) =>
             new RepositorySnapshot(Id,
                                    files?.ToList() ?? Files,
                                    pathToCoverageResultFile ?? PathToCoverageResultFile,
                                    atHash ?? AtHash,
                                    commitCreationDate ?? CommitCreationDate,
-                                   name ?? RepositoryName);
+                                   name ?? RepositoryName,
+                                   rootPath ?? RootPath);
 
         public SnapshotHeader AsHeader() => new SnapshotHeader(Id,
                                                                RepositoryName.Match(x => x, string.Empty),
