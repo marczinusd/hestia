@@ -46,6 +46,7 @@ namespace Hestia.UIRunner
                    .As<ISnapshotPersistence>();
             builder.RegisterType<XmlFileSerializationWrapper>()
                    .As<IXmlFileSerializationWrapper>();
+            builder.RegisterInstance(DbSetup.Context.Value);
 
             return builder;
         }

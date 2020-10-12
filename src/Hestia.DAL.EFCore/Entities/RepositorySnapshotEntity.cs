@@ -11,7 +11,7 @@ namespace Hestia.DAL.EFCore.Entities
         {
         }
 
-        public RepositorySnapshotEntity(IEnumerable<FileEntity> files,
+        public RepositorySnapshotEntity(IList<FileEntity> files,
                                         string atHash,
                                         DateTime? hashDate,
                                         string name,
@@ -24,7 +24,7 @@ namespace Hestia.DAL.EFCore.Entities
             Id = id;
         }
 
-        [UsedImplicitly] public IEnumerable<FileEntity> Files { get; set; }
+        [UsedImplicitly] public IList<FileEntity> Files { get; set; }
 
         [UsedImplicitly] public string Id { get; set; }
 

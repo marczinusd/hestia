@@ -17,7 +17,7 @@ namespace Hestia.DAL.EFCore.Entities
                            null!);
 
         public static RepositorySnapshotEntity AsEntity(this IRepositorySnapshot snapshot) =>
-            new RepositorySnapshotEntity(snapshot.Files.Select(f => f.AsEntity()),
+            new RepositorySnapshotEntity(snapshot.Files.Select(f => f.AsEntity()).ToList(),
                                          snapshot.AtHash.Match(x => x, string.Empty),
                                          snapshot.CommitCreationDate.Match(x => x, () => DateTime.MinValue),
                                          snapshot.RepositoryName.Match(x => x, () => string.Empty),
