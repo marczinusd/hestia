@@ -250,7 +250,7 @@ namespace Test.Hestia.Model.Stats
 
             // verify behavior
             gitCommandsMock.Verify(mock => mock.Checkout(It.IsAny<string>(), It.IsAny<string>()), Times.Exactly(5));
-            gitCommandsMock.Verify(mock => mock.DateOfLatestCommitOnBranch(It.IsAny<string>()), Times.Exactly(5));
+            gitCommandsMock.Verify(mock => mock.DateOfLatestCommitOnBranch(It.IsAny<string>()), Times.Exactly(10)); // invoked redundantly due to how snapshots are enriched
             gitCommandsMock.Verify(mock => mock.GetHashForNthCommit(It.IsAny<string>(), It.IsAny<int>()),
                                    Times.Exactly(5));
             executorMock.Verify(mock => mock.Execute("dotnet cover", It.IsAny<string>(), It.IsAny<string>()),
