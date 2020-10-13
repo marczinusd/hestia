@@ -10,9 +10,14 @@ namespace Hestia.UIRunner
         public static readonly Lazy<HestiaContext> Context = new Lazy<HestiaContext>(() =>
         {
             var contextBuilder = new DbContextOptionsBuilder();
-            var dbPath = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "dev", "hestia.db");
-            contextBuilder.UseSqlite($@"Data Source={dbPath}"); // TODO: move this to app.config
+            var dbFolder = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "dev");
+            var dbPath = Path.Join(dbFolder, "hestia.db");
+            if (!Directory.Exists(dbFolder))
+            {
+                Directory.CreateDirectory(dbFolder);
+            }
 
+            contextBuilder.UseSqlite($@"Data Source={dbPath}"); // TODO: move this to app.config
             var dbContext = new HestiaContext(contextBuilder.Options);
             dbContext.Database.EnsureCreated();
 

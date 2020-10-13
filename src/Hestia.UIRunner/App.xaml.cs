@@ -30,6 +30,7 @@ namespace Hestia.UIRunner
 
         private static ContainerBuilder BuildContainer() =>
             new ContainerBuilder()
-                .RegisterMainWindowViewModelDependencies();
+                .RegisterMainWindowViewModelDependencies()
+                .WithDbConnection(DbSetup.Context.Value);
     }
 }

@@ -42,11 +42,17 @@ namespace Hestia.UIRunner
                    .As<IReportGeneratorWrapper>();
             builder.RegisterType<CoverageReportConverter>()
                    .As<ICoverageReportConverter>();
+
+            return builder;
+        }
+
+        public static ContainerBuilder WithDbConnection(this ContainerBuilder builder, HestiaContext dbContext)
+        {
             builder.RegisterType<SnapshotEFClient>()
                    .As<ISnapshotPersistence>();
             builder.RegisterType<XmlFileSerializationWrapper>()
                    .As<IXmlFileSerializationWrapper>();
-            builder.RegisterInstance(DbSetup.Context.Value);
+            builder.RegisterInstance(dbContext);
 
             return builder;
         }

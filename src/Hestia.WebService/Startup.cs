@@ -33,6 +33,11 @@ namespace Hestia.WebService
                 var dbConn = Configuration["Connection:SqliteConn"];
                 optionsBuilder.UseSqlite($"Data Source={Path.Join(dbPath, dbConn)}");
                 var context = new HestiaContext(optionsBuilder.Options);
+                if (!Directory.Exists(dbPath))
+                {
+                    Directory.CreateDirectory(dbPath);
+                }
+
                 context.Database.EnsureCreated();
 
                 return new HestiaContext(optionsBuilder.Options);
