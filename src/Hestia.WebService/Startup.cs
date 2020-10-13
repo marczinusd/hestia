@@ -1,9 +1,10 @@
+using System;
 using System.Diagnostics.CodeAnalysis;
-using Autofac;
+using System.IO;
 using Hestia.DAL.EFCore;
 using Hestia.DAL.Interfaces;
-using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -25,19 +26,25 @@ namespace Hestia.WebService
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton(provider =>
+            {
+                var optionsBuilder = new DbContextOptionsBuilder();
+                var dbPath = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "dev");
+                var dbConn = Configuration["Connection:SqliteConn"];
+                optionsBuilder.UseSqlite($"Data Source={Path.Join(dbPath, dbConn)}");
+                var context = new HestiaContext(optionsBuilder.Options);
+                context.Database.EnsureCreated();
+
+                return new HestiaContext(optionsBuilder.Options);
+            });
+            services.AddSingleton<ISnapshotRetrieval, SnapshotEFClient>();
+            services.AddSingleton<IFileRetrieval, SnapshotEFClient>();
             services.AddControllers();
 
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Hestia API", Version = "v1" });
             });
-
-            services.AddSingleton<ISnapshotPersistence, SnapshotEFClient>();
-        }
-
-        [UsedImplicitly]
-        public void ConfigureContainer(ContainerBuilder builder)
-        {
         }
 
         // ReSharper disable once UnusedMember.Global

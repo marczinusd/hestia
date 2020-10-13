@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Hestia.DAL.Interfaces;
 using Hestia.Model.Interfaces;
+using Hestia.WebService.ServiceModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,7 +29,8 @@ namespace Hestia.WebService.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<ISnapshotHeader>> GetAllSnapshots() =>
-            Ok(_snapshotRetrieval.GetAllSnapshotsHeaders());
+            Ok(_snapshotRetrieval.GetAllSnapshotsHeaders()
+                                 .Select(SlimSnapshot.From));
 
         /// <summary>
         ///     Looks up a repository by id.
