@@ -17,10 +17,10 @@ namespace Hestia.Model.Builders
                                           args.DiskIoWrapper
                                               .EnumerateAllFilesForPathRecursively(Path.Join(args.RootPath,
                                                   args.SourceRoot))
+                                              .Where(f => !args.SourceExtensions.Any() ||
+                                                          args.SourceExtensions.Contains(Path.GetExtension(f)))
                                               .Select(filePath =>
                                                           FileBuilder.BuildFileFromPath(filePath, args.DiskIoWrapper))
-                                              .Where(f => !args.SourceExtensions.Any() ||
-                                                          args.SourceExtensions.Contains(f.Extension))
                                               .ToList(),
                                           string.IsNullOrWhiteSpace(args.CoveragePath)
                                               ? Option<string>.None
