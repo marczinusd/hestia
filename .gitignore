@@ -477,6 +477,7 @@ dist/
 **/.idea/*
 **/TestResults/*
 **/obj/*
+**/bin/*
 
 # Cypress
 **/screenshots/*
