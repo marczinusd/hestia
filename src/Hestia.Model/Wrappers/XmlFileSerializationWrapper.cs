@@ -14,7 +14,7 @@ namespace Hestia.Model.Wrappers
             var serializer = new XmlSerializer(typeof(T));
             using Stream reader = new FileStream(path, fileMode);
 
-            return (T)serializer.Deserialize(reader);
+            return (T)serializer.Deserialize(reader)!;
         }
     }
 }

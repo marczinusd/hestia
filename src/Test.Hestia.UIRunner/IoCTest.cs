@@ -3,7 +3,6 @@ using FluentAssertions;
 using Hestia.DAL.EFCore;
 using Hestia.UIRunner;
 using Microsoft.EntityFrameworkCore;
-using Moq;
 using Xunit;
 
 namespace Test.Hestia.UIRunner

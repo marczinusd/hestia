@@ -170,8 +170,8 @@ namespace Hestia.Model.Stats
                 file.Content.Select(line =>
                 {
                     // ReSharper disable once AssignNullToNotNullAttribute
-                    ILineGitStats statsForLine = lineStats.SingleOrDefault(l => l.LineNumber ==
-                                                                               line.LineNumber);
+                    var statsForLine = lineStats.SingleOrDefault(l => l.LineNumber ==
+                                                                      line.LineNumber);
                     return new SourceLine(line.LineNumber,
                                           line.Text,
                                           line.LineCoverageStats,

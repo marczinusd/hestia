@@ -8,6 +8,6 @@ namespace Hestia.Model.Extensions
     {
         public static IEnumerable<T> DistinctBy<T, Tr>(this IEnumerable<T> enumerable, Func<T, Tr> selector) =>
             enumerable.GroupBy(selector)
-                      .Select(x => x.FirstOrDefault());
+                      .Select(x => x.First());
     }
 }
