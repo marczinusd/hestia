@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Hestia.DAL.EFCore;
 using Microsoft.EntityFrameworkCore;
+using SharpGen.Runtime;
 
 namespace Hestia.UIRunner
 {
+    [ExcludeFromCodeCoverage]
     internal static class DbSetup
     {
         public static readonly Lazy<HestiaContext> Context = new Lazy<HestiaContext>(() =>

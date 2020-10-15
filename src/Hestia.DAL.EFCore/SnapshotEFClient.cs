@@ -28,9 +28,6 @@ namespace Hestia.DAL.EFCore
         public IObservable<Unit> InsertSnapshot(IRepositorySnapshot snapshot)
         {
             _dbContext.Snapshots.Add(snapshot.AsEntity());
-            _dbContext.SaveChanges();
-            var count = _dbContext.Snapshots.Count();
-            Console.WriteLine(count);
 
             return Observable.FromAsync(_dbContext.SaveChangesAsync)
                              .Select(x => Unit.Default);
