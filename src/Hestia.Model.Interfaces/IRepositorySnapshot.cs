@@ -14,6 +14,8 @@ namespace Hestia.Model.Interfaces
 
         Option<string> RepositoryName { get; }
 
+        Option<int> CommitRelativePosition { get; }
+
         string RootPath { get; }
 
         IList<IFile> Files { get; }
@@ -23,6 +25,7 @@ namespace Hestia.Model.Interfaces
                                  string? pathToCoverageResultFile = null,
                                  DateTime? commitCreationDate = null,
                                  string? name = null,
-                                 string? rootPath = null);
+                                 string? rootPath = null,
+                                 int? commitRelativePosition = null);
     }
 }

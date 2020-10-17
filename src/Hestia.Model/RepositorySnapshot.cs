@@ -14,13 +14,15 @@ namespace Hestia.Model
                                   Option<string> atHash,
                                   Option<DateTime> commitCreationDate,
                                   Option<string> repositoryName,
-                                  string rootPath)
+                                  string rootPath,
+                                  Option<int> commitRelativePosition)
         {
             PathToCoverageResultFile = pathToCoverageResultFile;
             AtHash = atHash;
             CommitCreationDate = commitCreationDate;
             RepositoryName = repositoryName;
             RootPath = rootPath;
+            CommitRelativePosition = commitRelativePosition;
             Files = files;
             Id = id;
         }
@@ -35,6 +37,8 @@ namespace Hestia.Model
 
         public Option<string> RepositoryName { get; }
 
+        public Option<int> CommitRelativePosition { get; }
+
         public string RootPath { get; }
 
         public IList<IFile> Files { get; }
@@ -44,14 +48,16 @@ namespace Hestia.Model
                                         string? pathToCoverageResultFile = null,
                                         DateTime? commitCreationDate = null,
                                         string? name = null,
-                                        string? rootPath = null) =>
+                                        string? rootPath = null,
+                                        int? commitRelativePosition = null) =>
             new RepositorySnapshot(Id,
                                    files?.ToList() ?? Files,
                                    pathToCoverageResultFile ?? PathToCoverageResultFile,
                                    atHash ?? AtHash,
                                    commitCreationDate ?? CommitCreationDate,
                                    name ?? RepositoryName,
-                                   rootPath ?? RootPath);
+                                   rootPath ?? RootPath,
+                                   commitRelativePosition ?? CommitRelativePosition);
 
         public SnapshotHeader AsHeader() => new SnapshotHeader(Id,
                                                                RepositoryName.Match(x => x, string.Empty),

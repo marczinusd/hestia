@@ -84,9 +84,7 @@ namespace Test.Hestia.UIRunner.ViewModel
                                        Mock.Of<IOpenFileDialogService>(),
                                        Mock.Of<ICoverageReportConverter>())
             {
-                SourceExtensions = "bla",
-                CoverageOutputLocation = "bla",
-                RepositoryPath = input
+                SourceExtensions = "bla", CoverageOutputLocation = "bla", RepositoryPath = input
             };
             Helpers.After(TimeSpan.FromMilliseconds(WaitMs),
                           () => vm.ValidationContext.Text
@@ -106,9 +104,7 @@ namespace Test.Hestia.UIRunner.ViewModel
                                        Mock.Of<IOpenFileDialogService>(),
                                        Mock.Of<ICoverageReportConverter>())
             {
-                RepositoryPath = "bla",
-                SourceExtensions = "bla",
-                CoverageOutputLocation = input
+                RepositoryPath = "bla", SourceExtensions = "bla", CoverageOutputLocation = input
             };
             Helpers.After(TimeSpan.FromMilliseconds(WaitMs),
                           () => vm.ValidationContext.Text
@@ -128,9 +124,7 @@ namespace Test.Hestia.UIRunner.ViewModel
                                        Mock.Of<IOpenFileDialogService>(),
                                        Mock.Of<ICoverageReportConverter>())
             {
-                RepositoryPath = "bla",
-                CoverageOutputLocation = "bla",
-                SourceExtensions = input
+                RepositoryPath = "bla", CoverageOutputLocation = "bla", SourceExtensions = input
             };
 
             Helpers.After(TimeSpan.FromMilliseconds(WaitMs),
@@ -153,7 +147,8 @@ namespace Test.Hestia.UIRunner.ViewModel
                                                             Option<string>.None,
                                                             Option<DateTime>.None,
                                                             Option<string>.None,
-                                                            string.Empty);
+                                                            string.Empty,
+                                                            0);
             converterMock.Setup(mock => mock.Convert(It.IsAny<string>(), It.IsAny<string>()))
                          .Returns(CoverageOutputLocation);
             builderMock.Setup(mock => mock.Build(It.IsAny<RepositorySnapshotBuilderArguments>()))
@@ -245,7 +240,8 @@ namespace Test.Hestia.UIRunner.ViewModel
                                                             Option<string>.None,
                                                             Option<DateTime>.None,
                                                             Option<string>.None,
-                                                            string.Empty);
+                                                            string.Empty,
+                                                            0);
             converterMock.Setup(mock => mock.Convert(It.IsAny<string>(), It.IsAny<string>()))
                          .Returns(Option<string>.None);
             builderMock.Setup(mock => mock.Build(It.IsAny<RepositorySnapshotBuilderArguments>()))

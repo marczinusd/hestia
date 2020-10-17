@@ -20,7 +20,8 @@ namespace Test.Hestia.WebService.ServiceModel
                                                   "123",
                                                   DateTime.MinValue,
                                                   "bla",
-                                                  "path").AsHeader();
+                                                  "path",
+                                                  0).AsHeader();
 
             var slim = SlimSnapshot.From(snapshot);
 
