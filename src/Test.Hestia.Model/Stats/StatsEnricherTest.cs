@@ -50,6 +50,7 @@ namespace Test.Hestia.Model.Stats
                                                           Option<DateTime>.None,
                                                           string.Empty,
                                                           string.Empty,
+                                                          0,
                                                           0);
 
             var enrichedSnapshot = enricher.EnrichWithCoverage(snapshotToEnrich);
@@ -70,6 +71,7 @@ namespace Test.Hestia.Model.Stats
                                                   Option<DateTime>.None,
                                                   string.Empty,
                                                   string.Empty,
+                                                  0,
                                                   0);
             var enricher = fixture.Create<StatsEnricher>();
 

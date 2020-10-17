@@ -72,7 +72,8 @@ namespace Hestia.Model.Stats
                                            .ToList(),
                                            _gitCommands.GetHashForLatestCommit(repositorySnapshot.RootPath),
                                            commitCreationDate: _gitCommands.DateOfLatestCommitOnBranch(repositorySnapshot.RootPath),
-                                           commitRelativePosition: _gitCommands.GetOrderOfCurrentHeadRelativeToFirstCommitOfBranch(repositorySnapshot.RootPath));
+                                           commitRelativePosition: _gitCommands.GetOrderOfCurrentHeadRelativeToFirstCommitOfBranch(repositorySnapshot.RootPath),
+                                           numberOfCommitsOnBranch: _gitCommands.NumberOfCommitsOnCurrentBranch(repositorySnapshot.RootPath));
         }
 
         public Repository Enrich(Repository repository,
@@ -91,7 +92,7 @@ namespace Hestia.Model.Stats
             var sampleInterval = (args.LastCommitToSample - args.FirstCommitToSample) / (args.NumberOfSamples - 1);
 
             return Enumerable
-                   .Range(0, args.NumberOfSamples - 1) // -1 so last sample should come from args.LastCommitToSample
+                   .Range(0, args.NumberOfSamples - 1) // -1 so that last sample comes from args.LastCommitToSample
                    .Select(i => args.FirstCommitToSample + (i * sampleInterval))
                    .Append(args.LastCommitToSample)
                    .Select(commitNo => _gitCommands.GetHashForNthCommit(args.RepoPath, commitNo))

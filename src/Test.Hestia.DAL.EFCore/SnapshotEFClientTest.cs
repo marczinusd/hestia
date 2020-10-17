@@ -47,7 +47,8 @@ namespace Test.Hestia.DAL.EFCore
                                    DateTime.MinValue,
                                    "somename",
                                    "somePath",
-                                   1);
+                                   1,
+                                   0);
 
         public SnapshotEFClientTest() => SeedDb();
 

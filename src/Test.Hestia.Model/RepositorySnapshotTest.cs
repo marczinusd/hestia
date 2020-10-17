@@ -21,6 +21,7 @@ namespace Test.Hestia.Model
                                                   default(DateTime),
                                                   string.Empty,
                                                   string.Empty,
+                                                  0,
                                                   0);
 
             snapshot.Should()
@@ -37,6 +38,7 @@ namespace Test.Hestia.Model
                                                   default(DateTime),
                                                   string.Empty,
                                                   string.Empty,
+                                                  0,
                                                   0);
 
             var newSnapshot = snapshot.With(MockRepo.CreateFiles(3),
@@ -76,6 +78,7 @@ namespace Test.Hestia.Model
                                                   Some(DateTime.MaxValue),
                                                   Some("name"),
                                                   "path",
+                                                  0,
                                                   0);
 
             var header = snapshot.AsHeader();

@@ -29,6 +29,7 @@ namespace Test.Hestia.UIRunner.ViewModel
                                                   Option<DateTime>.None,
                                                   Option<string>.None,
                                                   string.Empty,
+                                                  0,
                                                   0);
             var vm = new RepositoryViewModel(scheduler.CreateColdObservable(snapshot.AsNotification()),
                                              Mock.Of<ISnapshotPersistence>());
@@ -51,6 +52,7 @@ namespace Test.Hestia.UIRunner.ViewModel
                                                   Option<DateTime>.None,
                                                   Option<string>.None,
                                                   string.Empty,
+                                                  0,
                                                   0);
             var snapshotPersistence = new Mock<ISnapshotPersistence>();
             var vm = new RepositoryViewModel(Observable.Return(snapshot),
@@ -76,6 +78,7 @@ namespace Test.Hestia.UIRunner.ViewModel
                                                   Option<DateTime>.None,
                                                   Option<string>.None,
                                                   string.Empty,
+                                                  0,
                                                   0);
             var vm = new RepositoryViewModel(scheduler.CreateColdObservable(snapshot.AsNotification()),
                                              Mock.Of<ISnapshotPersistence>());
@@ -105,6 +108,7 @@ namespace Test.Hestia.UIRunner.ViewModel
                                                   Option<DateTime>.None,
                                                   Option<string>.None,
                                                   string.Empty,
+                                                  0,
                                                   0);
             var persistence = new Mock<ISnapshotPersistence>();
             var commitObservable = Observable.Return(Unit.Default)

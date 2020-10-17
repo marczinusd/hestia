@@ -36,7 +36,8 @@ namespace Test.Hestia.DAL.EFCore.Entities
             Some(DateTime.MinValue),
             Some("name"),
             "somePath",
-            1);
+            1,
+            0);
 
         private static readonly File FileWithNones = new File("filename",
                                                               "ext",
@@ -52,7 +53,8 @@ namespace Test.Hestia.DAL.EFCore.Entities
             None,
             None,
             string.Empty,
-            1);
+            1,
+            0);
 
         [Fact]
         public void FileIsCorrectlyMappedToEntityTest()

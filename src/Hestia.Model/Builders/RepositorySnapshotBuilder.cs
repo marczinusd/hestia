@@ -29,6 +29,7 @@ namespace Hestia.Model.Builders
                                           args.CommitCreationDate,
                                           new DirectoryInfo(args.RootPath).Name,
                                           args.RootPath,
+                                          Option<int>.None,
                                           Option<int>.None);
         }
     }

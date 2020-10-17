@@ -16,6 +16,8 @@ namespace Hestia.Model.Interfaces
 
         Option<int> CommitRelativePosition { get; }
 
+        Option<int> NumberOfCommitsOnBranch { get; }
+
         string RootPath { get; }
 
         IList<IFile> Files { get; }
@@ -26,6 +28,7 @@ namespace Hestia.Model.Interfaces
                                  DateTime? commitCreationDate = null,
                                  string? name = null,
                                  string? rootPath = null,
-                                 int? commitRelativePosition = null);
+                                 int? commitRelativePosition = null,
+                                 int? numberOfCommitsOnBranch = null);
     }
 }
