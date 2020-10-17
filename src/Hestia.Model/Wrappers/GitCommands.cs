@@ -105,6 +105,13 @@ namespace Hestia.Model.Wrappers
                                     .Value);
         }
 
+        public int GetOrderOfCurrentHeadRelativeToFirstCommitOfBranch(string repoPath)
+        {
+            var firstCommit = GetHashForNthCommit(repoPath, 1);
+
+            return int.Parse(Exec($"rev-list {firstCommit}..HEAD --count", repoPath).First());
+        }
+
         public string GetHashForLatestCommit(string repoPath) => Exec("rev-parse HEAD", repoPath).First();
 
         public void Checkout(string hash, string repoPath) =>

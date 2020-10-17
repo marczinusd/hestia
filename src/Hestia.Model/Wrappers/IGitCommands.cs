@@ -36,5 +36,6 @@ namespace Hestia.Model.Wrappers
         string GetHashForLatestCommit(string repoPath);
 
         void Checkout(string hash, string repoPath);
+        int GetOrderOfCurrentHeadRelativeToFirstCommitOfBranch(string repoPath);
     }
 }

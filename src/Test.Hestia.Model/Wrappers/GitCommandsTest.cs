@@ -274,6 +274,36 @@ namespace Test.Hestia.Model.Wrappers
         }
 
         [Fact]
+        public void GetOrderOfCurrentHeadRelativeToFirstCommitOfBranchTest()
+        {
+            var output = Helpers.LoadResource(Paths.GitSingleCommitOutput, typeof(GitCommandsTest).Assembly);
+            var executorMock = new Mock<ICommandLineExecutor>();
+            var gitCommands = new GitCommands(executorMock.Object);
+            const int nthCommit = 1;
+            const int allCommits = 123;
+            executorMock.Setup(mock => mock.Execute("git", "rev-list --count HEAD", "dir"))
+                        .Returns(new[] { "123" });
+            var nthCommitHashCommand = $"log -1 HEAD~{allCommits - nthCommit + 1}";
+            executorMock.Setup(mock => mock.Execute("git", nthCommitHashCommand, "dir"))
+                        .Returns(output.Split(Environment.NewLine));
+            executorMock.Setup(mock => mock.Execute("git",
+                                                    "rev-list abb3cc3d7e405c39eae91b22c41d1281b9075cd4..HEAD --count",
+                                                    "dir"))
+                        .Returns(new[] { "42" });
+
+            var result = gitCommands.GetOrderOfCurrentHeadRelativeToFirstCommitOfBranch("dir");
+
+            executorMock.Verify(mock => mock.Execute("git", "rev-list --count HEAD", "dir"), Times.Once);
+            executorMock.Verify(mock => mock.Execute("git", nthCommitHashCommand, "dir"), Times.Once);
+            executorMock.Verify(mock => mock.Execute("git",
+                                                     "rev-list abb3cc3d7e405c39eae91b22c41d1281b9075cd4..HEAD --count",
+                                                     "dir"),
+                                Times.Once);
+            result.Should()
+                  .Be(42);
+        }
+
+        [Fact]
         public void CheckoutNthCommitOnBranchThrowsExceptionWhenCommitNumberIsGreaterThanAllCommitNumber()
         {
             var executorMock = new Mock<ICommandLineExecutor>();
