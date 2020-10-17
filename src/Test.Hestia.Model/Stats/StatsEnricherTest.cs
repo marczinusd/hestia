@@ -44,12 +44,12 @@ namespace Test.Hestia.Model.Stats
                                .Returns(coverageProviderMock.Object);
             var enricher = fixture.Create<StatsEnricher>();
             var snapshotToEnrich = new RepositorySnapshot(string.Empty,
+                                                          string.Empty,
                                                           new List<IFile>(),
+                                                          string.Empty,
                                                           "coverage.json",
                                                           Option<string>.None,
                                                           Option<DateTime>.None,
-                                                          string.Empty,
-                                                          string.Empty,
                                                           0,
                                                           0);
 
@@ -65,12 +65,12 @@ namespace Test.Hestia.Model.Stats
             var fixture = new Fixture();
             fixture.Customize(new AutoMoqCustomization { ConfigureMembers = true });
             var snapshot = new RepositorySnapshot(string.Empty,
+                                                  string.Empty,
                                                   new List<IFile>(),
+                                                  string.Empty,
                                                   Option<string>.None,
                                                   "hash",
                                                   Option<DateTime>.None,
-                                                  string.Empty,
-                                                  string.Empty,
                                                   0,
                                                   0);
             var enricher = fixture.Create<StatsEnricher>();

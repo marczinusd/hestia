@@ -9,12 +9,12 @@ namespace Hestia.Model
     public class RepositorySnapshot : IRepositorySnapshot
     {
         public RepositorySnapshot(string id,
+                                  string rootPath,
                                   IList<IFile> files,
+                                  Option<string> repositoryName,
                                   Option<string> pathToCoverageResultFile,
                                   Option<string> atHash,
                                   Option<DateTime> commitCreationDate,
-                                  Option<string> repositoryName,
-                                  string rootPath,
                                   Option<int> commitRelativePosition,
                                   Option<int> numberOfCommitsOnBranch)
         {
@@ -56,12 +56,12 @@ namespace Hestia.Model
                                         int? commitRelativePosition = null,
                                         int? numberOfCommitsOnBranch = null) =>
             new RepositorySnapshot(Id,
+                                   rootPath ?? RootPath,
                                    files?.ToList() ?? Files,
+                                   name ?? RepositoryName,
                                    pathToCoverageResultFile ?? PathToCoverageResultFile,
                                    atHash ?? AtHash,
                                    commitCreationDate ?? CommitCreationDate,
-                                   name ?? RepositoryName,
-                                   rootPath ?? RootPath,
                                    commitRelativePosition ?? CommitRelativePosition,
                                    numberOfCommitsOnBranch ?? NumberOfCommitsOnBranch);
 

@@ -142,12 +142,12 @@ namespace Test.Hestia.UIRunner.ViewModel
             var builderMock = new Mock<IRepositorySnapshotBuilderWrapper>();
             var converterMock = new Mock<ICoverageReportConverter>();
             var repositorySnapshot = new RepositorySnapshot(string.Empty,
+                                                            string.Empty,
                                                             new List<IFile>(),
                                                             Option<string>.None,
                                                             Option<string>.None,
-                                                            Option<DateTime>.None,
                                                             Option<string>.None,
-                                                            string.Empty,
+                                                            Option<DateTime>.None,
                                                             0,
                                                             0);
             converterMock.Setup(mock => mock.Convert(It.IsAny<string>(), It.IsAny<string>()))
@@ -236,12 +236,12 @@ namespace Test.Hestia.UIRunner.ViewModel
             var builderMock = new Mock<IRepositorySnapshotBuilderWrapper>();
             var converterMock = new Mock<ICoverageReportConverter>();
             var repositorySnapshot = new RepositorySnapshot(string.Empty,
+                                                            string.Empty,
                                                             new List<IFile>(),
                                                             Option<string>.None,
                                                             Option<string>.None,
-                                                            Option<DateTime>.None,
                                                             Option<string>.None,
-                                                            string.Empty,
+                                                            Option<DateTime>.None,
                                                             0,
                                                             0);
             converterMock.Setup(mock => mock.Convert(It.IsAny<string>(), It.IsAny<string>()))

@@ -23,12 +23,12 @@ namespace Test.Hestia.UIRunner.ViewModel
         {
             var scheduler = new TestScheduler();
             var snapshot = new RepositorySnapshot(string.Empty,
+                                                  string.Empty,
                                                   new List<IFile> { MockRepo.CreateFile(), MockRepo.CreateFile() },
                                                   Option<string>.None,
                                                   Option<string>.None,
-                                                  Option<DateTime>.None,
                                                   Option<string>.None,
-                                                  string.Empty,
+                                                  Option<DateTime>.None,
                                                   0,
                                                   0);
             var vm = new RepositoryViewModel(scheduler.CreateColdObservable(snapshot.AsNotification()),
@@ -46,12 +46,12 @@ namespace Test.Hestia.UIRunner.ViewModel
         public void ExecutingCommitToDatabaseCommandInvokesSnapshotPersistor()
         {
             var snapshot = new RepositorySnapshot(string.Empty,
+                                                  string.Empty,
                                                   new List<IFile> { MockRepo.CreateFile(), MockRepo.CreateFile() },
                                                   Option<string>.None,
                                                   Option<string>.None,
-                                                  Option<DateTime>.None,
                                                   Option<string>.None,
-                                                  string.Empty,
+                                                  Option<DateTime>.None,
                                                   0,
                                                   0);
             var snapshotPersistence = new Mock<ISnapshotPersistence>();
@@ -72,12 +72,12 @@ namespace Test.Hestia.UIRunner.ViewModel
         {
             var scheduler = new TestScheduler();
             var snapshot = new RepositorySnapshot(string.Empty,
+                                                  string.Empty,
                                                   new List<IFile> { MockRepo.CreateFile(), MockRepo.CreateFile() },
                                                   Option<string>.None,
                                                   Option<string>.None,
-                                                  Option<DateTime>.None,
                                                   Option<string>.None,
-                                                  string.Empty,
+                                                  Option<DateTime>.None,
                                                   0,
                                                   0);
             var vm = new RepositoryViewModel(scheduler.CreateColdObservable(snapshot.AsNotification()),
@@ -102,12 +102,12 @@ namespace Test.Hestia.UIRunner.ViewModel
         {
             var scheduler = new TestScheduler();
             var snapshot = new RepositorySnapshot(string.Empty,
+                                                  string.Empty,
                                                   new List<IFile> { MockRepo.CreateFile(), MockRepo.CreateFile() },
                                                   Option<string>.None,
                                                   Option<string>.None,
-                                                  Option<DateTime>.None,
                                                   Option<string>.None,
-                                                  string.Empty,
+                                                  Option<DateTime>.None,
                                                   0,
                                                   0);
             var persistence = new Mock<ISnapshotPersistence>();

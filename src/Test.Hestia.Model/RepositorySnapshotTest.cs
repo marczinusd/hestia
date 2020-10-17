@@ -15,12 +15,12 @@ namespace Test.Hestia.Model
         public void WithShouldReturnNewObject()
         {
             var snapshot = new RepositorySnapshot(string.Empty,
+                                                  string.Empty,
                                                   new List<IFile>(),
                                                   string.Empty,
                                                   string.Empty,
+                                                  string.Empty,
                                                   default(DateTime),
-                                                  string.Empty,
-                                                  string.Empty,
                                                   0,
                                                   0);
 
@@ -32,12 +32,12 @@ namespace Test.Hestia.Model
         public void WithShouldCorrectlyOverridePropertiesWithProvidedValues()
         {
             var snapshot = new RepositorySnapshot(string.Empty,
+                                                  string.Empty,
                                                   new List<IFile>(),
                                                   string.Empty,
                                                   string.Empty,
+                                                  string.Empty,
                                                   default(DateTime),
-                                                  string.Empty,
-                                                  string.Empty,
                                                   0,
                                                   0);
 
@@ -72,12 +72,12 @@ namespace Test.Hestia.Model
         public void AsHeaderShouldCreateExpectedRepositorySnapshotRepresentation()
         {
             var snapshot = new RepositorySnapshot("id",
+                                                  "path",
                                                   new List<IFile>(),
+                                                  Some("name"),
                                                   Some("path"),
                                                   Some("hash"),
                                                   Some(DateTime.MaxValue),
-                                                  Some("name"),
-                                                  "path",
                                                   0,
                                                   0);
 

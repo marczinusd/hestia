@@ -41,12 +41,12 @@ namespace Test.Hestia.DAL.EFCore
 
         private static readonly RepositorySnapshot NewSnapshot =
             new RepositorySnapshot("newid",
+                                   "somePath",
                                    new List<IFile>(),
+                                   "somename",
                                    "coveragePath",
                                    "hash",
                                    DateTime.MinValue,
-                                   "somename",
-                                   "somePath",
                                    1,
                                    0);
 

@@ -30,12 +30,12 @@ namespace Test.Hestia.DAL.EFCore.Entities
                                                      new FileCoverageStats(new FileCoverage("path", new[] { (1, 1) })));
 
         private static readonly RepositorySnapshot Snapshot = new RepositorySnapshot("id",
+            "somePath",
             new List<IFile> { File },
+            Some("name"),
             Some("path"),
             Some("hash"),
             Some(DateTime.MinValue),
-            Some("name"),
-            "somePath",
             1,
             0);
 
@@ -47,12 +47,12 @@ namespace Test.Hestia.DAL.EFCore.Entities
                                                               None);
 
         private static readonly RepositorySnapshot SnapshotWithNones = new RepositorySnapshot("id",
+            string.Empty,
             new List<IFile> { FileWithNones },
             None,
             None,
             None,
             None,
-            string.Empty,
             1,
             0);
 

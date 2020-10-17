@@ -14,6 +14,7 @@ namespace Hestia.Model.Builders
             args.PathValidator.ValidateDirectoryPath(Path.Join(args.RootPath, args.SourceRoot));
 
             return new RepositorySnapshot(args.SnapshotId,
+                                          args.RootPath,
                                           args.DiskIoWrapper
                                               .EnumerateAllFilesForPathRecursively(Path.Join(args.RootPath,
                                                   args.SourceRoot))
@@ -22,13 +23,12 @@ namespace Hestia.Model.Builders
                                               .Select(filePath =>
                                                           FileBuilder.BuildFileFromPath(filePath, args.DiskIoWrapper))
                                               .ToList(),
+                                          new DirectoryInfo(args.RootPath).Name,
                                           string.IsNullOrWhiteSpace(args.CoveragePath)
                                               ? Option<string>.None
                                               : Some(args.CoveragePath),
                                           args.AtHash,
                                           args.CommitCreationDate,
-                                          new DirectoryInfo(args.RootPath).Name,
-                                          args.RootPath,
                                           Option<int>.None,
                                           Option<int>.None);
         }

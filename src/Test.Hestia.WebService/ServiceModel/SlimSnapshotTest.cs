@@ -15,12 +15,12 @@ namespace Test.Hestia.WebService.ServiceModel
         public void FromCreatesCorrectSlimSnapshotRepresentation()
         {
             var snapshot = new RepositorySnapshot("bla",
+                                                  "path",
                                                   new List<IFile>(),
+                                                  "bla",
                                                   Option<string>.None,
                                                   "123",
                                                   DateTime.MinValue,
-                                                  "bla",
-                                                  "path",
                                                   0,
                                                   0).AsHeader();
 
