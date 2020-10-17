@@ -17,7 +17,7 @@ namespace Hestia.UIRunner
         private static readonly string DefaultDBFolder =
             Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "dev");
 
-        public static readonly Lazy<HestiaContext> Context = new Lazy<HestiaContext>(() =>
+        private static readonly Lazy<HestiaContext> ContextLazy = new Lazy<HestiaContext>(() =>
         {
             var dbPath = BuildDBPath();
             var contextBuilder = new DbContextOptionsBuilder();
@@ -27,6 +27,8 @@ namespace Hestia.UIRunner
 
             return dbContext;
         });
+
+        public static HestiaContext Context => ContextLazy.Value;
 
         private static string BuildDBPath()
         {
