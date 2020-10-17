@@ -37,7 +37,9 @@ namespace Test.Hestia.DAL.EFCore
             "someHash",
             DateTime.MinValue,
             "someRepo",
-            SeededSnapshotId);
+            SeededSnapshotId,
+            5,
+            2);
 
         private static readonly RepositorySnapshot NewSnapshot =
             new RepositorySnapshot("newid",

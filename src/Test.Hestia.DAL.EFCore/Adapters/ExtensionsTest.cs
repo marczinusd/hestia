@@ -28,7 +28,9 @@ namespace Test.Hestia.DAL.EFCore.Adapters
                                          "hash",
                                          DateTime.MinValue,
                                          "name",
-                                         "id");
+                                         "id",
+                                         5,
+                                         1);
 
         [Fact]
         public void MappersCreatesCorrectFileAdapterFromEntity()
@@ -81,6 +83,10 @@ namespace Test.Hestia.DAL.EFCore.Adapters
                   .Be("hash");
             result.CommitDate.Should()
                   .Be(DateTime.MinValue);
+            result.CommitRelativePosition.Should()
+                  .Be(1);
+            result.NumberOfCommits.Should()
+                  .Be(5);
         }
     }
 }

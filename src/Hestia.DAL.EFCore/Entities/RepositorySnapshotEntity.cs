@@ -15,13 +15,17 @@ namespace Hestia.DAL.EFCore.Entities
                                         string atHash,
                                         DateTime? hashDate,
                                         string name,
-                                        string id)
+                                        string id,
+                                        int numberOfCommits,
+                                        int commitRelativePosition)
         {
             Files = files;
             AtHash = atHash;
             CommitDate = hashDate;
             Name = name;
             Id = id;
+            NumberOfCommits = numberOfCommits;
+            CommitRelativePosition = commitRelativePosition;
         }
 
         [UsedImplicitly] public IList<FileEntity> Files { get; set; }
@@ -33,5 +37,9 @@ namespace Hestia.DAL.EFCore.Entities
         [UsedImplicitly] public string AtHash { get; set; }
 
         [UsedImplicitly] public DateTime? CommitDate { get; set; }
+
+        [UsedImplicitly] public int NumberOfCommits { get; set; }
+
+        [UsedImplicitly] public int CommitRelativePosition { get; set; }
     }
 }

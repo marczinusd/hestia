@@ -21,6 +21,10 @@ namespace Hestia.DAL.EFCore.Adapters
         public DateTime? CommitDate => _entity.CommitDate;
 
         public IEnumerable<IFileEntity> Files => _entity.Files?
-                                                        .Select(AdapterExtensions.AsModel) ?? new List<IFileEntity>();
+                                                     .Select(AdapterExtensions.AsModel) ?? new List<IFileEntity>();
+
+        public int? NumberOfCommits => _entity.NumberOfCommits;
+
+        public int? CommitRelativePosition => _entity.CommitRelativePosition;
     }
 }

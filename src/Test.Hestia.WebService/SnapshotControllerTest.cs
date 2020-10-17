@@ -32,7 +32,9 @@ namespace Test.Hestia.WebService
                                          "hash",
                                          DateTime.MinValue,
                                          "name",
-                                         null!);
+                                         null!,
+                                         5,
+                                         1);
 
         [Fact]
         public void GetAllRepositories()
