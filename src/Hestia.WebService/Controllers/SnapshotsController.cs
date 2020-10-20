@@ -38,7 +38,7 @@ namespace Hestia.WebService.Controllers
         /// <param name="id">id of the repository to lookup.</param>
         /// <returns>Full details of a repository with the id provided.</returns>
         /// <response code="404">Returns 404 when a repository for id was not found.</response>
-        [HttpGet("[Controller]/{id}")]
+        [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(IRepositorySnapshotEntity), StatusCodes.Status200OK)]
         public ActionResult<IRepositorySnapshotEntity> GetSnapshotById(string id) =>
@@ -51,7 +51,7 @@ namespace Hestia.WebService.Controllers
         /// <param name="id">Id of the snapshot that contains the file.</param>
         /// <param name="fileId">Id of the file within the snapshot.</param>
         /// <returns>Returns 404 if file was not found.</returns>
-        [HttpGet("[Controller]/{id}/files/{fileId}")]
+        [HttpGet("{id}/files/{fileId}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(IFileEntity), StatusCodes.Status200OK)]
         public ActionResult<IFileEntity> GetFileDetailsById(string id, string fileId) =>
@@ -63,7 +63,7 @@ namespace Hestia.WebService.Controllers
         /// </summary>
         /// <param name="id">Snapshot id.</param>
         /// <returns>Returns 404 if snapshot id is invalid.</returns>
-        [HttpGet("[Controller]/{id}/files")]
+        [HttpGet("{id}/files")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(IEnumerable<IFileHeader>), StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<IFileHeader>> GetAllFileHeaders(string id) =>

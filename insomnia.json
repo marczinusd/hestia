@@ -1,7 +1,7 @@
 {
   "_type": "export",
   "__export_format": 4,
-  "__export_date": "2020-10-15T11:32:12.466Z",
+  "__export_date": "2020-10-20T21:09:09.319Z",
   "__export_source": "insomnia.desktop.app:v2020.4.1",
   "resources": [
     {
@@ -40,9 +40,9 @@
     {
       "_id": "req_0b58179c442e41a8abeca83d71fd86ec",
       "parentId": "wrk_686ac1512bd34ac18d8938da4b88d68a",
-      "modified": 1602761339078,
+      "modified": 1603228072255,
       "created": 1602760984166,
-      "url": "{{ base_url }}/snapshots/snapshots/{{ sample_snapshot_id }}",
+      "url": "{{ base_url }}/snapshots/{{ sample_snapshot_id }}",
       "name": "Get snapshot details by ID",
       "description": "",
       "method": "GET",
@@ -147,12 +147,12 @@
     {
       "_id": "env_fc855722e2004104aa8d8e71b6c10612",
       "parentId": "env_2da5a3a02f2671aa2ff36ca1b4bc743c0e727dc8",
-      "modified": 1602761294560,
+      "modified": 1603227764220,
       "created": 1602761248356,
       "name": "Development",
       "data": {
-        "base_url": "",
-        "sample_snapshot_id": "",
+        "base_url": "https://localhost:5001",
+        "sample_snapshot_id": "54e0057f-b60c-44d2-bc0e-9f8e522233a2",
         "sample_file_id": ""
       },
       "dataPropertyOrder": {
