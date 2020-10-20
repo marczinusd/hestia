@@ -72,8 +72,10 @@ namespace Hestia.Model.Stats
                                            .ToList(),
                                            _gitCommands.GetHashForLatestCommit(repositorySnapshot.RootPath),
                                            commitCreationDate: _gitCommands.DateOfLatestCommitOnBranch(repositorySnapshot.RootPath),
-                                           commitRelativePosition: _gitCommands.GetOrderOfCurrentHeadRelativeToFirstCommitOfBranch(repositorySnapshot.RootPath),
                                            numberOfCommitsOnBranch: _gitCommands.NumberOfCommitsOnCurrentBranch(repositorySnapshot.RootPath));
+
+            // I can't find a way to make this work consistently, rev-parse doesn't return the precise number of branch-specific commits
+            // commitRelativePosition: _gitCommands.GetOrderOfCurrentHeadRelativeToFirstCommitOfBranch(repositorySnapshot.RootPath),
         }
 
         public Repository Enrich(Repository repository,
