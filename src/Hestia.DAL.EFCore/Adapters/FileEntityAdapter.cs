@@ -21,7 +21,9 @@ namespace Hestia.DAL.EFCore.Adapters
 
         public int LifetimeChanges => _entity.LifetimeChanges;
 
-        public IEnumerable<ILineEntity> Lines => _entity.Lines
-                                                        .Select(AdapterExtensions.AsModel);
+        public IList<ILineEntity> Lines => _entity.Lines?
+                                                  .Select(AdapterExtensions.AsModel)
+                                                  .ToList() ??
+                                           new List<ILineEntity>();
     }
 }

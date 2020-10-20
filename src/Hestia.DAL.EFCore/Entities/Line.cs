@@ -37,7 +37,7 @@ namespace Hestia.DAL.EFCore.Entities
 
         [UsedImplicitly] public int NumberOfChanges { get; set; }
 
-        [UsedImplicitly] public virtual File File { get; set; }
+        [UsedImplicitly] public File File { get; set; }
 
         [UsedImplicitly] public string FileId { get; set; }
     }

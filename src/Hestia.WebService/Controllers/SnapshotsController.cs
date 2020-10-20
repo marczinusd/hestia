@@ -58,6 +58,14 @@ namespace Hestia.WebService.Controllers
             _fileRetrieval.GetFileDetails(fileId, id)
                           .Match<ActionResult>(Ok, NotFound);
 
+        [HttpGet("{id}/files/{fileId}/lines")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(IFileEntity), StatusCodes.Status200OK)]
+        public ActionResult<IEnumerable<ILineEntity>> GetLinesForFile(string fileId) =>
+            _snapshotRetrieval.FileExistsWithId(fileId)
+                ? Ok(_snapshotRetrieval.GetFileContent(fileId))
+                : NotFound() as ActionResult;
+
         /// <summary>
         ///     Fetches all file headers for given snapshot.
         /// </summary>
@@ -68,7 +76,6 @@ namespace Hestia.WebService.Controllers
         [ProducesResponseType(typeof(IEnumerable<IFileHeader>), StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<IFileHeader>> GetAllFileHeaders(string id) =>
             _snapshotRetrieval.GetSnapshotById(id)
-                              .Match<ActionResult>(file => Ok(file.Files),
-                                                   NotFound);
+                              .Match<ActionResult>(_ => Ok(_snapshotRetrieval.GetAllFilesForSnapshot(id)), NotFound());
     }
 }

@@ -25,6 +25,11 @@ namespace Hestia.DAL.EFCore
                 ? Some<IFileEntity>(new FileEntityAdapter(result))
                 : None;
 
+        public IEnumerable<ILineEntity> GetFileContent(string fileId) =>
+            _dbContext.SourceLines
+                      .Where(l => l.FileId == fileId)
+                      .Select(l => new LineEntityAdapter(l));
+
         public IObservable<Unit> InsertSnapshot(IRepositorySnapshot snapshot)
         {
             _dbContext.Snapshots.Add(snapshot.AsEntity());
@@ -36,6 +41,16 @@ namespace Hestia.DAL.EFCore
         public IEnumerable<ISnapshotHeader> GetAllSnapshotsHeaders() => _dbContext.Snapshots
             .Select(s => new RepositorySnapshotEntityAdapter(s))
             .ToList();
+
+        public IEnumerable<IFileEntity> GetAllFilesForSnapshot(string snapshotId) =>
+            _dbContext.Files
+                      .Where(f => f.SnapshotId == snapshotId)
+                      .Select(f => new FileEntityAdapter(f))
+                      .ToList();
+
+        public bool SnapshotExistsWithId(string snapshotId) => _dbContext.Snapshots.Any(s => s.Id == snapshotId);
+
+        public bool FileExistsWithId(string fileId) => _dbContext.Files.Any(f => f.Id == fileId);
 
         public Option<IRepositorySnapshotEntity> GetSnapshotById(string id) =>
             _dbContext.Snapshots.SingleOrDefault(s => s.Id == id) is { } entity
