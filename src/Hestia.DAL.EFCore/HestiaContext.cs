@@ -24,14 +24,23 @@ namespace Hestia.DAL.EFCore
             modelBuilder.Entity<LineEntity>()
                         .Property(l => l.Id)
                         .ValueGeneratedOnAdd();
+            modelBuilder.Entity<LineEntity>()
+                        .HasOne(l => l.Parent)
+                        .WithMany(p => p.Lines);
 
             modelBuilder.Entity<RepositorySnapshotEntity>()
                         .Property(s => s.Id)
                         .ValueGeneratedOnAdd();
+            modelBuilder.Entity<RepositorySnapshotEntity>()
+                        .HasMany(r => r.Files)
+                        .WithOne(f => f.Parent);
 
             modelBuilder.Entity<FileEntity>()
                         .Property(f => f.Id)
                         .ValueGeneratedOnAdd();
+            modelBuilder.Entity<FileEntity>()
+                        .HasOne(f => f.Parent)
+                        .WithMany(parent => parent.Files);
         }
     }
 }
