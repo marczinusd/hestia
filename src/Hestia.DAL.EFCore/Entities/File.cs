@@ -38,5 +38,7 @@ namespace Hestia.DAL.EFCore.Entities
         [UsedImplicitly] public IList<Line> Lines { get; set; }
 
         [UsedImplicitly] public Snapshot Snapshot { get; set; }
+
+        [UsedImplicitly] public string SnapshotId { get; set; }
     }
 }

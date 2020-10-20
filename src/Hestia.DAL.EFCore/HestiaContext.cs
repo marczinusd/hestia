@@ -26,7 +26,8 @@ namespace Hestia.DAL.EFCore
                         .ValueGeneratedOnAdd();
             modelBuilder.Entity<Line>()
                         .HasOne(l => l.File)
-                        .WithMany(p => p.Lines);
+                        .WithMany(p => p.Lines)
+                        .HasForeignKey(l => l.FileId);
 
             modelBuilder.Entity<Snapshot>()
                         .Property(s => s.Id)
@@ -40,7 +41,8 @@ namespace Hestia.DAL.EFCore
                         .ValueGeneratedOnAdd();
             modelBuilder.Entity<File>()
                         .HasOne(f => f.Snapshot)
-                        .WithMany(parent => parent.Files);
+                        .WithMany(parent => parent.Files)
+                        .HasForeignKey(f => f.SnapshotId);
         }
     }
 }
