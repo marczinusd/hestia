@@ -4,20 +4,20 @@ using JetBrains.Annotations;
 
 namespace Hestia.DAL.EFCore.Entities
 {
-    public class RepositorySnapshotEntity
+    public class Snapshot
     {
         [UsedImplicitly]
-        public RepositorySnapshotEntity()
+        public Snapshot()
         {
         }
 
-        public RepositorySnapshotEntity(IList<FileEntity> files,
-                                        string atHash,
-                                        DateTime? hashDate,
-                                        string name,
-                                        string id,
-                                        int numberOfCommits,
-                                        int commitRelativePosition)
+        public Snapshot(IList<File> files,
+                        string atHash,
+                        DateTime? hashDate,
+                        string name,
+                        string id,
+                        int numberOfCommits,
+                        int commitRelativePosition)
         {
             Files = files;
             AtHash = atHash;
@@ -28,7 +28,7 @@ namespace Hestia.DAL.EFCore.Entities
             CommitRelativePosition = commitRelativePosition;
         }
 
-        [UsedImplicitly] public IList<FileEntity> Files { get; set; }
+        [UsedImplicitly] public IList<File> Files { get; set; }
 
         [UsedImplicitly] public string Id { get; set; }
 

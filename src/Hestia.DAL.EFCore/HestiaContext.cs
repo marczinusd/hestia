@@ -13,33 +13,33 @@ namespace Hestia.DAL.EFCore
         {
         }
 
-        [UsedImplicitly] public DbSet<RepositorySnapshotEntity> Snapshots { get; set; }
+        [UsedImplicitly] public DbSet<Snapshot> Snapshots { get; set; }
 
-        [UsedImplicitly] public DbSet<FileEntity> Files { get; set; }
+        [UsedImplicitly] public DbSet<File> Files { get; set; }
 
-        [UsedImplicitly] public DbSet<LineEntity> SourceLines { get; set; }
+        [UsedImplicitly] public DbSet<Line> SourceLines { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<LineEntity>()
+            modelBuilder.Entity<Line>()
                         .Property(l => l.Id)
                         .ValueGeneratedOnAdd();
-            modelBuilder.Entity<LineEntity>()
-                        .HasOne(l => l.Parent)
+            modelBuilder.Entity<Line>()
+                        .HasOne(l => l.File)
                         .WithMany(p => p.Lines);
 
-            modelBuilder.Entity<RepositorySnapshotEntity>()
+            modelBuilder.Entity<Snapshot>()
                         .Property(s => s.Id)
                         .ValueGeneratedOnAdd();
-            modelBuilder.Entity<RepositorySnapshotEntity>()
+            modelBuilder.Entity<Snapshot>()
                         .HasMany(r => r.Files)
-                        .WithOne(f => f.Parent);
+                        .WithOne(f => f.Snapshot);
 
-            modelBuilder.Entity<FileEntity>()
+            modelBuilder.Entity<File>()
                         .Property(f => f.Id)
                         .ValueGeneratedOnAdd();
-            modelBuilder.Entity<FileEntity>()
-                        .HasOne(f => f.Parent)
+            modelBuilder.Entity<File>()
+                        .HasOne(f => f.Snapshot)
                         .WithMany(parent => parent.Files);
         }
     }

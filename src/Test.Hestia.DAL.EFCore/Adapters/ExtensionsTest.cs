@@ -9,33 +9,33 @@ namespace Test.Hestia.DAL.EFCore.Adapters
 {
     public class ExtensionsTest
     {
-        private static readonly LineEntity LineEntity = new LineEntity("bla",
-                                                                       true,
-                                                                       1,
-                                                                       2,
-                                                                       "id",
-                                                                       1);
+        private static readonly Line Line = new Line("bla",
+                                                     true,
+                                                     1,
+                                                     2,
+                                                     "id",
+                                                     1);
 
-        private static readonly FileEntity FileEntity = new FileEntity("path",
-                                                                       1,
-                                                                       2,
-                                                                       3,
-                                                                       new List<LineEntity> { LineEntity },
-                                                                       "id");
+        private static readonly File File = new File("path",
+                                                     1,
+                                                     2,
+                                                     3,
+                                                     new List<Line> { Line },
+                                                     "id");
 
-        private static readonly RepositorySnapshotEntity SnapshotEntity =
-            new RepositorySnapshotEntity(new List<FileEntity> { FileEntity },
-                                         "hash",
-                                         DateTime.MinValue,
-                                         "name",
-                                         "id",
-                                         5,
-                                         1);
+        private static readonly Snapshot Snapshot =
+            new Snapshot(new List<File> { File },
+                         "hash",
+                         DateTime.MinValue,
+                         "name",
+                         "id",
+                         5,
+                         1);
 
         [Fact]
         public void MappersCreatesCorrectFileAdapterFromEntity()
         {
-            var result = FileEntity.AsModel();
+            var result = File.AsModel();
 
             result.Lines.Should()
                   .HaveCount(1);
@@ -54,7 +54,7 @@ namespace Test.Hestia.DAL.EFCore.Adapters
         [Fact]
         public void MappersCreatesCorrectLineAdapterFromEntity()
         {
-            var result = LineEntity.AsModel();
+            var result = Line.AsModel();
 
             result.Content.Should()
                   .Be("bla");
@@ -71,7 +71,7 @@ namespace Test.Hestia.DAL.EFCore.Adapters
         [Fact]
         public void MappersCreatesCorrectSnapshotAdapterFromEntity()
         {
-            var result = SnapshotEntity.AsModel();
+            var result = Snapshot.AsModel();
 
             result.Files.Should()
                   .HaveCount(1);

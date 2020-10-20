@@ -7,6 +7,7 @@ using Hestia.Model.Interfaces;
 using Hestia.Model.Stats;
 using Xunit;
 using static LanguageExt.Prelude;
+using File = Hestia.Model.File;
 
 namespace Test.Hestia.DAL.EFCore.Entities
 {
@@ -77,7 +78,7 @@ namespace Test.Hestia.DAL.EFCore.Entities
                   .BeNull();
             entity.Lines.Should()
                   .HaveCount(1);
-            entity.Parent.Should()
+            entity.Snapshot.Should()
                   .BeNull();
         }
 
@@ -102,7 +103,7 @@ namespace Test.Hestia.DAL.EFCore.Entities
                   .BeNull();
             entity.Lines.Should()
                   .HaveCount(1);
-            entity.Parent.Should()
+            entity.Snapshot.Should()
                   .BeNull();
         }
 
@@ -147,7 +148,7 @@ namespace Test.Hestia.DAL.EFCore.Entities
                   .Be("bla");
             entity.LineNumber.Should()
                   .Be(1);
-            entity.Parent.Should()
+            entity.File.Should()
                   .BeNull();
             entity.IsCovered.Should()
                   .BeTrue();
@@ -157,7 +158,7 @@ namespace Test.Hestia.DAL.EFCore.Entities
                   .Be(2);
             entity.Id.Should()
                   .BeNull();
-            entity.Parent.Should()
+            entity.File.Should()
                   .BeNull();
         }
 
@@ -170,7 +171,7 @@ namespace Test.Hestia.DAL.EFCore.Entities
                   .Be("bla");
             entity.LineNumber.Should()
                   .Be(1);
-            entity.Parent.Should()
+            entity.File.Should()
                   .BeNull();
             entity.IsCovered.Should()
                   .BeFalse();
@@ -180,7 +181,7 @@ namespace Test.Hestia.DAL.EFCore.Entities
                   .Be(0);
             entity.Id.Should()
                   .BeNull();
-            entity.Parent.Should()
+            entity.File.Should()
                   .BeNull();
         }
     }

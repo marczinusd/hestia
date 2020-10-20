@@ -3,19 +3,19 @@ using JetBrains.Annotations;
 
 namespace Hestia.DAL.EFCore.Entities
 {
-    public class FileEntity
+    public class File
     {
         [UsedImplicitly]
-        public FileEntity()
+        public File()
         {
         }
 
-        public FileEntity(string path,
-                          int lifetimeChanges,
-                          int lifetimeAuthors,
-                          decimal coveragePercentage,
-                          IList<LineEntity> lines,
-                          string id)
+        public File(string path,
+                    int lifetimeChanges,
+                    int lifetimeAuthors,
+                    decimal coveragePercentage,
+                    IList<Line> lines,
+                    string id)
         {
             Path = path;
             LifetimeChanges = lifetimeChanges;
@@ -35,8 +35,8 @@ namespace Hestia.DAL.EFCore.Entities
 
         [UsedImplicitly] public decimal CoveragePercentage { get; set; }
 
-        [UsedImplicitly] public IList<LineEntity> Lines { get; set; }
+        [UsedImplicitly] public IList<Line> Lines { get; set; }
 
-        [UsedImplicitly] public RepositorySnapshotEntity Parent { get; set; }
+        [UsedImplicitly] public Snapshot Snapshot { get; set; }
     }
 }

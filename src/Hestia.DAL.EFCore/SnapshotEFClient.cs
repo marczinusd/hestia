@@ -21,7 +21,7 @@ namespace Hestia.DAL.EFCore
         }
 
         public Option<IFileEntity> GetFileDetails(string fileId, string snapshotId) =>
-            _dbContext.Files.FirstOrDefault(f => f.Id == fileId && f.Parent.Id == snapshotId) is { } result
+            _dbContext.Files.FirstOrDefault(f => f.Id == fileId && f.Snapshot.Id == snapshotId) is { } result
                 ? Some<IFileEntity>(new FileEntityAdapter(result))
                 : None;
 

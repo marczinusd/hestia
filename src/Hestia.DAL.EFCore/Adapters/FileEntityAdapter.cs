@@ -7,9 +7,9 @@ namespace Hestia.DAL.EFCore.Adapters
 {
     public class FileEntityAdapter : IFileEntity
     {
-        private readonly FileEntity _entity;
+        private readonly File _entity;
 
-        public FileEntityAdapter(FileEntity entity) => _entity = entity;
+        public FileEntityAdapter(File entity) => _entity = entity;
 
         public string Id => _entity.Id;
 
@@ -22,6 +22,6 @@ namespace Hestia.DAL.EFCore.Adapters
         public int LifetimeChanges => _entity.LifetimeChanges;
 
         public IEnumerable<ILineEntity> Lines => _entity.Lines
-                                                 .Select(AdapterExtensions.AsModel);
+                                                        .Select(AdapterExtensions.AsModel);
     }
 }

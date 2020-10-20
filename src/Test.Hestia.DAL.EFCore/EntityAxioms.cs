@@ -9,27 +9,27 @@ namespace Test.Hestia.DAL.EFCore
         [Fact]
         public void LineEntityHasSettableParentLinks()
         {
-            var entity = new LineEntity { Parent = new FileEntity() };
+            var entity = new Line { File = new File() };
 
-            entity.Parent.Should()
+            entity.File.Should()
                   .NotBeNull();
         }
 
         [Fact]
         public void FileEntityHasSettableParentLinks()
         {
-            var entity = new FileEntity { Parent = new RepositorySnapshotEntity() };
+            var entity = new File { Snapshot = new Snapshot() };
 
-            entity.Parent.Should()
+            entity.Snapshot.Should()
                   .NotBeNull();
         }
 
         [Fact]
         public void EntitiesHaveParameterlessConstructors()
         {
-            var line = new LineEntity();
-            var file = new FileEntity();
-            var snapshot = new RepositorySnapshotEntity();
+            var line = new Line();
+            var file = new File();
+            var snapshot = new Snapshot();
 
             line.Should()
                 .NotBeNull();

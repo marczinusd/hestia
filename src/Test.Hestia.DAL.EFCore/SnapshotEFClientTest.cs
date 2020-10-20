@@ -9,6 +9,7 @@ using Hestia.Model.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Reactive.Testing;
 using Xunit;
+using File = Hestia.DAL.EFCore.Entities.File;
 
 namespace Test.Hestia.DAL.EFCore
 {
@@ -17,29 +18,29 @@ namespace Test.Hestia.DAL.EFCore
         private const string SeededSnapshotId = "repoid";
         private const string SeededFileId = "fileId";
 
-        private static readonly RepositorySnapshotEntity SeededRepo = new RepositorySnapshotEntity(new List<FileEntity>
-            {
-                new FileEntity("path",
-                               1,
-                               2,
-                               100,
-                               new List<LineEntity>
-                               {
-                                   new LineEntity("blabla",
-                                                  true,
-                                                  1,
-                                                  2,
-                                                  "id",
-                                                  1)
-                               },
-                               SeededFileId)
-            },
-            "someHash",
-            DateTime.MinValue,
-            "someRepo",
-            SeededSnapshotId,
-            5,
-            2);
+        private static readonly Snapshot SeededRepo = new Snapshot(new List<File>
+                                                                   {
+                                                                       new File("path",
+                                                                                    1,
+                                                                                    2,
+                                                                                    100,
+                                                                                    new List<Line>
+                                                                                    {
+                                                                                        new Line("blabla",
+                                                                                            true,
+                                                                                            1,
+                                                                                            2,
+                                                                                            "id",
+                                                                                            1)
+                                                                                    },
+                                                                                    SeededFileId)
+                                                                   },
+                                                                   "someHash",
+                                                                   DateTime.MinValue,
+                                                                   "someRepo",
+                                                                   SeededSnapshotId,
+                                                                   5,
+                                                                   2);
 
         private static readonly RepositorySnapshot NewSnapshot =
             new RepositorySnapshot("newid",

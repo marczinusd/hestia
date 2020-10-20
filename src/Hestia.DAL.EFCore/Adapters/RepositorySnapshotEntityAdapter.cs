@@ -8,9 +8,9 @@ namespace Hestia.DAL.EFCore.Adapters
 {
     public class RepositorySnapshotEntityAdapter : IRepositorySnapshotEntity
     {
-        private readonly RepositorySnapshotEntity _entity;
+        private readonly Snapshot _entity;
 
-        public RepositorySnapshotEntityAdapter(RepositorySnapshotEntity entity) => _entity = entity;
+        public RepositorySnapshotEntityAdapter(Snapshot entity) => _entity = entity;
 
         public string Id => _entity.Id;
 
@@ -20,8 +20,9 @@ namespace Hestia.DAL.EFCore.Adapters
 
         public DateTime? CommitDate => _entity.CommitDate;
 
-        public IEnumerable<IFileEntity> Files => _entity.Files?
-                                                     .Select(AdapterExtensions.AsModel) ?? new List<IFileEntity>();
+        public IEnumerable<IFileEntity> Files => _entity
+                                                 .Files?
+                                                 .Select(AdapterExtensions.AsModel) ?? new List<IFileEntity>();
 
         public int? NumberOfCommits => _entity.NumberOfCommits;
 

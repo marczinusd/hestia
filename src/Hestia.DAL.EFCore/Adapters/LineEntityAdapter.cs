@@ -5,9 +5,9 @@ namespace Hestia.DAL.EFCore.Adapters
 {
     public class LineEntityAdapter : ILineEntity
     {
-        private readonly LineEntity _entity;
+        private readonly Line _entity;
 
-        public LineEntityAdapter(LineEntity entity) => _entity = entity;
+        public LineEntityAdapter(Line entity) => _entity = entity;
 
         public string Content => _entity.Content;
 
