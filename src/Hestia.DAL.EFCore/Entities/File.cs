@@ -14,7 +14,7 @@ namespace Hestia.DAL.EFCore.Entities
                     int lifetimeChanges,
                     int lifetimeAuthors,
                     decimal coveragePercentage,
-                    IList<Line> lines,
+                    List<Line> lines,
                     string id)
         {
             Path = path;
@@ -35,7 +35,7 @@ namespace Hestia.DAL.EFCore.Entities
 
         [UsedImplicitly] public decimal CoveragePercentage { get; set; }
 
-        [UsedImplicitly] public IList<Line> Lines { get; set; }
+        [UsedImplicitly] public List<Line> Lines { get; set; }
 
         [UsedImplicitly] public Snapshot Snapshot { get; set; }
 

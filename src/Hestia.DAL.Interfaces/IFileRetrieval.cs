@@ -8,7 +8,5 @@ namespace Hestia.DAL.Interfaces
         Option<IFileEntity> GetFileDetails(string fileId);
 
         IEnumerable<ILineEntity> GetLinesForFile(string fileId);
-
-        bool FileExistsWithId(string fileId);
     }
 }

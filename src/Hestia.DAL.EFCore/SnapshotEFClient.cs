@@ -48,8 +48,6 @@ namespace Hestia.DAL.EFCore
                       .Select(f => new FileEntityAdapter(f))
                       .ToList();
 
-        public bool FileExistsWithId(string fileId) => _dbContext.Files.Any(f => f.Id == fileId);
-
         public Option<IRepositorySnapshotEntity> GetSnapshotById(string id) =>
             _dbContext.Snapshots.SingleOrDefault(s => s.Id == id) is { } entity
                 ? Some<IRepositorySnapshotEntity>(new RepositorySnapshotEntityAdapter(entity))
