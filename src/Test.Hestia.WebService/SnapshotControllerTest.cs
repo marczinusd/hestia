@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using FluentAssertions;
 using Hestia.DAL.EFCore.Adapters;
 using Hestia.DAL.EFCore.Entities;
@@ -17,7 +16,6 @@ namespace Test.Hestia.WebService
     public class SnapshotControllerTest
     {
         private const string SnapshotId = "snapshotId";
-        private const string FileId = "fileId";
 
         private static readonly Snapshot Snapshot =
             new Snapshot(new[]
@@ -40,8 +38,7 @@ namespace Test.Hestia.WebService
         public void GetAllRepositories()
         {
             var snapshotRetrieval = new Mock<ISnapshotRetrieval>();
-            var controller = new SnapshotsController(snapshotRetrieval.Object,
-                                                     Mock.Of<IFileRetrieval>());
+            var controller = new SnapshotsController(snapshotRetrieval.Object);
 
             controller.GetAllSnapshots();
 
@@ -54,8 +51,7 @@ namespace Test.Hestia.WebService
             var snapshotRetrieval = new Mock<ISnapshotRetrieval>();
             snapshotRetrieval.Setup(mock => mock.GetSnapshotById(It.IsAny<string>()))
                              .Returns(Some(Snapshot.AsModel()));
-            var controller = new SnapshotsController(snapshotRetrieval.Object,
-                                                     Mock.Of<IFileRetrieval>());
+            var controller = new SnapshotsController(snapshotRetrieval.Object);
 
             var result = controller.GetSnapshotById(SnapshotId);
 
@@ -68,8 +64,7 @@ namespace Test.Hestia.WebService
         public void GetSnapshotByIdInvokesReturnNotFoundIfSnapshotIsNotFound()
         {
             var snapshotRetrieval = new Mock<ISnapshotRetrieval>();
-            var controller = new SnapshotsController(snapshotRetrieval.Object,
-                                                     Mock.Of<IFileRetrieval>());
+            var controller = new SnapshotsController(snapshotRetrieval.Object);
             snapshotRetrieval.Setup(mock => mock.GetSnapshotById(It.IsAny<string>()))
                              .Returns(Option<IRepositorySnapshotEntity>.None);
 
@@ -84,8 +79,7 @@ namespace Test.Hestia.WebService
         public void GetAllFileHeadersReturnsOkIfFileHeadersForSnapshotCouldBeRetrieved()
         {
             var snapshotRetrieval = new Mock<ISnapshotRetrieval>();
-            var controller = new SnapshotsController(snapshotRetrieval.Object,
-                                                     Mock.Of<IFileRetrieval>());
+            var controller = new SnapshotsController(snapshotRetrieval.Object);
             snapshotRetrieval.Setup(mock => mock.GetSnapshotById(It.IsAny<string>()))
                              .Returns(Some(Snapshot.AsModel()));
 
@@ -100,51 +94,11 @@ namespace Test.Hestia.WebService
         public void GetAllFileHeadersReturnsNotFoundIfSnapshotCouldNotBeFound()
         {
             var snapshotRetrieval = new Mock<ISnapshotRetrieval>();
-            var controller = new SnapshotsController(snapshotRetrieval.Object,
-                                                     Mock.Of<IFileRetrieval>());
+            var controller = new SnapshotsController(snapshotRetrieval.Object);
             snapshotRetrieval.Setup(mock => mock.GetSnapshotById(It.IsAny<string>()))
                              .Returns(Option<IRepositorySnapshotEntity>.None);
 
             var result = controller.GetSnapshotById(SnapshotId);
-
-            result.Result
-                  .Should()
-                  .BeOfType<NotFoundResult>();
-        }
-
-        [Fact]
-        public void GetFileDetailsByIdReturnsOkIfFileDetailsCouldBeFound()
-        {
-            var fileRetrieval = new Mock<IFileRetrieval>();
-            var controller = new SnapshotsController(Mock.Of<ISnapshotRetrieval>(),
-                                                     fileRetrieval.Object);
-            fileRetrieval.Setup(mock => mock.GetFileDetails(It.IsAny<string>(), It.IsAny<string>()))
-                         .Returns(Some(Snapshot.Files.First()
-                                               .AsModel()));
-
-            var result = controller.GetFileDetailsById(SnapshotId, FileId);
-
-            result.Result
-                  .Should()
-                  .BeOfType<OkObjectResult>();
-            result.Result.As<OkObjectResult>()
-                  .Value.As<IFileEntity>()
-                  .Id
-                  .Should()
-                  .Be(Snapshot.Files.First()
-                              .Id);
-        }
-
-        [Fact]
-        public void GetFileDetailsByIdReturnsNotFoundIfFileDetailsWasNotFound()
-        {
-            var fileRetrieval = new Mock<IFileRetrieval>();
-            var controller = new SnapshotsController(Mock.Of<ISnapshotRetrieval>(),
-                                                     fileRetrieval.Object);
-            fileRetrieval.Setup(mock => mock.GetFileDetails(It.IsAny<string>(), It.IsAny<string>()))
-                         .Returns(Option<IFileEntity>.None);
-
-            var result = controller.GetFileDetailsById(SnapshotId, FileId);
 
             result.Result
                   .Should()

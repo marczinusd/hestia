@@ -9,9 +9,7 @@ namespace Hestia.DAL.Interfaces
         IEnumerable<ISnapshotHeader> GetAllSnapshotsHeaders();
 
         Option<IRepositorySnapshotEntity> GetSnapshotById(string id);
+
         IEnumerable<IFileEntity> GetAllFilesForSnapshot(string snapshotId);
-        IEnumerable<ILineEntity> GetFileContent(string fileId);
-        bool SnapshotExistsWithId(string snapshotId);
-        bool FileExistsWithId(string fileId);
     }
 }

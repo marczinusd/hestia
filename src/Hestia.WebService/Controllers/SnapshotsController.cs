@@ -12,14 +12,11 @@ namespace Hestia.WebService.Controllers
     [Route("[controller]")]
     public class SnapshotsController : ControllerBase
     {
-        private readonly IFileRetrieval _fileRetrieval;
         private readonly ISnapshotRetrieval _snapshotRetrieval;
 
-        public SnapshotsController(ISnapshotRetrieval snapshotRetrieval,
-                                   IFileRetrieval fileRetrieval)
+        public SnapshotsController(ISnapshotRetrieval snapshotRetrieval)
         {
             _snapshotRetrieval = snapshotRetrieval;
-            _fileRetrieval = fileRetrieval;
         }
 
         /// <summary>
@@ -44,27 +41,6 @@ namespace Hestia.WebService.Controllers
         public ActionResult<IRepositorySnapshotEntity> GetSnapshotById(string id) =>
             _snapshotRetrieval.GetSnapshotById(id)
                               .Match<ActionResult>(Ok, NotFound);
-
-        /// <summary>
-        ///     Fetches complete file details by id.
-        /// </summary>
-        /// <param name="id">Id of the snapshot that contains the file.</param>
-        /// <param name="fileId">Id of the file within the snapshot.</param>
-        /// <returns>Returns 404 if file was not found.</returns>
-        [HttpGet("{id}/files/{fileId}")]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(IFileEntity), StatusCodes.Status200OK)]
-        public ActionResult<IFileEntity> GetFileDetailsById(string id, string fileId) =>
-            _fileRetrieval.GetFileDetails(fileId, id)
-                          .Match<ActionResult>(Ok, NotFound);
-
-        [HttpGet("{id}/files/{fileId}/lines")]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(IFileEntity), StatusCodes.Status200OK)]
-        public ActionResult<IEnumerable<ILineEntity>> GetLinesForFile(string fileId) =>
-            _snapshotRetrieval.FileExistsWithId(fileId)
-                ? Ok(_snapshotRetrieval.GetFileContent(fileId))
-                : NotFound() as ActionResult;
 
         /// <summary>
         ///     Fetches all file headers for given snapshot.

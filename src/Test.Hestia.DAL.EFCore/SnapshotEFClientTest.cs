@@ -124,7 +124,7 @@ namespace Test.Hestia.DAL.EFCore
             using var context = new HestiaContext(Options);
             var client = new SnapshotEFClient(context);
 
-            client.GetFileDetails(SeededFileId, SeededSnapshotId)
+            client.GetFileDetails(SeededFileId)
                   .Match(x => x, () => null)
                   ?.Id.Should()
                   .Be(SeededFileId);
@@ -136,7 +136,7 @@ namespace Test.Hestia.DAL.EFCore
             using var context = new HestiaContext(Options);
             var client = new SnapshotEFClient(context);
 
-            client.GetFileDetails("invalid", SeededSnapshotId)
+            client.GetFileDetails("invalid")
                   .IsNone
                   .Should()
                   .BeTrue();

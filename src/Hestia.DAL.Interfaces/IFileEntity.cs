@@ -5,6 +5,6 @@ namespace Hestia.DAL.Interfaces
 {
     public interface IFileEntity : IFileHeader
     {
-        IList<ILineEntity> Lines { get; }
+        List<ILineEntity> Lines { get; }
     }
 }

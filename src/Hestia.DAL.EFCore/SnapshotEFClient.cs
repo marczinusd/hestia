@@ -20,12 +20,12 @@ namespace Hestia.DAL.EFCore
             _dbContext = dbContext;
         }
 
-        public Option<IFileEntity> GetFileDetails(string fileId, string snapshotId) =>
-            _dbContext.Files.FirstOrDefault(f => f.Id == fileId && f.Snapshot.Id == snapshotId) is { } result
+        public Option<IFileEntity> GetFileDetails(string fileId) =>
+            _dbContext.Files.FirstOrDefault(f => f.Id == fileId) is { } result
                 ? Some<IFileEntity>(new FileEntityAdapter(result))
                 : None;
 
-        public IEnumerable<ILineEntity> GetFileContent(string fileId) =>
+        public IEnumerable<ILineEntity> GetLinesForFile(string fileId) =>
             _dbContext.SourceLines
                       .Where(l => l.FileId == fileId)
                       .Select(l => new LineEntityAdapter(l));
@@ -47,8 +47,6 @@ namespace Hestia.DAL.EFCore
                       .Where(f => f.SnapshotId == snapshotId)
                       .Select(f => new FileEntityAdapter(f))
                       .ToList();
-
-        public bool SnapshotExistsWithId(string snapshotId) => _dbContext.Snapshots.Any(s => s.Id == snapshotId);
 
         public bool FileExistsWithId(string fileId) => _dbContext.Files.Any(f => f.Id == fileId);
 
