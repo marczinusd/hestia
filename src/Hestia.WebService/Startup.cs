@@ -44,6 +44,7 @@ namespace Hestia.WebService
             });
             services.AddSingleton<ISnapshotRetrieval, SnapshotEFClient>();
             services.AddSingleton<IFileRetrieval, SnapshotEFClient>();
+            services.AddCors();
             services.AddControllers();
 
             services.AddSwaggerGen(c =>
@@ -65,6 +66,13 @@ namespace Hestia.WebService
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseCors(options =>
+                {
+                    options.AllowAnyHeader()
+                           .AllowAnyMethod()
+                           .SetIsOriginAllowed((host) => true)
+                           .AllowCredentials();
+                });
             }
 
             app.UseHttpsRedirection();
