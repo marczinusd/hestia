@@ -8,6 +8,7 @@ using Hestia.WebService.Controllers;
 using LanguageExt;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using Serilog;
 using Xunit;
 using static LanguageExt.Prelude;
 
@@ -38,7 +39,7 @@ namespace Test.Hestia.WebService
         public void GetAllRepositories()
         {
             var snapshotRetrieval = new Mock<ISnapshotRetrieval>();
-            var controller = new SnapshotsController(snapshotRetrieval.Object);
+            var controller = new SnapshotsController(snapshotRetrieval.Object, Mock.Of<ILogger>());
 
             controller.GetAllSnapshots();
 
@@ -51,7 +52,7 @@ namespace Test.Hestia.WebService
             var snapshotRetrieval = new Mock<ISnapshotRetrieval>();
             snapshotRetrieval.Setup(mock => mock.GetSnapshotById(It.IsAny<string>()))
                              .Returns(Some(Snapshot.AsModel()));
-            var controller = new SnapshotsController(snapshotRetrieval.Object);
+            var controller = new SnapshotsController(snapshotRetrieval.Object, Mock.Of<ILogger>());
 
             var result = controller.GetSnapshotById(SnapshotId);
 
@@ -64,7 +65,7 @@ namespace Test.Hestia.WebService
         public void GetSnapshotByIdInvokesReturnNotFoundIfSnapshotIsNotFound()
         {
             var snapshotRetrieval = new Mock<ISnapshotRetrieval>();
-            var controller = new SnapshotsController(snapshotRetrieval.Object);
+            var controller = new SnapshotsController(snapshotRetrieval.Object, Mock.Of<ILogger>());
             snapshotRetrieval.Setup(mock => mock.GetSnapshotById(It.IsAny<string>()))
                              .Returns(Option<IRepositorySnapshotEntity>.None);
 
@@ -79,7 +80,7 @@ namespace Test.Hestia.WebService
         public void GetAllFileHeadersReturnsOkIfFileHeadersForSnapshotCouldBeRetrieved()
         {
             var snapshotRetrieval = new Mock<ISnapshotRetrieval>();
-            var controller = new SnapshotsController(snapshotRetrieval.Object);
+            var controller = new SnapshotsController(snapshotRetrieval.Object, Mock.Of<ILogger>());
             snapshotRetrieval.Setup(mock => mock.GetSnapshotById(It.IsAny<string>()))
                              .Returns(Some(Snapshot.AsModel()));
 
@@ -94,7 +95,7 @@ namespace Test.Hestia.WebService
         public void GetAllFileHeadersReturnsNotFoundIfSnapshotCouldNotBeFound()
         {
             var snapshotRetrieval = new Mock<ISnapshotRetrieval>();
-            var controller = new SnapshotsController(snapshotRetrieval.Object);
+            var controller = new SnapshotsController(snapshotRetrieval.Object, Mock.Of<ILogger>());
             snapshotRetrieval.Setup(mock => mock.GetSnapshotById(It.IsAny<string>()))
                              .Returns(Option<IRepositorySnapshotEntity>.None);
 

@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Serilog;
 
 namespace Hestia.WebService
 {
@@ -44,6 +45,7 @@ namespace Hestia.WebService
             });
             services.AddSingleton<ISnapshotRetrieval, SnapshotEFClient>();
             services.AddSingleton<IFileRetrieval, SnapshotEFClient>();
+            services.AddSingleton<ILogger>(_ => Log.Logger);
             services.AddCors();
             services.AddControllers();
 

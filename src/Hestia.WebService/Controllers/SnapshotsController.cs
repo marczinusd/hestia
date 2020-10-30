@@ -5,6 +5,7 @@ using Hestia.Model.Interfaces;
 using Hestia.WebService.ServiceModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
 namespace Hestia.WebService.Controllers
 {
@@ -13,10 +14,12 @@ namespace Hestia.WebService.Controllers
     public class SnapshotsController : ControllerBase
     {
         private readonly ISnapshotRetrieval _snapshotRetrieval;
+        private readonly ILogger _logger;
 
-        public SnapshotsController(ISnapshotRetrieval snapshotRetrieval)
+        public SnapshotsController(ISnapshotRetrieval snapshotRetrieval, ILogger logger)
         {
             _snapshotRetrieval = snapshotRetrieval;
+            _logger = logger;
         }
 
         /// <summary>
@@ -25,9 +28,13 @@ namespace Hestia.WebService.Controllers
         /// <returns>Full list of repository ids and names.</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<IEnumerable<ISnapshotHeader>> GetAllSnapshots() =>
-            Ok(_snapshotRetrieval.GetAllSnapshotsHeaders()
-                                 .Select(SlimSnapshot.From));
+        public ActionResult<IEnumerable<ISnapshotHeader>> GetAllSnapshots()
+        {
+            _logger.Information("Invoked GET /snapshots");
+
+            return Ok(_snapshotRetrieval.GetAllSnapshotsHeaders()
+                                        .Select(SlimSnapshot.From));
+        }
 
         /// <summary>
         ///     Looks up a repository by id.
@@ -38,9 +45,13 @@ namespace Hestia.WebService.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(IRepositorySnapshotEntity), StatusCodes.Status200OK)]
-        public ActionResult<IRepositorySnapshotEntity> GetSnapshotById(string id) =>
-            _snapshotRetrieval.GetSnapshotById(id)
-                              .Match<ActionResult>(Ok, NotFound);
+        public ActionResult<IRepositorySnapshotEntity> GetSnapshotById(string id)
+        {
+            _logger.Information($"Invoked GET /snapshots/${id}");
+
+            return _snapshotRetrieval.GetSnapshotById(id)
+                                     .Match<ActionResult>(Ok, NotFound);
+        }
 
         /// <summary>
         ///     Fetches all file headers for given snapshot.
@@ -50,8 +61,13 @@ namespace Hestia.WebService.Controllers
         [HttpGet("{id}/files")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(IEnumerable<IFileHeader>), StatusCodes.Status200OK)]
-        public ActionResult<IEnumerable<IFileHeader>> GetAllFileHeaders(string id) =>
-            _snapshotRetrieval.GetSnapshotById(id)
-                              .Match<ActionResult>(_ => Ok(_snapshotRetrieval.GetAllFilesForSnapshot(id)), NotFound());
+        public ActionResult<IEnumerable<IFileHeader>> GetAllFileHeaders(string id)
+        {
+            _logger.Information($"Invoked GET /snapshots/{id}/files");
+
+            return _snapshotRetrieval.GetSnapshotById(id)
+                                     .Match<ActionResult>(_ => Ok(_snapshotRetrieval.GetAllFilesForSnapshot(id)),
+                                                          NotFound());
+        }
     }
 }

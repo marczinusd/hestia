@@ -8,6 +8,7 @@ using Hestia.WebService.Controllers;
 using LanguageExt;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using Serilog;
 using Xunit;
 using static LanguageExt.Prelude;
 
@@ -31,7 +32,7 @@ namespace Test.Hestia.WebService
         public void GetFileDetailsByIdReturnsOkIfFileDetailsCouldBeFound()
         {
             var fileRetrieval = new Mock<IFileRetrieval>();
-            var controller = new FilesController(fileRetrieval.Object);
+            var controller = new FilesController(fileRetrieval.Object, Mock.Of<ILogger>());
             fileRetrieval.Setup(mock => mock.GetFileDetails(It.IsAny<string>()))
                          .Returns(Some(Files.First().AsModel()));
 
@@ -51,7 +52,7 @@ namespace Test.Hestia.WebService
         public void GetFileDetailsByIdReturnsNotFoundIfFileDetailsWasNotFound()
         {
             var fileRetrieval = new Mock<IFileRetrieval>();
-            var controller = new FilesController(fileRetrieval.Object);
+            var controller = new FilesController(fileRetrieval.Object, Mock.Of<ILogger>());
             fileRetrieval.Setup(mock => mock.GetFileDetails(It.IsAny<string>()))
                          .Returns(Option<IFileEntity>.None);
 
