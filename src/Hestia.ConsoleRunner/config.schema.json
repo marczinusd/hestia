@@ -16,7 +16,11 @@
       ],
       "sqliteDbLocation": "/dev/bla",
       "sqliteDbName": "hestia.db",
-      "statGranularity": "file"
+      "statGranularity": "file",
+      "ignorePatterns": [
+        "*AssemblyInfo.cs",
+        "*Test.cs"
+      ]
     }
   ],
   "required": [
@@ -118,6 +122,38 @@
         "file",
         "full"
       ]
+    },
+    "ignorePatterns": {
+      "$id": "#/properties/ignorePatterns",
+      "type": "array",
+      "title": "The ignorePatterns schema",
+      "description": "Array of patterns to filter out files before processing (such as tests and metadata files)",
+      "default": [],
+      "examples": [
+        [
+          "(.*)AssemblyInfo.cs(.*)",
+          "(.*)Test.cs",
+          "Test.Hestia(.*).cs"
+        ]
+      ],
+      "additionalItems": true,
+      "items": {
+        "$id": "#/properties/ignorePatterns/items",
+        "anyOf": [
+          {
+            "$id": "#/properties/ignorePatterns/items/anyOf/0",
+            "type": "string",
+            "title": "The first anyOf schema",
+            "description": "Regex pattern in C#'s standard format",
+            "default": "",
+            "examples": [
+              "(.*)AssemblyInfo.cs(.*)",
+              "(.*)Test.cs",
+              "Test.Hestia(.*).cs"
+            ]
+          }
+        ]
+      }
     }
   },
   "additionalProperties": true

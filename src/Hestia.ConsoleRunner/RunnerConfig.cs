@@ -33,5 +33,9 @@ namespace Hestia.ConsoleRunner
         [UsedImplicitly]
         [JsonPropertyName("statGranularity")]
         public string StatGranularity { get; set; }
+
+        [UsedImplicitly]
+        [JsonPropertyName("ignorePatterns")]
+        public List<string> IgnorePatterns { get; set; }
     }
 }

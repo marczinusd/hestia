@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reactive.Subjects;
+using System.Text.RegularExpressions;
 using Hestia.DAL.Interfaces;
 using Hestia.Model.Builders;
 using Hestia.Model.Interfaces;
@@ -52,6 +55,8 @@ namespace Hestia.ConsoleRunner
                     return ConvertCoverageReport(snapshot);
                 })
                 .Apply(snapshot =>
+                           snapshot.With(files: snapshot.Files.Where(f => FilterFileOnPatterns(config.IgnorePatterns, f))))
+                .Apply(snapshot =>
                 {
                     _log.Information("Enriching snapshot with coverage stats");
                     return _statsEnricher.EnrichWithCoverage(snapshot);
@@ -87,6 +92,27 @@ namespace Hestia.ConsoleRunner
 
                     return Unit.Default;
                 });
+
+        private bool FilterFileOnPatterns(List<string> ignorePatterns, IFile file)
+        {
+            foreach (var pattern in ignorePatterns)
+            {
+                try
+                {
+                    if (Regex.IsMatch(file.FullPath, pattern))
+                    {
+                        _log.Debug($"Filtering out {file.Path} because it matched pattern: '{pattern}'");
+                        return false;
+                    }
+                }
+                catch (ArgumentException)
+                {
+                    _log.Warning($"Regex pattern {pattern} is invalid -- skipping");
+                }
+            }
+
+            return true;
+        }
 
         // ReSharper disable once UnusedMethodReturnValue.Local
         private IDisposable CreateProgressBar(IObservable<int> progressSubject, int total)

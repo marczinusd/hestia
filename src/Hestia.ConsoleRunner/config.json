@@ -6,5 +6,6 @@
   "fileExtensions": [],
   "sqliteDbLocation": "",
   "sqliteDbName": "",
-  "statGranularity": "file"
+  "statGranularity": "file",
+  "ignorePatterns": []
 }
