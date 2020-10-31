@@ -38,7 +38,7 @@ namespace Test.Hestia.ConsoleRunner
                                                    Mock.Of<IDiskIOWrapper>(),
                                                    Mock.Of<IPathValidator>());
             var files = new List<IFile>(MockRepo.CreateFiles(4));
-            files.Add(new File("BlablaTest",
+            files.Add(new File("BlablaTest.cs",
                                ".cs",
                                "somepath",
                                new List<ISourceLine>(),
@@ -81,8 +81,28 @@ namespace Test.Hestia.ConsoleRunner
         [Fact]
         public void BuildFromConfigFiltersSnapshotFilesBasedOnIgnorePaths()
         {
-            // create snapshot with n files
-            // verify that files matching Test.cs are filtered out in the statsenricher call
+            var log = new Mock<ILogger>();
+            var enricher = new Mock<IStatsEnricher>();
+            enricher.Setup(mock => mock.EnrichWithCoverage(It.IsAny<IRepositorySnapshot>()))
+                    .Returns<IRepositorySnapshot>(s => s);
+            enricher.Setup(mock => mock.EnrichWithGitStats(It.IsAny<IRepositorySnapshot>(),
+                                                           It.IsAny<GitStatGranularity>(),
+                                                           It.IsAny<Option<ISubject<int>>>()))
+                    .Returns<IRepositorySnapshot, GitStatGranularity, Option<ISubject<int>>>((s, _, __) => s);
+            var runner = CreateInitialBuilder()
+                         .With(log.Object)
+                         .With(enricher.Object)
+                         .Build();
+            var config = ConfigFactory();
+            config.IgnorePatterns.Add("(.*)Test.cs");
+
+            runner.BuildFromConfig(config);
+
+            enricher.Verify(mock => mock.EnrichWithGitStats(It.Is<IRepositorySnapshot>(s => s.Files.Count == 4),
+                                                            It.IsAny<GitStatGranularity>(),
+                                                            It.IsAny<Option<ISubject<int>>>()),
+                            Times.Once);
+            log.Verify(mock => mock.Debug(It.Is<string>(s => s.Contains("Filtering out"))), Times.Once);
         }
 
         [Fact]
@@ -97,7 +117,7 @@ namespace Test.Hestia.ConsoleRunner
 
             runner.BuildFromConfig(config);
 
-            log.Verify(mock => mock.Warning(It.Is<string>(s => s.Contains("is invalid"))), Times.Exactly(5));
+            log.Verify(mock => mock.Warning(It.Is<string>(s => s.Contains("is invalid"))), Times.Exactly(4));
         }
 
         [Fact]
@@ -114,6 +134,29 @@ namespace Test.Hestia.ConsoleRunner
 
             log.Verify(mock => mock.Warning(It.Is<string>(s => s.Contains("Could not parse git stat granularity"))),
                        Times.Once);
+        }
+
+        [Fact]
+        public void BuildFromConfigDoesNotInvokeCoverageEnrichmentIfReportCouldNotBeConverted()
+        {
+            var converter = new Mock<ICoverageReportConverter>();
+            converter.Setup(mock => mock.Convert(It.IsAny<string>(), It.IsAny<string>()))
+                     .Returns(None);
+            var enricher = new Mock<IStatsEnricher>();
+            enricher.Setup(mock => mock.EnrichWithCoverage(It.IsAny<IRepositorySnapshot>()))
+                    .Returns<IRepositorySnapshot>(s => s);
+            enricher.Setup(mock => mock.EnrichWithGitStats(It.IsAny<IRepositorySnapshot>(),
+                                                           It.IsAny<GitStatGranularity>(),
+                                                           It.IsAny<Option<ISubject<int>>>()))
+                    .Returns<IRepositorySnapshot, GitStatGranularity, Option<ISubject<int>>>((s, _, __) => s);
+            var runner = CreateInitialBuilder()
+                         .With(converter.Object)
+                         .With(enricher.Object)
+                         .Build();
+
+            runner.BuildFromConfig(ConfigFactory());
+
+            enricher.Verify(mock => mock.EnrichWithCoverage(It.IsAny<IRepositorySnapshot>()), Times.Never);
         }
 
         [Fact]
@@ -140,11 +183,11 @@ namespace Test.Hestia.ConsoleRunner
         {
             var enricher = new Mock<IStatsEnricher>();
             enricher.Setup(mock => mock.EnrichWithCoverage(It.IsAny<IRepositorySnapshot>()))
-                    .Returns(Snapshot());
+                    .Returns<IRepositorySnapshot>(s => s);
             enricher.Setup(mock => mock.EnrichWithGitStats(It.IsAny<IRepositorySnapshot>(),
                                                            It.IsAny<GitStatGranularity>(),
                                                            It.IsAny<Option<ISubject<int>>>()))
-                    .Returns(Snapshot());
+                    .Returns<IRepositorySnapshot, GitStatGranularity, Option<ISubject<int>>>((s, _, __) => s);
             var runner = CreateInitialBuilder()
                          .With(enricher.Object)
                          .Build();

@@ -54,8 +54,8 @@ namespace Test.Hestia.DAL.EFCore.Entities
             None,
             None,
             None,
-            1,
-            0);
+            None,
+            None);
 
         [Fact]
         public void FileIsCorrectlyMappedToEntityTest()
@@ -105,6 +105,8 @@ namespace Test.Hestia.DAL.EFCore.Entities
                   .HaveCount(1);
             entity.Snapshot.Should()
                   .BeNull();
+            entity.SnapshotId.Should()
+                  .BeNull();
         }
 
         [Fact]
@@ -137,6 +139,15 @@ namespace Test.Hestia.DAL.EFCore.Entities
             entity.CommitDate
                   .Should()
                   .Be(DateTime.MinValue);
+            entity.NumberOfCommits
+                  .Should()
+                  .Be(-1);
+            entity.CommitRelativePosition
+                  .Should()
+                  .Be(-1);
+            entity.Name
+                  .Should()
+                  .BeEmpty();
         }
 
         [Fact]
@@ -160,6 +171,8 @@ namespace Test.Hestia.DAL.EFCore.Entities
                   .BeNull();
             entity.File.Should()
                   .BeNull();
+            entity.FileId.Should()
+                  .BeNull();
         }
 
         [Fact]
@@ -182,6 +195,8 @@ namespace Test.Hestia.DAL.EFCore.Entities
             entity.Id.Should()
                   .BeNull();
             entity.File.Should()
+                  .BeNull();
+            entity.FileId.Should()
                   .BeNull();
         }
     }

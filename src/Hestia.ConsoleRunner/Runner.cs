@@ -62,9 +62,18 @@ namespace Hestia.ConsoleRunner
                 .Apply(snapshot =>
                 {
                     _log.Information("Enriching snapshot with coverage stats");
+                    var coveragePath = snapshot.PathToCoverageResultFile
+                                               .Some(x => x)
+                                               .None(() => string.Empty);
+                    if (string.IsNullOrWhiteSpace(coveragePath))
+                    {
+                        _log.Warning($"Coverage report provided at {coveragePath} could not be converted and was not processed");
+                        return snapshot;
+                    }
+
                     return _statsEnricher.EnrichWithCoverage(snapshot);
                 })
-                .Apply(x =>
+                .Apply(snapshot =>
                 {
                     var canParse = Enum.GetNames<GitStatGranularity>()
                                        .Select(val => val.ToLower())
@@ -75,7 +84,7 @@ namespace Hestia.ConsoleRunner
                     }
 
                     var progressSubject = new Subject<int>();
-                    _progressBarFactory.CreateProgressBar(progressSubject, x.Files.Count);
+                    _progressBarFactory.CreateProgressBar(progressSubject, snapshot.Files.Count);
                     var granularity = !canParse
                                           ? GitStatGranularity.File
                                           : (GitStatGranularity)Enum.Parse(typeof(GitStatGranularity),
@@ -83,7 +92,7 @@ namespace Hestia.ConsoleRunner
                                                                            true);
 
                     _log.Information($"Enriching snapshot with git stats with {granularity.ToString()} granularity");
-                    return _statsEnricher.EnrichWithGitStats(x, granularity, progressSubject);
+                    return _statsEnricher.EnrichWithGitStats(snapshot, granularity, progressSubject);
                 })
                 .Apply(snapshot =>
                 {
@@ -137,8 +146,7 @@ namespace Hestia.ConsoleRunner
             var coverageOutputLocation = snapshot.PathToCoverageResultFile.Match(x => x, string.Empty);
             var newPath = _converter.Convert(coverageOutputLocation,
                                              Path.GetDirectoryName(coverageOutputLocation)!)
-                                    .Some(x => x)
-                                    .None(() => null!);
+                                    .Match(x => x, () => string.Empty);
 
             return snapshot.With(pathToCoverageResultFile: newPath);
         }
