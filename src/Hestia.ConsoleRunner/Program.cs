@@ -131,6 +131,8 @@ namespace Hestia.ConsoleRunner
             builder.RegisterType<RepositorySnapshotBuilderWrapper>()
                    .As<IRepositorySnapshotBuilderWrapper>();
             builder.RegisterType<Runner>();
+            builder.RegisterType<ProgressBarFactory>()
+                   .As<IProgressBarFactory>();
 
             return builder;
         }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reactive.Subjects;
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using FluentAssertions;
@@ -131,6 +132,31 @@ namespace Test.Hestia.Model.Stats
                             .All(s => s.NumberOfLifetimeAuthors == 2 && s.ModifiedInNumberOfCommits == 2)
                             .Should()
                             .BeTrue();
+        }
+
+        [Fact]
+        public void StatsEnricherPublishesProgressUpdatesOnGitStatEnrichment()
+        {
+            var fixture = new Fixture();
+            var ioMock = MockRepo.CreateDiskIOWrapperMock();
+            var gitCommandsMock = MockRepo.CreateGitCommandsMock();
+            fixture.Register(() => ioMock.Object);
+            fixture.Register(() => gitCommandsMock.Object);
+            fixture.Customize(new AutoMoqCustomization { ConfigureMembers = true });
+            var enricher = fixture.Create<StatsEnricher>();
+            var subject = new Subject<int>();
+            var updates = new List<int>();
+            subject.Subscribe(val => updates.Add(val));
+
+            enricher.EnrichWithGitStats(MockRepo.CreateSnapshot(new[] { ".cs" },
+                                                                   "lcov.info",
+                                                                   ioMock.Object,
+                                                                   Mock.Of<IPathValidator>()),
+                                                               GitStatGranularity.Full,
+                                                               subject);
+
+            updates.Should()
+                   .HaveCount(2);
         }
 
         [Fact]

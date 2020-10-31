@@ -11,7 +11,6 @@ using Hestia.Model.Stats;
 using Hestia.Model.Wrappers;
 using LanguageExt;
 using Serilog;
-using ShellProgressBar;
 
 namespace Hestia.ConsoleRunner
 {
@@ -24,6 +23,7 @@ namespace Hestia.ConsoleRunner
         private readonly ICoverageReportConverter _converter;
         private readonly ILogger _log;
         private readonly ISnapshotPersistence _persistence;
+        private readonly IProgressBarFactory _progressBarFactory;
 
         public Runner(IDiskIOWrapper ioWrapper,
                       IPathValidator pathValidator,
@@ -31,7 +31,8 @@ namespace Hestia.ConsoleRunner
                       IStatsEnricher statsEnricher,
                       ICoverageReportConverter converter,
                       ILogger log,
-                      ISnapshotPersistence persistence)
+                      ISnapshotPersistence persistence,
+                      IProgressBarFactory progressBarFactory)
         {
             _ioWrapper = ioWrapper;
             _pathValidator = pathValidator;
@@ -40,6 +41,7 @@ namespace Hestia.ConsoleRunner
             _converter = converter;
             _log = log;
             _persistence = persistence;
+            _progressBarFactory = progressBarFactory;
         }
 
         public void BuildFromConfig(RunnerConfig config, bool dryRun = false) =>
@@ -55,7 +57,8 @@ namespace Hestia.ConsoleRunner
                     return ConvertCoverageReport(snapshot);
                 })
                 .Apply(snapshot =>
-                           snapshot.With(files: snapshot.Files.Where(f => FilterFileOnPatterns(config.IgnorePatterns, f))))
+                           snapshot.With(files: snapshot.Files.Where(f => FilterFileOnPatterns(config.IgnorePatterns,
+                                                                         f))))
                 .Apply(snapshot =>
                 {
                     _log.Information("Enriching snapshot with coverage stats");
@@ -63,17 +66,21 @@ namespace Hestia.ConsoleRunner
                 })
                 .Apply(x =>
                 {
-                    var canParse =
-                        Enum.Parse(typeof(GitStatGranularity), config.StatGranularity, true) is GitStatGranularity;
+                    var canParse = Enum.GetNames<GitStatGranularity>()
+                                       .Select(val => val.ToLower())
+                                       .Contains(config.StatGranularity);
                     if (!canParse)
                     {
                         _log.Warning($"Could not parse git stat granularity from value {config.StatGranularity}. Possible values: {string.Join(',', Enum.GetValues<GitStatGranularity>())}");
                     }
 
                     var progressSubject = new Subject<int>();
-                    CreateProgressBar(progressSubject, x.Files.Count);
-                    var granularity =
-                        (GitStatGranularity)Enum.Parse(typeof(GitStatGranularity), config.StatGranularity, true);
+                    _progressBarFactory.CreateProgressBar(progressSubject, x.Files.Count);
+                    var granularity = !canParse
+                                          ? GitStatGranularity.File
+                                          : (GitStatGranularity)Enum.Parse(typeof(GitStatGranularity),
+                                                                           config.StatGranularity,
+                                                                           true);
 
                     _log.Information($"Enriching snapshot with git stats with {granularity.ToString()} granularity");
                     return _statsEnricher.EnrichWithGitStats(x, granularity, progressSubject);
@@ -112,19 +119,6 @@ namespace Hestia.ConsoleRunner
             }
 
             return true;
-        }
-
-        // ReSharper disable once UnusedMethodReturnValue.Local
-        private IDisposable CreateProgressBar(IObservable<int> progressSubject, int total)
-        {
-            var options = new ProgressBarOptions { ProgressBarOnBottom = true };
-            var progressBar = new ProgressBar(total, "Processing git stats for all files", options);
-            progressSubject.Subscribe(val =>
-            {
-                progressBar.Tick($"File {val} of {total}");
-            }); // don't try this at home
-
-            return progressBar;
         }
 
         private RepositorySnapshotBuilderArguments ConfigAsBuilder(RunnerConfig config) =>

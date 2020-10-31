@@ -20,6 +20,7 @@ namespace Test.Hestia.ConsoleRunner
         private ICoverageReportConverter _converter = Mock.Of<ICoverageReportConverter>();
         private ILogger _logger = Mock.Of<ILogger>();
         private ISnapshotPersistence _snapshotPersistence = Mock.Of<ISnapshotPersistence>();
+        private IProgressBarFactory _progressBarFactory = Mock.Of<IProgressBarFactory>();
 
         public RunnerBuilder With(IDiskIOWrapper diskIOWrapper)
         {
@@ -69,6 +70,7 @@ namespace Test.Hestia.ConsoleRunner
                                             _enricher,
                                             _converter,
                                             _logger,
-                                            _snapshotPersistence);
+                                            _snapshotPersistence,
+                                            _progressBarFactory);
     }
 }

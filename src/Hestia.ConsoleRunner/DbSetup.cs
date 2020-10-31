@@ -18,18 +18,6 @@ namespace Hestia.ConsoleRunner
         private static readonly string DefaultDBFolder =
             Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "dev");
 
-        public static HestiaContext CreateContext(string dbName, string dbPath)
-        {
-            var finalPath = BuildDBPath(dbName, dbPath);
-            Log.Logger.Information($"Using sqlite db at {finalPath}");
-            var contextBuilder = new DbContextOptionsBuilder();
-            contextBuilder.UseSqlite($@"Data Source={finalPath}");
-            var dbContext = new HestiaContext(contextBuilder.Options);
-            EnsureDBCreated(dbContext, Path.GetDirectoryName(finalPath)!);
-
-            return dbContext;
-        }
-
         public static ContainerBuilder WithDbContext(this ContainerBuilder builder, string dbName, string dbPath)
         {
             builder.RegisterType<SnapshotEFClient>()
@@ -39,6 +27,18 @@ namespace Hestia.ConsoleRunner
             builder.RegisterInstance(CreateContext(dbName, dbPath));
 
             return builder;
+        }
+
+        private static HestiaContext CreateContext(string dbName, string dbPath)
+        {
+            var finalPath = BuildDBPath(dbName, dbPath);
+            Log.Logger.Information($"Using sqlite db at {finalPath}");
+            var contextBuilder = new DbContextOptionsBuilder();
+            contextBuilder.UseSqlite($@"Data Source={finalPath}");
+            var dbContext = new HestiaContext(contextBuilder.Options);
+            EnsureDBCreated(dbContext, Path.GetDirectoryName(finalPath)!);
+
+            return dbContext;
         }
 
         private static string BuildDBPath(string name, string path)

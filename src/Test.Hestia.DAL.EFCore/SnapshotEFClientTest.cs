@@ -185,6 +185,31 @@ namespace Test.Hestia.DAL.EFCore
                .NotThrow<NullReferenceException>();
         }
 
+        [Fact]
+        public void GetLinesForFileRetrievesTheExpectedLines()
+        {
+            using var context = new HestiaContext(Options);
+            var client = new SnapshotEFClient(context);
+
+            var lines = client.GetLinesForFile(SeededFileId);
+
+            lines.Should()
+                 .HaveCount(1);
+        }
+
+        [Fact]
+        public void GetAllFilesForSnapshotRetrievesAllFilesForSnapshotId()
+        {
+            using var context = new HestiaContext(Options);
+            var client = new SnapshotEFClient(context);
+
+            var files = client.GetAllFilesForSnapshot(SeededSnapshotId);
+
+            files.First()
+                 .Id.Should()
+                 .Be(SeededFileId);
+        }
+
         private void SeedDb()
         {
             using var context = new HestiaContext(Options);

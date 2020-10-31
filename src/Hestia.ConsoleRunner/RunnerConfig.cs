@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 
 namespace Hestia.ConsoleRunner
 {
+    [ExcludeFromCodeCoverage]
     public class RunnerConfig
     {
         [UsedImplicitly]

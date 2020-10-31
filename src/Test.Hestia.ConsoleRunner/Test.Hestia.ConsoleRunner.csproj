@@ -34,5 +34,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Hestia.ConsoleRunner\Hestia.ConsoleRunner.csproj" />
+    <ProjectReference Include="..\Test.Hestia.Utils\Test.Hestia.Utils.csproj" />
   </ItemGroup>
 </Project>
