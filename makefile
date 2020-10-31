@@ -19,3 +19,6 @@ cover:
 run-webservice:
 	$(MAKE)
 	dotnet run --project src/Hestia.WebService/Hestia.WebService.csproj
+run-console:
+	$(MAKE)
+	dotnet run --project src/Hestia.ConsoleRunner/Hestia.ConsoleRunner.csproj

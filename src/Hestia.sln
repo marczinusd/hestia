@@ -24,6 +24,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hestia.DAL.Interfaces", "He
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hestia.Model.Interfaces", "Hestia.Model.Interfaces\Hestia.Model.Interfaces.csproj", "{720C5F8A-3C80-44EF-9EA0-5450B666D491}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hestia.ConsoleRunner", "Hestia.ConsoleRunner\Hestia.ConsoleRunner.csproj", "{CE6B1BA8-E5A4-4F58-996C-ECC124163681}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Hestia.ConsoleRunner", "Test.Hestia.ConsoleRunner\Test.Hestia.ConsoleRunner.csproj", "{88E5691F-1401-45D0-B927-5DCF91A08578}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,6 +78,14 @@ Global
 		{720C5F8A-3C80-44EF-9EA0-5450B666D491}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{720C5F8A-3C80-44EF-9EA0-5450B666D491}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{720C5F8A-3C80-44EF-9EA0-5450B666D491}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE6B1BA8-E5A4-4F58-996C-ECC124163681}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE6B1BA8-E5A4-4F58-996C-ECC124163681}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE6B1BA8-E5A4-4F58-996C-ECC124163681}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE6B1BA8-E5A4-4F58-996C-ECC124163681}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88E5691F-1401-45D0-B927-5DCF91A08578}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88E5691F-1401-45D0-B927-5DCF91A08578}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88E5691F-1401-45D0-B927-5DCF91A08578}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88E5691F-1401-45D0-B927-5DCF91A08578}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{82AF4D38-13F4-44F4-B844-E0BA1006C5ED} = {39BB93D3-D10F-4057-B9C1-F6498FE33699}
@@ -81,5 +93,6 @@ Global
 		{FE9AADBE-A923-450B-8B17-DE6539CFC102} = {39BB93D3-D10F-4057-B9C1-F6498FE33699}
 		{C4EE2FC8-3F31-4337-BB2F-5E7567D74161} = {39BB93D3-D10F-4057-B9C1-F6498FE33699}
 		{DFCE0709-A41B-496F-AA0F-614C53DF1688} = {39BB93D3-D10F-4057-B9C1-F6498FE33699}
+		{88E5691F-1401-45D0-B927-5DCF91A08578} = {39BB93D3-D10F-4057-B9C1-F6498FE33699}
 	EndGlobalSection
 EndGlobal
