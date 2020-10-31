@@ -44,7 +44,7 @@ namespace Hestia.ConsoleRunner
             _progressBarFactory = progressBarFactory;
         }
 
-        public void BuildFromConfig(RunnerConfig config, bool dryRun = false) =>
+        public void BuildFromConfig(RunnerConfig config, bool dryRun) =>
             ConfigAsBuilder(config)
                 .Apply(arguments =>
                 {
@@ -63,8 +63,7 @@ namespace Hestia.ConsoleRunner
                 {
                     _log.Information("Enriching snapshot with coverage stats");
                     var coveragePath = snapshot.PathToCoverageResultFile
-                                               .Some(x => x)
-                                               .None(() => string.Empty);
+                                               .Match(x => x, () => string.Empty);
                     if (string.IsNullOrWhiteSpace(coveragePath))
                     {
                         _log.Warning($"Coverage report provided at {coveragePath} could not be converted and was not processed");
@@ -145,8 +144,7 @@ namespace Hestia.ConsoleRunner
         {
             var coverageOutputLocation = snapshot.PathToCoverageResultFile.Match(x => x, string.Empty);
             var newPath = _converter.Convert(coverageOutputLocation,
-                                             Path.GetDirectoryName(coverageOutputLocation)!)
-                                    .Match(x => x, () => string.Empty);
+                                             Path.GetDirectoryName(coverageOutputLocation)!);
 
             return snapshot.With(pathToCoverageResultFile: newPath);
         }

@@ -14,14 +14,16 @@ namespace Test.Hestia.DAL.EFCore.Adapters
                                                      1,
                                                      2,
                                                      "id",
-                                                     1);
+                                                     1,
+                                                     null);
 
         private static readonly File File = new File("path",
                                                      1,
                                                      2,
                                                      3,
                                                      new List<Line> { Line },
-                                                     "id");
+                                                     "id",
+                                                     null);
 
         private static readonly Snapshot Snapshot =
             new Snapshot(new List<File> { File },

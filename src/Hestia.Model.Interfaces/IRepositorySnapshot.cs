@@ -24,7 +24,7 @@ namespace Hestia.Model.Interfaces
 
         IRepositorySnapshot With(IEnumerable<IFile>? files = null,
                                  string? atHash = null,
-                                 string? pathToCoverageResultFile = null,
+                                 Option<string>? pathToCoverageResultFile = null,
                                  DateTime? commitCreationDate = null,
                                  string? name = null,
                                  string? rootPath = null,

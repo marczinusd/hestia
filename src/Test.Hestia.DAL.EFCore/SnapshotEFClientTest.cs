@@ -31,9 +31,11 @@ namespace Test.Hestia.DAL.EFCore
                                                                                             1,
                                                                                             2,
                                                                                             "id",
-                                                                                            1)
+                                                                                            1,
+                                                                                            null)
                                                                                     },
-                                                                                    SeededFileId)
+                                                                                    SeededFileId,
+                                                                                    null)
                                                                    },
                                                                    "someHash",
                                                                    DateTime.MinValue,

@@ -17,7 +17,7 @@ using Unit = System.Reactive.Unit;
 
 namespace Hestia.UIRunner.ViewModels
 {
-    public class FormViewModel : ReactiveValidationObject<FormViewModel>
+    public class FormViewModel : ReactiveValidationObject
     {
         private readonly IRepositorySnapshotBuilderWrapper _builder;
         private readonly IDiskIOWrapper _ioWrapper;

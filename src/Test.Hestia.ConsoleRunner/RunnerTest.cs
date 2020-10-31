@@ -58,7 +58,7 @@ namespace Test.Hestia.ConsoleRunner
                          .With(snapshotBuilder.Object)
                          .Build();
 
-            runner.BuildFromConfig(ConfigFactory());
+            runner.BuildFromConfig(ConfigFactory(), false);
 
             snapshotBuilder.Verify(mock => mock.Build(It.IsAny<RepositorySnapshotBuilderArguments>()), Times.Once);
         }
@@ -73,7 +73,7 @@ namespace Test.Hestia.ConsoleRunner
                          .With(converter.Object)
                          .Build();
 
-            runner.BuildFromConfig(ConfigFactory());
+            runner.BuildFromConfig(ConfigFactory(), false);
 
             converter.Verify(mock => mock.Convert(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
         }
@@ -96,7 +96,7 @@ namespace Test.Hestia.ConsoleRunner
             var config = ConfigFactory();
             config.IgnorePatterns.Add("(.*)Test.cs");
 
-            runner.BuildFromConfig(config);
+            runner.BuildFromConfig(config, false);
 
             enricher.Verify(mock => mock.EnrichWithGitStats(It.Is<IRepositorySnapshot>(s => s.Files.Count == 4),
                                                             It.IsAny<GitStatGranularity>(),
@@ -115,7 +115,7 @@ namespace Test.Hestia.ConsoleRunner
             var config = ConfigFactory();
             config.IgnorePatterns.Add("**.cs");
 
-            runner.BuildFromConfig(config);
+            runner.BuildFromConfig(config, false);
 
             log.Verify(mock => mock.Warning(It.Is<string>(s => s.Contains("is invalid"))), Times.Exactly(4));
         }
@@ -130,7 +130,7 @@ namespace Test.Hestia.ConsoleRunner
             var config = ConfigFactory();
             config.StatGranularity = "bla";
 
-            runner.BuildFromConfig(config);
+            runner.BuildFromConfig(config, false);
 
             log.Verify(mock => mock.Warning(It.Is<string>(s => s.Contains("Could not parse git stat granularity"))),
                        Times.Once);
@@ -154,7 +154,7 @@ namespace Test.Hestia.ConsoleRunner
                          .With(enricher.Object)
                          .Build();
 
-            runner.BuildFromConfig(ConfigFactory());
+            runner.BuildFromConfig(ConfigFactory(), false);
 
             enricher.Verify(mock => mock.EnrichWithCoverage(It.IsAny<IRepositorySnapshot>()), Times.Never);
         }
@@ -173,7 +173,7 @@ namespace Test.Hestia.ConsoleRunner
                          .With(enricher.Object)
                          .Build();
 
-            runner.BuildFromConfig(ConfigFactory());
+            runner.BuildFromConfig(ConfigFactory(), false);
 
             enricher.Verify(mock => mock.EnrichWithCoverage(It.IsAny<RepositorySnapshot>()), Times.Once);
         }
@@ -192,7 +192,7 @@ namespace Test.Hestia.ConsoleRunner
                          .With(enricher.Object)
                          .Build();
 
-            runner.BuildFromConfig(ConfigFactory());
+            runner.BuildFromConfig(ConfigFactory(), false);
 
             enricher.Verify(mock => mock.EnrichWithGitStats(It.IsAny<RepositorySnapshot>(),
                                                             It.IsAny<GitStatGranularity>(),
@@ -208,7 +208,7 @@ namespace Test.Hestia.ConsoleRunner
                          .With(persistence.Object)
                          .Build();
 
-            runner.BuildFromConfig(ConfigFactory());
+            runner.BuildFromConfig(ConfigFactory(), false);
 
             persistence.Verify(mock => mock.InsertSnapshotSync(It.Is<IRepositorySnapshot>(_ => true)), Times.Once);
         }

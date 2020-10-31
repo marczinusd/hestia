@@ -14,7 +14,8 @@ namespace Hestia.DAL.EFCore.Entities
                      file.Content
                          .Select(AsEntity)
                          .ToList(),
-                     null!);
+                     null!,
+                     null);
 
         public static Snapshot AsEntity(this IRepositorySnapshot snapshot) =>
             new Snapshot(snapshot.Files.Select(f => f.AsEntity())
@@ -35,6 +36,7 @@ namespace Hestia.DAL.EFCore.Entities
                      line.LineGitStats.Match(x => x.ModifiedInNumberOfCommits,
                                              () => 0),
                      null,
-                     line.LineNumber);
+                     line.LineNumber,
+                     null);
     }
 }

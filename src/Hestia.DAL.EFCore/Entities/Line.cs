@@ -15,7 +15,8 @@ namespace Hestia.DAL.EFCore.Entities
                     int numberOfAuthors,
                     int numberOfChanges,
                     string id,
-                    int lineNumber)
+                    int lineNumber,
+                    string fileId)
         {
             Content = content;
             IsCovered = isCovered;
@@ -23,6 +24,7 @@ namespace Hestia.DAL.EFCore.Entities
             NumberOfChanges = numberOfChanges;
             Id = id;
             LineNumber = lineNumber;
+            FileId = fileId;
         }
 
         [UsedImplicitly] public string Id { get; set; }

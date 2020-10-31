@@ -26,7 +26,8 @@ namespace Test.Hestia.WebService
                                       2,
                                       3,
                                       new List<Line>(),
-                                      "id")
+                                      "id",
+                                      null)
                          },
                          "hash",
                          DateTime.MinValue,
