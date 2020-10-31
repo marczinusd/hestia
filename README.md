@@ -7,11 +7,10 @@
 
 WIP application that can analyze a project's code quality by looking at statistics from git and code coverage.
 
-Features working currently:
+Included in the project is:
 
 * Shared model for git / coverage statistics
 * Console runner for easily repeatable analysis runs
-* Avalonia/ReactiveUI-based cross-platform UI runner to create repository snapshots to analyze
 * Persistence with EFCore targeting Sqlite
 * Simple web API to serve statistics
 * Angular-based web client here: [marczinusd/hestia-ui](https://github.com/marczinusd/hestia-ui)
