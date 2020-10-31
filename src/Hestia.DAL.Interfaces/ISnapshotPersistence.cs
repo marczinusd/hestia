@@ -1,6 +1,5 @@
 ﻿using System;
 using Hestia.Model.Interfaces;
-using LanguageExt;
 
 namespace Hestia.DAL.Interfaces
 {
