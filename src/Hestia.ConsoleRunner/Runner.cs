@@ -83,7 +83,7 @@ namespace Hestia.ConsoleRunner
                     }
 
                     var progressSubject = new Subject<int>();
-                    _progressBarFactory.CreateProgressBar(progressSubject, snapshot.Files.Count);
+                    var disposable = _progressBarFactory.CreateProgressBar(progressSubject, snapshot.Files.Count);
                     var granularity = !canParse
                                           ? GitStatGranularity.File
                                           : (GitStatGranularity)Enum.Parse(typeof(GitStatGranularity),
@@ -91,7 +91,10 @@ namespace Hestia.ConsoleRunner
                                                                            true);
 
                     _log.Information($"Enriching snapshot with git stats with {granularity.ToString()} granularity");
-                    return _statsEnricher.EnrichWithGitStats(snapshot, granularity, progressSubject);
+                    var result = _statsEnricher.EnrichWithGitStats(snapshot, granularity, progressSubject);
+                    disposable.Dispose();
+
+                    return result;
                 })
                 .Apply(snapshot =>
                 {

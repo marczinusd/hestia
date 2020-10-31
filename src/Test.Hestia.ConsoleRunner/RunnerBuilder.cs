@@ -10,8 +10,8 @@ namespace Test.Hestia.ConsoleRunner
 {
     public class RunnerBuilder
     {
-        private IDiskIOWrapper _diskIOWrapper = Mock.Of<IDiskIOWrapper>();
-        private IPathValidator _pathValidator = Mock.Of<IPathValidator>();
+        private readonly IDiskIOWrapper _diskIOWrapper = Mock.Of<IDiskIOWrapper>();
+        private readonly IPathValidator _pathValidator = Mock.Of<IPathValidator>();
 
         private IRepositorySnapshotBuilderWrapper
             _snapshotBuilderWrapper = Mock.Of<IRepositorySnapshotBuilderWrapper>();
@@ -21,18 +21,6 @@ namespace Test.Hestia.ConsoleRunner
         private ILogger _logger = Mock.Of<ILogger>();
         private ISnapshotPersistence _snapshotPersistence = Mock.Of<ISnapshotPersistence>();
         private IProgressBarFactory _progressBarFactory = Mock.Of<IProgressBarFactory>();
-
-        public RunnerBuilder With(IDiskIOWrapper diskIOWrapper)
-        {
-            _diskIOWrapper = diskIOWrapper;
-            return this;
-        }
-
-        public RunnerBuilder With(IPathValidator pathValidator)
-        {
-            _pathValidator = pathValidator;
-            return this;
-        }
 
         public RunnerBuilder With(IRepositorySnapshotBuilderWrapper snapshotBuilderWrapper)
         {
@@ -61,6 +49,12 @@ namespace Test.Hestia.ConsoleRunner
         public RunnerBuilder With(ISnapshotPersistence snapshotPersistence)
         {
             _snapshotPersistence = snapshotPersistence;
+            return this;
+        }
+
+        public RunnerBuilder With(IProgressBarFactory progressBarFactory)
+        {
+            _progressBarFactory = progressBarFactory;
             return this;
         }
 

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reactive.Disposables;
 using System.Reactive.Subjects;
 using Hestia.ConsoleRunner;
 using Hestia.DAL.Interfaces;
@@ -241,10 +242,14 @@ namespace Test.Hestia.ConsoleRunner
                                                            It.IsAny<GitStatGranularity>(),
                                                            It.IsAny<Option<ISubject<int>>>()))
                     .Returns(Snapshot());
+            var progressBar = new Mock<IProgressBarFactory>();
+            progressBar.Setup(mock => mock.CreateProgressBar(It.IsAny<IObservable<int>>(), It.IsAny<int>()))
+                       .Returns(Disposable.Empty);
 
             return new RunnerBuilder().With(snapshotBuilder.Object)
                                       .With(converter.Object)
-                                      .With(enricher.Object);
+                                      .With(enricher.Object)
+                                      .With(progressBar.Object);
         }
     }
 }
