@@ -69,9 +69,29 @@ namespace Test.Hestia.DAL.EFCore
 
             scheduler.Start(() => client.InsertSnapshot(NewSnapshot));
 
-            context.Snapshots
+            context.Snapshots.Count()
                    .Should()
-                   .HaveCount(2);
+                   .Be(2);
+            context.Snapshots.ToList()[1]
+                   .Name
+                   .Should()
+                   .Be("somename");
+            context.SourceLines
+                   .Should()
+                   .HaveCount(1);
+        }
+
+        [Fact]
+        public void InsertSnapshotSyncShouldPersistAsExpected()
+        {
+            using var context = new HestiaContext(Options);
+            var client = new SnapshotEFClient(context);
+
+            client.InsertSnapshotSync(NewSnapshot);
+
+            context.Snapshots.Count()
+                   .Should()
+                   .Be(2);
             context.Snapshots.ToList()[1]
                    .Name
                    .Should()

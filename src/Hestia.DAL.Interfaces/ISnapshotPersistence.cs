@@ -6,6 +6,8 @@ namespace Hestia.DAL.Interfaces
 {
     public interface ISnapshotPersistence
     {
-        IObservable<Unit> InsertSnapshot(IRepositorySnapshot snapshot);
+        IObservable<int> InsertSnapshot(IRepositorySnapshot snapshot);
+
+        int InsertSnapshotSync(IRepositorySnapshot snapshot);
     }
 }

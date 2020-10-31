@@ -82,8 +82,8 @@ namespace Hestia.ConsoleRunner
                     }
 
                     _log.Information("Saving enriched snapshot to database");
-                    _persistence.InsertSnapshot(snapshot);
-                    _log.Information("Committed to DB successfully");
+                    var result = _persistence.InsertSnapshotSync(snapshot);
+                    _log.Information($"Committed {result} state entries to DB successfully");
 
                     return Unit.Default;
                 });
@@ -91,16 +91,12 @@ namespace Hestia.ConsoleRunner
         // ReSharper disable once UnusedMethodReturnValue.Local
         private IDisposable CreateProgressBar(IObservable<int> progressSubject, int total)
         {
-            var options = new ProgressBarOptions
-            {
-                ProgressCharacter = '─',
-                ProgressBarOnBottom = true
-            };
+            var options = new ProgressBarOptions { ProgressBarOnBottom = true };
             var progressBar = new ProgressBar(total, "Processing git stats for all files", options);
             progressSubject.Subscribe(val =>
             {
                 progressBar.Tick($"File {val} of {total}");
-            });
+            }); // don't try this at home
 
             return progressBar;
         }

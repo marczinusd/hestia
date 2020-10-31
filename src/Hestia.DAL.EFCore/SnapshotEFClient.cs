@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Hestia.DAL.EFCore.Adapters;
 using Hestia.DAL.EFCore.Entities;
@@ -30,12 +31,18 @@ namespace Hestia.DAL.EFCore
                       .Where(l => l.FileId == fileId)
                       .Select(l => new LineEntityAdapter(l));
 
-        public IObservable<Unit> InsertSnapshot(IRepositorySnapshot snapshot)
+        public IObservable<int> InsertSnapshot(IRepositorySnapshot snapshot)
         {
             _dbContext.Snapshots.Add(snapshot.AsEntity());
 
-            return Observable.FromAsync(_dbContext.SaveChangesAsync)
-                             .Select(x => Unit.Default);
+            return Observable.FromAsync(_dbContext.SaveChangesAsync);
+        }
+
+        public int InsertSnapshotSync(IRepositorySnapshot snapshot)
+        {
+            _dbContext.Snapshots.Add(snapshot.AsEntity());
+
+            return _dbContext.SaveChanges();
         }
 
         public IEnumerable<ISnapshotHeader> GetAllSnapshotsHeaders() => _dbContext.Snapshots

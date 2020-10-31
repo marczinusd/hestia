@@ -2,7 +2,6 @@
 using System.IO;
 using Hestia.DAL.EFCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Serilog;
 
 namespace Hestia.ConsoleRunner

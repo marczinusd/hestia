@@ -18,7 +18,7 @@ namespace Hestia.UIRunner.ViewModels
         {
             _selectedRepository = selectedRepositoryObservable.ToProperty(this, nameof(Repository));
             SelectedItemObservable = this.WhenAnyValue(x => x.SelectedItem);
-            CommitToDatabaseCommand = ReactiveCommand.CreateFromObservable<Unit, Unit>(_ =>
+            CommitToDatabaseCommand = ReactiveCommand.CreateFromObservable<Unit, int>(_ =>
                 snapshotPersistence.InsertSnapshot(_selectedRepository.Value));
             CommitToDatabaseCommand.IsExecuting.ToProperty(this, x => x.IsInsertionInProgress, out _isExecuting);
         }
@@ -27,7 +27,7 @@ namespace Hestia.UIRunner.ViewModels
 
         public IRepositorySnapshot Repository => _selectedRepository.Value;
 
-        public ReactiveCommand<Unit, Unit> CommitToDatabaseCommand { get; }
+        public ReactiveCommand<Unit, int> CommitToDatabaseCommand { get; }
 
         public IObservable<IFile> SelectedItemObservable { get; }
 

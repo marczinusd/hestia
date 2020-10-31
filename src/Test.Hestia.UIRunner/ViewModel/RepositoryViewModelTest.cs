@@ -12,7 +12,6 @@ using Moq;
 using Test.Hestia.Utils;
 using Test.Hestia.Utils.TestData;
 using Xunit;
-using Unit = LanguageExt.Unit;
 
 namespace Test.Hestia.UIRunner.ViewModel
 {
@@ -58,7 +57,7 @@ namespace Test.Hestia.UIRunner.ViewModel
             var vm = new RepositoryViewModel(Observable.Return(snapshot),
                                              snapshotPersistence.Object);
             snapshotPersistence.Setup(mock => mock.InsertSnapshot(It.IsAny<IRepositorySnapshot>()))
-                               .Returns(Observable.Empty<Unit>);
+                               .Returns(Observable.Empty<int>);
 
             vm.CommitToDatabaseCommand.Execute();
 
@@ -111,9 +110,9 @@ namespace Test.Hestia.UIRunner.ViewModel
                                                   0,
                                                   0);
             var persistence = new Mock<ISnapshotPersistence>();
-            var commitObservable = Observable.Return(Unit.Default)
+            var commitObservable = Observable.Return(123)
                                              .Delay(TimeSpan.FromSeconds(1), scheduler);
-            var observer = scheduler.CreateObserver<Unit>();
+            var observer = scheduler.CreateObserver<int>();
             commitObservable.Subscribe(observer);
             persistence.Setup(mock => mock.InsertSnapshot(It.IsAny<IRepositorySnapshot>()))
                        .Returns(commitObservable);
