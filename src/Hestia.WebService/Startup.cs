@@ -27,7 +27,7 @@ namespace Hestia.WebService
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton(provider =>
+            services.AddTransient(provider =>
             {
                 var optionsBuilder = new DbContextOptionsBuilder();
                 var dbPath = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "dev");
@@ -43,8 +43,8 @@ namespace Hestia.WebService
 
                 return new HestiaContext(optionsBuilder.Options);
             });
-            services.AddSingleton<ISnapshotRetrieval, SnapshotEFClient>();
-            services.AddSingleton<IFileRetrieval, SnapshotEFClient>();
+            services.AddTransient<ISnapshotRetrieval, SnapshotEFClient>();
+            services.AddTransient<IFileRetrieval, SnapshotEFClient>();
             services.AddSingleton<ILogger>(_ => Log.Logger);
             services.AddCors();
             services.AddControllers();
