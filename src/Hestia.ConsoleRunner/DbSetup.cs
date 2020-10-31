@@ -1,11 +1,16 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using Autofac;
 using Hestia.DAL.EFCore;
+using Hestia.DAL.Interfaces;
+using Hestia.Model.Wrappers;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 namespace Hestia.ConsoleRunner
 {
+    [ExcludeFromCodeCoverage]
     internal static class DbSetup
     {
         private const string DefaultDBName = "hestia.db";
@@ -23,6 +28,17 @@ namespace Hestia.ConsoleRunner
             EnsureDBCreated(dbContext, Path.GetDirectoryName(finalPath)!);
 
             return dbContext;
+        }
+
+        public static ContainerBuilder WithDbContext(this ContainerBuilder builder, string dbName, string dbPath)
+        {
+            builder.RegisterType<SnapshotEFClient>()
+                   .As<ISnapshotPersistence>();
+            builder.RegisterType<XmlFileSerializationWrapper>()
+                   .As<IXmlFileSerializationWrapper>();
+            builder.RegisterInstance(CreateContext(dbName, dbPath));
+
+            return builder;
         }
 
         private static string BuildDBPath(string name, string path)

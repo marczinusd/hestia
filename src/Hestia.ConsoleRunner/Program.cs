@@ -7,8 +7,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text.Json;
 using Autofac;
-using Hestia.DAL.EFCore;
-using Hestia.DAL.Interfaces;
 using Hestia.Model.Builders;
 using Hestia.Model.Stats;
 using Hestia.Model.Wrappers;
@@ -55,7 +53,9 @@ namespace Hestia.ConsoleRunner
                     }
 
                     var config = JsonSerializer.Deserialize<RunnerConfig>(configAsText)!;
-                    var container = SetupIOC(config);
+                    var container = SetupIOC()
+                                    .WithDbContext(config?.SqliteDbName, config?.SqliteDbLocation)
+                                    .Build();
                     var runner = container.Resolve<Runner>();
 
                     runner.BuildFromConfig(config, dryRun);
@@ -107,7 +107,7 @@ namespace Hestia.ConsoleRunner
             return Log.Logger;
         }
 
-        private static IContainer SetupIOC(RunnerConfig config)
+        private static ContainerBuilder SetupIOC()
         {
             var builder = new ContainerBuilder();
             builder.RegisterType<DiskIOWrapper>()
@@ -132,13 +132,7 @@ namespace Hestia.ConsoleRunner
                    .As<IRepositorySnapshotBuilderWrapper>();
             builder.RegisterType<Runner>();
 
-            builder.RegisterType<SnapshotEFClient>()
-                   .As<ISnapshotPersistence>();
-            builder.RegisterType<XmlFileSerializationWrapper>()
-                   .As<IXmlFileSerializationWrapper>();
-            builder.RegisterInstance(DbSetup.CreateContext(config.SqliteDbName, config.SqliteDbLocation));
-
-            return builder.Build();
+            return builder;
         }
     }
 }
