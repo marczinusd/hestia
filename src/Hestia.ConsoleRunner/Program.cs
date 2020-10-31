@@ -20,18 +20,23 @@ namespace Hestia.ConsoleRunner
     [ExcludeFromCodeCoverage]
     internal static class Program
     {
-        private static readonly string ConfigSchemaJsonLocation = Path.Join(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "config.schema.json");
+        private static readonly string ConfigSchemaJsonLocation =
+            Path.Join(Path.GetDirectoryName(Assembly.GetExecutingAssembly()
+                                                    .Location),
+                      "config.schema.json");
 
         public static int Main(string[] args)
         {
             var rootCommand = new RootCommand
             {
-                new Option("--configPath", "Path to configuration file") { Argument = new Argument<string>() }
+                new Option("--configPath", "Path to configuration file") { Argument = new Argument<string>() },
+                new Option("--debug", "Set log level to debug"),
+                new Option("--dryRun", "Skip committing to database -- useful for testing")
             };
             rootCommand.Description = "Console runner for Hestia analysis";
-            rootCommand.Handler = CommandHandler.Create<string>(configPath =>
+            rootCommand.Handler = CommandHandler.Create<string, bool, bool>((configPath, debug, dryRun) =>
             {
-                var log = CreateLogger();
+                var log = CreateLogger(debug);
                 log.Information($"Running with config at {configPath}");
                 try
                 {
@@ -53,7 +58,8 @@ namespace Hestia.ConsoleRunner
                     var container = SetupIOC(config);
                     var runner = container.Resolve<Runner>();
 
-                    runner.BuildFromConfig(config);
+                    runner.BuildFromConfig(config, dryRun);
+                    log.Information("Done!");
                 }
                 catch (Exception e)
                 {
@@ -90,12 +96,13 @@ namespace Hestia.ConsoleRunner
             return false;
         }
 
-        private static ILogger CreateLogger()
+        private static ILogger CreateLogger(bool enableDebug)
         {
-            Log.Logger = new LoggerConfiguration()
-                         .MinimumLevel.Debug()
-                         .WriteTo.Console()
-                         .CreateLogger();
+            var config = new LoggerConfiguration();
+            config = enableDebug ? config.MinimumLevel.Debug() : config.MinimumLevel.Information();
+
+            Log.Logger = config.WriteTo.Console()
+                               .CreateLogger();
 
             return Log.Logger;
         }

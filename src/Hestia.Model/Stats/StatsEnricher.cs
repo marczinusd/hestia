@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reactive.Subjects;
 using Hestia.Model.Builders;
 using Hestia.Model.Interfaces;
 using Hestia.Model.Wrappers;
@@ -62,20 +63,34 @@ namespace Hestia.Model.Stats
         }
 
         public IRepositorySnapshot EnrichWithGitStats(IRepositorySnapshot repositorySnapshot,
-                                                      GitStatGranularity granularity)
+                                                      GitStatGranularity granularity,
+                                                      Option<ISubject<int>> progress)
         {
             _logger.Debug($"Enriching repository snapshot with hash {repositorySnapshot.AtHash} with git stats");
 
             return repositorySnapshot.With(repositorySnapshot
                                            .Files
-                                           .Apply(x => x.Select(f => EnrichWithGitStats(f, granularity)))
+                                           .Apply(x => x.Select((f, i) =>
+                                           {
+                                               progress.Do(subject => subject.OnNext(i + 1));
+
+                                               return EnrichWithGitStats(f, granularity);
+                                           }))
                                            .ToList(),
                                            _gitCommands.GetHashForLatestCommit(repositorySnapshot.RootPath),
-                                           commitCreationDate: _gitCommands.DateOfLatestCommitOnBranch(repositorySnapshot.RootPath),
-                                           numberOfCommitsOnBranch: _gitCommands.NumberOfCommitsOnCurrentBranch(repositorySnapshot.RootPath));
+                                           commitCreationDate:
+                                           _gitCommands.DateOfLatestCommitOnBranch(repositorySnapshot.RootPath),
+                                           numberOfCommitsOnBranch:
+                                           _gitCommands.NumberOfCommitsOnCurrentBranch(repositorySnapshot.RootPath));
 
             // I can't find a way to make this work consistently, rev-parse doesn't return the precise number of branch-specific commits
             // commitRelativePosition: _gitCommands.GetOrderOfCurrentHeadRelativeToFirstCommitOfBranch(repositorySnapshot.RootPath),
+        }
+
+        public IRepositorySnapshot EnrichWithGitStats(IRepositorySnapshot repositorySnapshot,
+                                                      GitStatGranularity granularity)
+        {
+            return EnrichWithGitStats(repositorySnapshot, granularity, None);
         }
 
         public Repository Enrich(Repository repository,

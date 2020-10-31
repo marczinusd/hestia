@@ -2,6 +2,8 @@
 using System.IO;
 using Hestia.DAL.EFCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace Hestia.ConsoleRunner
 {
@@ -15,6 +17,7 @@ namespace Hestia.ConsoleRunner
         public static HestiaContext CreateContext(string dbName, string dbPath)
         {
             var finalPath = BuildDBPath(dbName, dbPath);
+            Log.Logger.Information($"Using sqlite db at {finalPath}");
             var contextBuilder = new DbContextOptionsBuilder();
             contextBuilder.UseSqlite($@"Data Source={finalPath}");
             var dbContext = new HestiaContext(contextBuilder.Options);
