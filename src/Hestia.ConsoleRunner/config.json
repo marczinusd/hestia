@@ -1,0 +1,10 @@
+{
+  "$schema": "./config.schema.json",
+  "coverageReportLocation": "",
+  "repoRoot": "",
+  "sourceRelativePath": "",
+  "fileExtensions": [],
+  "sqliteDbLocation": "",
+  "sqliteDbName": "",
+  "statGranularity": "file"
+}

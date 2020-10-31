@@ -1,4 +1,10 @@
 .ONESHELL:
+# If the first argument is "run"...
+ifeq (run-console,$(firstword $(MAKECMDGOALS)))
+  RUN_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+  $(eval $(RUN_ARGS):;@:)
+endif
+
 build:
 	dotnet build src/Hestia.sln
 build_thesis:
@@ -21,4 +27,4 @@ run-webservice:
 	dotnet run --project src/Hestia.WebService/Hestia.WebService.csproj
 run-console:
 	$(MAKE)
-	dotnet run --project src/Hestia.ConsoleRunner/Hestia.ConsoleRunner.csproj
+	dotnet run --project src/Hestia.ConsoleRunner/Hestia.ConsoleRunner.csproj -- $(RUN_ARGS)

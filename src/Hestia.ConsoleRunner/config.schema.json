@@ -1,0 +1,124 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "http://example.com/example.json",
+  "type": "object",
+  "title": "Schema for Hestia console runner config",
+  "description": "The root schema comprises the entire JSON document.",
+  "default": {},
+  "examples": [
+    {
+      "coverageReportLocation": "/dev/bla",
+      "repoRoot": "/dev/bla/repo",
+      "sourceRelativePath": "src",
+      "fileExtensions": [
+        ".cs",
+        ".js"
+      ],
+      "sqliteDbLocation": "/dev/bla",
+      "sqliteDbName": "hestia.db",
+      "statGranularity": "file"
+    }
+  ],
+  "required": [
+    "coverageReportLocation",
+    "repoRoot",
+    "sourceRelativePath",
+    "fileExtensions",
+    "statGranularity"
+  ],
+  "properties": {
+    "coverageReportLocation": {
+      "$id": "#/properties/coverageReportLocation",
+      "type": "string",
+      "title": "The coverageReportLocation schema",
+      "description": "Location of the coverage report.",
+      "default": "",
+      "examples": [
+        "/dev/bla"
+      ]
+    },
+    "repoRoot": {
+      "$id": "#/properties/repoRoot",
+      "type": "string",
+      "title": "The repoRoot schema",
+      "description": "Root of the repo to analyse.",
+      "default": "",
+      "examples": [
+        "/dev/bla/repo"
+      ]
+    },
+    "sourceRelativePath": {
+      "$id": "#/properties/sourceRelativePath",
+      "type": "string",
+      "title": "The sourceRelativePath schema",
+      "description": "Source root relative to repo root (if applicable).",
+      "default": "",
+      "examples": [
+        "src"
+      ]
+    },
+    "fileExtensions": {
+      "$id": "#/properties/fileExtensions",
+      "type": "array",
+      "title": "The fileExtensions schema",
+      "description": "Only analyse files of extensions specified here.",
+      "default": [],
+      "examples": [
+        [
+          ".cs",
+          ".js"
+        ]
+      ],
+      "additionalItems": true,
+      "items": {
+        "$id": "#/properties/fileExtensions/items",
+        "anyOf": [
+          {
+            "$id": "#/properties/fileExtensions/items/anyOf/0",
+            "type": "string",
+            "title": "The first anyOf schema",
+            "description": "File extensions.",
+            "default": "",
+            "examples": [
+              ".cs",
+              ".js"
+            ]
+          }
+        ]
+      }
+    },
+    "sqliteDbLocation": {
+      "$id": "#/properties/sqliteDbLocation",
+      "type": "string",
+      "title": "The sqliteDbLocation schema",
+      "description": "Path to target sqlite database.",
+      "default": "",
+      "examples": [
+        "/dev/bla"
+      ]
+    },
+    "sqliteDbName": {
+      "$id": "#/properties/sliteDbName",
+      "type": "string",
+      "title": "The sliteDbName schema",
+      "description": "Sqlite database name.",
+      "default": "",
+      "examples": [
+        "hestia.db"
+      ]
+    },
+    "statGranularity": {
+      "default": "file",
+      "description": "Granularity of the analysis.",
+      "examples": [
+        "file"
+      ],
+      "title": "The statGranularity schema",
+      "enum": [
+        "file",
+        "full"
+      ]
+    }
+  },
+  "additionalProperties": true
+}
