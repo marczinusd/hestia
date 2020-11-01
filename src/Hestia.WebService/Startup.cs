@@ -72,7 +72,7 @@ namespace Hestia.WebService
                 {
                     options.AllowAnyHeader()
                            .AllowAnyMethod()
-                           .SetIsOriginAllowed((host) => true)
+                           .AllowAnyOrigin()
                            .AllowCredentials();
                 });
             }
