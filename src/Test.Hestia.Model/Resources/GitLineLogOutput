@@ -1,9 +1,9 @@
-﻿commit:(d564115) author:(Baba Yaga)
-commit:(0a40807) author:(David Marczinus)
-commit:(c6eb4d8) author:(David Marczinus)
-commit:(edbff2c) author:(David Marczinus)
-commit:(cd0e444) author:(Someone Else)
-commit:(58987db) author:(David Marczinus)
-commit:(a240325) author:(Mary Sue)
-commit:(a0f5aa9) author:(David Marczinus)
-commit:(b5d401f) author:(David Marczinus)
+﻿commit-d564115;auth-Baba Yaga
+commit-0a40807;auth-David Marczinus
+commit-c6eb4d8;auth-David Marczinus
+commit-edbff2c;auth-David Marczinus
+commit-cd0e444;auth-Someone Else
+commit-58987db;auth-David Marczinus
+commit-a240325;auth-Mary Sue
+commit-a0f5aa9;auth-David Marczinus
+commit-b5d401f;auth-David Marczinus

@@ -92,7 +92,7 @@ namespace Test.Hestia.Model.Wrappers
             var executorMock = new Mock<ICommandLineExecutor>();
             var fileName = "dir/bla.js";
             var lineNumber = 2;
-            var gitCommand = $"log --pretty='format:commit:(%h) author:(%an)' -L {lineNumber},{lineNumber}:\"{fileName}\" --no-patch";
+            var gitCommand = $"log --pretty='format:commit-%h;auth-%an' -L {lineNumber},{lineNumber}:\"{fileName}\" --no-patch";
             executorMock.Setup(mock => mock.Execute("git", It.Is<string>(command => command == gitCommand), "dir"))
                         .Returns(lineHistory.Split('\n'));
             var gitCommands = new GitCommands(executorMock.Object);
@@ -110,8 +110,8 @@ namespace Test.Hestia.Model.Wrappers
             var lineHistory = Helpers.LoadResource(Paths.GitLineLogOutput, typeof(GitCommandsTest).Assembly);
             var executorMock = new Mock<ICommandLineExecutor>();
             var fileName = "dir/bla.js";
-            var gitCommandFirstLine = $"log --pretty='format:commit:(%h) author:(%an)' -L 1,1:\"{fileName}\" --no-patch";
-            var gitCommandSecondLine = $"log --pretty='format:commit:(%h) author:(%an)' -L 2,2:\"{fileName}\" --no-patch";
+            var gitCommandFirstLine = $"log --pretty='format:commit-%h;auth-%an' -L 1,1:\"{fileName}\" --no-patch";
+            var gitCommandSecondLine = $"log --pretty='format:commit-%h;auth-%an' -L 2,2:\"{fileName}\" --no-patch";
             executorMock
                 .Setup(mock => mock.Execute("git", It.Is<string>(command => command == gitCommandFirstLine), "dir"))
                 .Returns(lineHistory.Split('\n'));
@@ -138,7 +138,7 @@ namespace Test.Hestia.Model.Wrappers
             var executorMock = new Mock<ICommandLineExecutor>();
             var fileName = "dir/bla.js";
             var lineNumber = 2;
-            var gitCommand = $"log --pretty='format:commit:(%h) author:(%an)' -L {lineNumber},{lineNumber}:\"{fileName}\" --no-patch";
+            var gitCommand = $"log --pretty='format:commit-%h;auth-%an' -L {lineNumber},{lineNumber}:\"{fileName}\" --no-patch";
             executorMock.Setup(mock => mock.Execute("git", It.Is<string>(command => command == gitCommand), "dir"))
                         .Returns(lineHistory.Split('\n'));
             var gitCommands = new GitCommands(executorMock.Object);
@@ -330,7 +330,7 @@ namespace Test.Hestia.Model.Wrappers
             var lineHistory = Helpers.LoadResource(Paths.GitLineLogOutput, typeof(GitCommandsTest).Assembly);
             const string repoPath = "dir";
             const string filePath = "dir/file.js";
-            const string gitCommand = "log --pretty='format:commit:(%h) author:(%an)' -L {0},{0}:\"{1}\" --no-patch";
+            const string gitCommand = "log --pretty='format:commit-%h;auth-%an' -L {0},{0}:\"{1}\" --no-patch";
             var gitCommands = new GitCommands(executorMock.Object);
             for (var i = 1; i < 4; i++)
             {

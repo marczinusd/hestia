@@ -10,10 +10,10 @@ namespace Hestia.Model.Wrappers
 {
     public class GitCommands : IGitCommands
     {
-        private const string AuthorPattern = @"\s*[Aa]uthor:\((.*)\)";
+        private const string AuthorPattern = @";auth-(.*)$";
         private const string ShortLogAuthorPattern = "\\s*\\d+\\s*(.*)";
         private const string CommitHeaderPattern = "^commit\\s+(.*)";
-        private const string CustomCommitHeader = @"^[Cc]ommit:\((.*)\)";
+        private const string CustomCommitHeader = @"^commit-(.*);(.*)";
         private const string GitDateFormat = "ddd MMM d HH:mm:ss yyyy K";
         private const string LatestCommitDateCommand = "log -1 --format=%cd";
         private const string CommitCountOnCurrentBranchCommand = "rev-list --count HEAD";
@@ -132,7 +132,7 @@ namespace Hestia.Model.Wrappers
             $"log --pretty=oneline {filepath}";
 
         private static string LineHistoryCommand(string filepath, int lineNumber) =>
-            $"log --pretty='format:commit:(%h) author:(%an)' -L {lineNumber},{lineNumber}:\"{filepath}\" --no-patch";
+            $"log --pretty='format:commit-%h;auth-%an' -L {lineNumber},{lineNumber}:\"{filepath}\" --no-patch";
 
         private static string AuthorsForFileCommand(string filepath) =>
             $"shortlog -c -s {filepath}";
