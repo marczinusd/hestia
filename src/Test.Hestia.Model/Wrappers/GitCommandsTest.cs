@@ -156,7 +156,7 @@ namespace Test.Hestia.Model.Wrappers
             var fileAuthors = Helpers.LoadResource(Paths.GitShortlogOutput, typeof(GitCommandsTest).Assembly);
             var executorMock = new Mock<ICommandLineExecutor>();
             var fileName = "dir/bla.js";
-            var gitCommand = $"shortlog -c -s {fileName}";
+            var gitCommand = $"shortlog -n -s {fileName}";
             executorMock.Setup(mock => mock.Execute("git", It.Is<string>(command => command == gitCommand), "dir"))
                         .Returns(fileAuthors.Split('\n'));
             var gitCommands = new GitCommands(executorMock.Object);
@@ -165,7 +165,7 @@ namespace Test.Hestia.Model.Wrappers
 
             executorMock.Verify(mock => mock.Execute("git", gitCommand, "dir"), Times.Once);
             result.Should()
-                  .Be(2);
+                  .Be(10);
         }
 
         [Fact]

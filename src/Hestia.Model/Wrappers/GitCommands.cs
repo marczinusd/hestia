@@ -11,7 +11,6 @@ namespace Hestia.Model.Wrappers
     public class GitCommands : IGitCommands
     {
         private const string AuthorPattern = @";auth-(.*)$";
-        private const string ShortLogAuthorPattern = "\\s*\\d+\\s*(.*)";
         private const string CommitHeaderPattern = "^commit\\s+(.*)";
         private const string CustomCommitHeader = @"commit-(.*);";
         private const string GitDateFormat = "ddd MMM d HH:mm:ss yyyy K";
@@ -135,7 +134,7 @@ namespace Hestia.Model.Wrappers
             $"log --pretty='commit-%h;auth-%an' -L {lineNumber},{lineNumber}:\"{filepath}\" --no-patch";
 
         private static string AuthorsForFileCommand(string filepath) =>
-            $"shortlog -c -s {filepath}";
+            $"shortlog -n -s {filepath}";
 
         private static string HashForNthCommitCommand(int commitNumber) =>
             $"log -1 HEAD~{commitNumber}";
@@ -147,13 +146,8 @@ namespace Hestia.Model.Wrappers
             commandOutput.Count(line => Regex.IsMatch(line, CustomCommitHeader));
 
         private static int ParseShortLogForUniqueAuthors(string[] commandOutput) =>
-            commandOutput.Select(line => Regex.Match(line, ShortLogAuthorPattern)
-                                              .Captures)
-                         .Where(capture => capture.Count == 1)
-                         .Select(capture => capture[0]
-                                     .Value)
-                         .Distinct()
-                         .Count();
+            commandOutput
+                .Count(l => !string.IsNullOrWhiteSpace(l));
 
         private static int ParseNumberOfUniqueAuthorsFromGitHistory(string[] commandOutput) =>
             commandOutput.Select(line => Regex.Match(line, AuthorPattern)
