@@ -159,7 +159,7 @@ namespace Test.Hestia.Model.Stats
                                         subject);
 
             updates.Should()
-                   .HaveCount(2);
+                   .NotBeEmpty();
         }
 
         [Fact]

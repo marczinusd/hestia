@@ -10,9 +10,10 @@ namespace Hestia.Model.Wrappers
 {
     public class GitCommands : IGitCommands
     {
-        private const string AuthorPattern = "\\s*Author:\\s*(.*)";
+        private const string AuthorPattern = @"\s*[Aa]uthor:\((.*)\)";
         private const string ShortLogAuthorPattern = "\\s*\\d+\\s*(.*)";
         private const string CommitHeaderPattern = "^commit\\s+(.*)";
+        private const string CustomCommitHeader = @"^[Cc]ommit:\((.*)\)";
         private const string GitDateFormat = "ddd MMM d HH:mm:ss yyyy K";
         private const string LatestCommitDateCommand = "log -1 --format=%cd";
         private const string CommitCountOnCurrentBranchCommand = "rev-list --count HEAD";
@@ -86,12 +87,15 @@ namespace Hestia.Model.Wrappers
 
             return Enumerable.Range(1, lineCount)
                              .Select(line =>
-                                         (line,
-                                          Exec(LineHistoryCommand(filePath, line),
-                                               path)))
+                             {
+                                 var output = Exec(LineHistoryCommand(filePath, line),
+                                                   path);
+
+                                 return (line, output);
+                             })
                              .Select(tuple => (tuple.line,
-                                               ParseLineHistoryForNumberOfChanges(tuple.Item2),
-                                               ParseNumberOfUniqueAuthorsFromGitHistory(tuple.Item2)));
+                                               ParseLineHistoryForNumberOfChanges(tuple.output),
+                                               ParseNumberOfUniqueAuthorsFromGitHistory(tuple.output)));
         }
 
         public string GetHashForNthCommit(string repoPath, int commitNumber)
@@ -109,10 +113,12 @@ namespace Hestia.Model.Wrappers
         {
             var firstCommit = GetHashForNthCommit(repoPath, 1);
 
-            return int.Parse(Exec($"rev-list {firstCommit}..HEAD --count", repoPath).First());
+            return int.Parse(Exec($"rev-list {firstCommit}..HEAD --count", repoPath)
+                                 .First());
         }
 
-        public string GetHashForLatestCommit(string repoPath) => Exec("rev-parse HEAD", repoPath).First();
+        public string GetHashForLatestCommit(string repoPath) => Exec("rev-parse HEAD", repoPath)
+            .First();
 
         public void Checkout(string hash, string repoPath) =>
             Exec(CheckoutCommand(hash), repoPath);
@@ -126,7 +132,7 @@ namespace Hestia.Model.Wrappers
             $"log --pretty=oneline {filepath}";
 
         private static string LineHistoryCommand(string filepath, int lineNumber) =>
-            $"log -L {lineNumber},{lineNumber}:\"{filepath}\"";
+            $"log --pretty='format:commit:(%h) author:(%an)' -L {lineNumber},{lineNumber}:\"{filepath}\" --no-patch";
 
         private static string AuthorsForFileCommand(string filepath) =>
             $"shortlog -c -s {filepath}";
@@ -138,7 +144,7 @@ namespace Hestia.Model.Wrappers
             $"checkout {hash}";
 
         private static int ParseLineHistoryForNumberOfChanges(string[] commandOutput) =>
-            commandOutput.Count(line => Regex.IsMatch(line, CommitHeaderPattern));
+            commandOutput.Count(line => Regex.IsMatch(line, CustomCommitHeader));
 
         private static int ParseShortLogForUniqueAuthors(string[] commandOutput) =>
             commandOutput.Select(line => Regex.Match(line, ShortLogAuthorPattern)

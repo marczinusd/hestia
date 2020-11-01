@@ -20,7 +20,7 @@ namespace Test.Hestia.Model.Wrappers
             var fileName = "dir/bla.js";
             var gitCommand = $"log --pretty=oneline {fileName}";
             executorMock.Setup(mock => mock.Execute("git", It.Is<string>(command => command == gitCommand), "dir"))
-                        .Returns(gitLogOutput.Split(Environment.NewLine));
+                        .Returns(gitLogOutput.Split('\n'));
             var gitCommands = new GitCommands(executorMock.Object);
 
             var result = gitCommands.NumberOfChangesForFile(fileName);
@@ -92,16 +92,16 @@ namespace Test.Hestia.Model.Wrappers
             var executorMock = new Mock<ICommandLineExecutor>();
             var fileName = "dir/bla.js";
             var lineNumber = 2;
-            var gitCommand = $"log -L {lineNumber},{lineNumber}:\"{fileName}\"";
+            var gitCommand = $"log --pretty='format:commit:(%h) author:(%an)' -L {lineNumber},{lineNumber}:\"{fileName}\" --no-patch";
             executorMock.Setup(mock => mock.Execute("git", It.Is<string>(command => command == gitCommand), "dir"))
-                        .Returns(lineHistory.Split(Environment.NewLine));
+                        .Returns(lineHistory.Split('\n'));
             var gitCommands = new GitCommands(executorMock.Object);
 
             var result = gitCommands.NumberOfChangesForLine(fileName, lineNumber);
 
             executorMock.Verify(mock => mock.Execute("git", It.Is<string>(s => s == gitCommand), "dir"), Times.Once);
             result.Should()
-                  .Be(2);
+                  .Be(9);
         }
 
         [Fact]
@@ -110,14 +110,14 @@ namespace Test.Hestia.Model.Wrappers
             var lineHistory = Helpers.LoadResource(Paths.GitLineLogOutput, typeof(GitCommandsTest).Assembly);
             var executorMock = new Mock<ICommandLineExecutor>();
             var fileName = "dir/bla.js";
-            var gitCommandFirstLine = $"log -L 1,1:\"{fileName}\"";
-            var gitCommandSecondLine = $"log -L 2,2:\"{fileName}\"";
+            var gitCommandFirstLine = $"log --pretty='format:commit:(%h) author:(%an)' -L 1,1:\"{fileName}\" --no-patch";
+            var gitCommandSecondLine = $"log --pretty='format:commit:(%h) author:(%an)' -L 2,2:\"{fileName}\" --no-patch";
             executorMock
                 .Setup(mock => mock.Execute("git", It.Is<string>(command => command == gitCommandFirstLine), "dir"))
-                .Returns(lineHistory.Split(Environment.NewLine));
+                .Returns(lineHistory.Split('\n'));
             executorMock
                 .Setup(mock => mock.Execute("git", It.Is<string>(command => command == gitCommandSecondLine), "dir"))
-                .Returns(lineHistory.Split(Environment.NewLine));
+                .Returns(lineHistory.Split('\n'));
             var gitCommands = new GitCommands(executorMock.Object);
 
             var result = gitCommands.NumberOfChangesForEachLine(fileName, 2)
@@ -128,7 +128,7 @@ namespace Test.Hestia.Model.Wrappers
             executorMock.Verify(mock => mock.Execute("git", It.Is<string>(s => s == gitCommandSecondLine), "dir"),
                                 Times.Once);
             result.Should()
-                  .BeEquivalentTo(new[] { 2, 2 });
+                  .BeEquivalentTo(new[] { 9, 9 });
         }
 
         [Fact]
@@ -138,16 +138,16 @@ namespace Test.Hestia.Model.Wrappers
             var executorMock = new Mock<ICommandLineExecutor>();
             var fileName = "dir/bla.js";
             var lineNumber = 2;
-            var gitCommand = $"log -L {lineNumber},{lineNumber}:\"{fileName}\"";
+            var gitCommand = $"log --pretty='format:commit:(%h) author:(%an)' -L {lineNumber},{lineNumber}:\"{fileName}\" --no-patch";
             executorMock.Setup(mock => mock.Execute("git", It.Is<string>(command => command == gitCommand), "dir"))
-                        .Returns(lineHistory.Split(Environment.NewLine));
+                        .Returns(lineHistory.Split('\n'));
             var gitCommands = new GitCommands(executorMock.Object);
 
             var result = gitCommands.NumberOfDifferentAuthorForLine(fileName, lineNumber);
 
             executorMock.Verify(mock => mock.Execute("git", It.Is<string>(s => s == gitCommand), "dir"), Times.Once);
             result.Should()
-                  .Be(2);
+                  .Be(4);
         }
 
         [Fact]
@@ -158,7 +158,7 @@ namespace Test.Hestia.Model.Wrappers
             var fileName = "dir/bla.js";
             var gitCommand = $"shortlog -c -s {fileName}";
             executorMock.Setup(mock => mock.Execute("git", It.Is<string>(command => command == gitCommand), "dir"))
-                        .Returns(fileAuthors.Split(Environment.NewLine));
+                        .Returns(fileAuthors.Split('\n'));
             var gitCommands = new GitCommands(executorMock.Object);
 
             var result = gitCommands.NumberOfDifferentAuthorsForFile(fileName);
@@ -217,7 +217,7 @@ namespace Test.Hestia.Model.Wrappers
                 .Returns(new[] { allCommits.ToString() });
             executorMock
                 .Setup(mock => mock.Execute("git", It.Is<string>(command => command == nthCommitHashCommand), repoPath))
-                .Returns(output.Split(Environment.NewLine));
+                .Returns(output.Split('\n'));
             var gitCommands = new GitCommands(executorMock.Object);
 
             var result = gitCommands.GetHashForNthCommit(repoPath, nthCommit);
@@ -260,7 +260,7 @@ namespace Test.Hestia.Model.Wrappers
                 .Returns(new[] { allCommits.ToString() });
             executorMock
                 .Setup(mock => mock.Execute("git", It.Is<string>(command => command == nthCommitHashCommand), repoPath))
-                .Returns(output.Split(Environment.NewLine));
+                .Returns(output.Split('\n'));
             var gitCommands = new GitCommands(executorMock.Object);
 
             gitCommands.CheckoutNthCommitOnBranch(repoPath, nthCommit);
@@ -285,7 +285,7 @@ namespace Test.Hestia.Model.Wrappers
                         .Returns(new[] { "123" });
             var nthCommitHashCommand = $"log -1 HEAD~{allCommits - nthCommit + 1}";
             executorMock.Setup(mock => mock.Execute("git", nthCommitHashCommand, "dir"))
-                        .Returns(output.Split(Environment.NewLine));
+                        .Returns(output.Split('\n'));
             executorMock.Setup(mock => mock.Execute("git",
                                                     "rev-list abb3cc3d7e405c39eae91b22c41d1281b9075cd4..HEAD --count",
                                                     "dir"))
@@ -330,13 +330,13 @@ namespace Test.Hestia.Model.Wrappers
             var lineHistory = Helpers.LoadResource(Paths.GitLineLogOutput, typeof(GitCommandsTest).Assembly);
             const string repoPath = "dir";
             const string filePath = "dir/file.js";
-            const string gitCommand = "log -L {0},{0}:\"{1}\"";
+            const string gitCommand = "log --pretty='format:commit:(%h) author:(%an)' -L {0},{0}:\"{1}\" --no-patch";
             var gitCommands = new GitCommands(executorMock.Object);
             for (var i = 1; i < 4; i++)
             {
                 var i1 = i;
                 executorMock.Setup(mock => mock.Execute("git", string.Format(gitCommand, i1, filePath), repoPath))
-                            .Returns(lineHistory.Split(Environment.NewLine));
+                            .Returns(lineHistory.Split('\n'));
             }
 
             var result = gitCommands.NumberOfDifferentAuthorsAndChangesForLine(filePath, 3)
@@ -345,7 +345,7 @@ namespace Test.Hestia.Model.Wrappers
             executorMock.Verify(mock => mock.Execute("git", It.IsAny<string>(), repoPath),
                                 Times.Exactly(3));
             result.Should()
-                  .BeEquivalentTo(new[] { (1, 2, 2), (2, 2, 2), (3, 2, 2) });
+                  .BeEquivalentTo(new[] { (1, 9, 4), (2, 9, 4), (3, 9, 4) });
         }
 
         [Fact]
