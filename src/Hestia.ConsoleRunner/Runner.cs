@@ -79,7 +79,7 @@ namespace Hestia.ConsoleRunner
                         return arguments;
                     }
 
-                    _log.Information($"Triggering test command '{config.BuildCommands}' in directory: {config.RepoRoot}");
+                    _log.Information($"Triggering test command '{string.Join(" && ", config.TestCommands)}' in directory: {config.RepoRoot}");
                     _spinner.Start("Running tests...",
                                    () => config.TestCommands.Iter(command =>
                                    {

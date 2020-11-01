@@ -25,47 +25,56 @@ namespace Hestia.ConsoleRunner
 
         public static int Main(string[] args)
         {
+            if (OperatingSystem.IsWindows())
+            {
+                // Welcome to 2020
+                Console.OutputEncoding = System.Text.Encoding.UTF8;
+            }
+
             var rootCommand = new RootCommand
             {
                 new Option("--configPath", "Path to configuration file") { Argument = new Argument<string>() },
                 new Option("--debug", "Set log level to debug"),
-                new Option("--dryRun", "Skip committing to database -- useful for testing")
+                new Option("--dryRun", "Skip committing to database -- useful for testing"),
+                new Option("--noSpinner",
+                           "Don't use spinner for build and test tasks (useful in alpine/wsl containers)")
             };
             rootCommand.Description = "Console runner for Hestia analysis";
-            rootCommand.Handler = CommandHandler.Create<string, bool, bool>((configPath, debug, dryRun) =>
-            {
-                var log = CreateLogger(debug);
-                log.Information($"Running with config at {configPath}");
-                try
+            rootCommand.Handler =
+                CommandHandler.Create<string, bool, bool, bool>((configPath, debug, dryRun, noSpinner) =>
                 {
-                    if (!File.Exists(configPath))
+                    var log = CreateLogger(debug);
+                    log.Information($"Running with config at {configPath}");
+                    try
                     {
-                        log.Error($"Config file not found at path: {configPath}");
-                        log.Error("Stopping execution...");
-                        return;
+                        if (!File.Exists(configPath))
+                        {
+                            log.Error($"Config file not found at path: {configPath}");
+                            log.Error("Stopping execution...");
+                            return;
+                        }
+
+                        var configAsText = File.ReadAllText(configPath);
+
+                        if (!ValidateJsonConfig(log, configAsText))
+                        {
+                            return;
+                        }
+
+                        var config = JsonSerializer.Deserialize<RunnerConfig>(configAsText)!;
+                        var container = SetupIOC(noSpinner)
+                                        .WithDbContext(config?.SqliteDbName, config?.SqliteDbLocation)
+                                        .Build();
+                        var runner = container.Resolve<Runner>();
+
+                        runner.BuildFromConfig(config, dryRun);
+                        log.Information("Done!");
                     }
-
-                    var configAsText = File.ReadAllText(configPath);
-
-                    if (!ValidateJsonConfig(log, configAsText))
+                    catch (Exception e)
                     {
-                        return;
+                        log.Error($"A fatal error occured during processing: {e.Message}. Exiting...");
                     }
-
-                    var config = JsonSerializer.Deserialize<RunnerConfig>(configAsText)!;
-                    var container = SetupIOC()
-                                    .WithDbContext(config?.SqliteDbName, config?.SqliteDbLocation)
-                                    .Build();
-                    var runner = container.Resolve<Runner>();
-
-                    runner.BuildFromConfig(config, dryRun);
-                    log.Information("Done!");
-                }
-                catch (Exception e)
-                {
-                    log.Error($"A fatal error occured during processing: {e.Message}. Exiting...");
-                }
-            });
+                });
 
             return rootCommand.InvokeAsync(args)
                               .Result;
@@ -107,7 +116,7 @@ namespace Hestia.ConsoleRunner
             return Log.Logger;
         }
 
-        private static ContainerBuilder SetupIOC()
+        private static ContainerBuilder SetupIOC(bool noSpinner)
         {
             var builder = new ContainerBuilder();
             builder.RegisterType<DiskIOWrapper>()
@@ -136,8 +145,16 @@ namespace Hestia.ConsoleRunner
             builder.RegisterType<CommandLineExecutor>()
                    .As<ICommandLineExecutor>()
                    .WithParameter("echoMode", ExecutorEchoMode.NoEcho);
-            builder.RegisterType<SpinnerWrapper>()
-                   .As<ISpinner>();
+            if (noSpinner)
+            {
+                builder.RegisterType<StaticSpinner>()
+                       .As<ISpinner>();
+            }
+            else
+            {
+                builder.RegisterType<KurukuruSpinnerWrapper>()
+                       .As<ISpinner>();
+            }
 
             return builder;
         }
