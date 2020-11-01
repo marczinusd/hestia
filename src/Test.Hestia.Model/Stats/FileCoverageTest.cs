@@ -9,7 +9,7 @@ namespace Test.Hestia.Model.Stats
         [Fact]
         public void ToStringShouldCreateCorrectStringRepresentation()
         {
-            var coverage = new FileCoverage("bla", new (int lineNumber, int hitCount)[] { (1, 2) });
+            var coverage = new FileCoverage("bla", new (int lineNumber, int hitCount, bool branch, string conditionCoverage)[] { (1, 2, true, "1/1") });
 
             coverage.ToString()
                     .Should()

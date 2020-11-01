@@ -20,7 +20,10 @@ namespace Test.Hestia.Model.Stats
 {
     public class StatsEnricherTest
     {
-        private readonly IEnumerable<IFileCoverage> _coverages = new[] { new FileCoverage("bla.js", new[] { (1, 1) }) };
+        private readonly IEnumerable<IFileCoverage> _coverages = new[]
+        {
+            new FileCoverage("bla.js", new[] { (1, 1, true, "1/1") })
+        };
 
         public static TheoryData<string, string> FileEnricherInvalidInput =>
             new TheoryData<string, string>
@@ -149,11 +152,11 @@ namespace Test.Hestia.Model.Stats
             subject.Subscribe(val => updates.Add(val));
 
             enricher.EnrichWithGitStats(MockRepo.CreateSnapshot(new[] { ".cs" },
-                                                                   "lcov.info",
-                                                                   ioMock.Object,
-                                                                   Mock.Of<IPathValidator>()),
-                                                               GitStatGranularity.Full,
-                                                               subject);
+                                                                "lcov.info",
+                                                                ioMock.Object,
+                                                                Mock.Of<IPathValidator>()),
+                                        GitStatGranularity.Full,
+                                        subject);
 
             updates.Should()
                    .HaveCount(2);
@@ -162,7 +165,11 @@ namespace Test.Hestia.Model.Stats
         [Fact]
         public void StatsEnricherEnrichesAllFilesInRepositorySnapshotWithCoverageStats()
         {
-            var lineCoverages = new List<(int lineNumber, int hitCount)> { (1, 1), (5, 1) };
+            var lineCoverages =
+                new List<(int lineNumber, int hitCount, bool branch, string conditionCoverage)>
+                {
+                    (1, 1, false, string.Empty), (5, 1, true, "1/1")
+                };
             var fixture = new Fixture();
             var coverageFactory = new Mock<ICoverageProviderFactory>();
             var coverageProvider = new Mock<ICoverageProvider>();
@@ -207,7 +214,10 @@ namespace Test.Hestia.Model.Stats
                             .HaveCount(3);
             firstCovStats.Coverage.LineCoverages
                          .Should()
-                         .BeEquivalentTo(lineCoverages.Select(l => new LineCoverage(l.lineNumber, l.hitCount)));
+                         .BeEquivalentTo(lineCoverages.Select(l => new LineCoverage(l.lineNumber,
+                                                                  l.hitCount,
+                                                                  l.branch,
+                                                                  l.conditionCoverage)));
             secondCovStats.Coverage.LineCoverages
                           .Should()
                           .BeEmpty();
@@ -216,7 +226,11 @@ namespace Test.Hestia.Model.Stats
         [Fact]
         public void OptionIsNoneShouldBeThrownIfInvalidCoveragePathWasProvided()
         {
-            var lineCoverages = new List<(int lineNumber, int hitCount)> { (1, 1), (5, 1) };
+            var lineCoverages =
+                new List<(int lineNumber, int hitCount, bool branch, string conditionCoverage)>
+                {
+                    (1, 1, false, string.Empty), (5, 1, true, "1/1")
+                };
             var fixture = new Fixture();
             var coverageFactory = new Mock<ICoverageProviderFactory>();
             var coverageProvider = new Mock<ICoverageProvider>();

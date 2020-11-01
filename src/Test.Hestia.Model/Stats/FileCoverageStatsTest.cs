@@ -10,7 +10,12 @@ namespace Test.Hestia.Model.Stats
         [Fact]
         public void FileCoverageStatsShouldCalculateLineCoverageCorrectly()
         {
-            var stats = new FileCoverageStats(new FileCoverage("bla", new[] { (1, 0), (2, 0), (3, 0), (4, 1) }));
+            var stats = new FileCoverageStats(new FileCoverage("bla",
+                                                               new[]
+                                                               {
+                                                                   (1, 0, true, "1/1"), (2, 0, true, "1/1"),
+                                                                   (3, 0, true, "1/1"), (4, 1, true, "1/1")
+                                                               }));
 
             stats.PercentageOfLineCoverage
                  .Should()
@@ -21,7 +26,9 @@ namespace Test.Hestia.Model.Stats
         public void CoverageShouldBeZeroIfNoStatsArePresent()
         {
             var stats = new FileCoverageStats(new FileCoverage("bla",
-                                                               Enumerable.Empty<(int lineNumber, int hitCount)>()));
+                                                               Enumerable
+                                                                   .Empty<(int lineNumber, int hitCount, bool branch,
+                                                                       string conditionCoverage)>()));
 
             stats.PercentageOfLineCoverage
                  .Should()

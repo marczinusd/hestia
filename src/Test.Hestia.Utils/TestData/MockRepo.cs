@@ -36,7 +36,7 @@ namespace Test.Hestia.Utils.TestData
         public static int SecondIncludedFileGitStats { get; } = 3;
 
         public static IFileCoverageStats DefaultCoverage { get; } =
-            new FileCoverageStats(new FileCoverage(string.Empty, new (int lineNumber, int hitCount)[0]));
+            new FileCoverageStats(new FileCoverage(string.Empty, new (int lineNumber, int hitCount, bool branch, string conditionCoverage)[0]));
 
         public static Mock<IDiskIOWrapper> CreateDiskIOWrapperMock()
         {
@@ -140,7 +140,7 @@ namespace Test.Hestia.Utils.TestData
                                                    .ToList(),
                                                   new FileGitStats(1, 1),
                                                   new FileCoverageStats(new FileCoverage(string.Empty,
-                                                                            new[] { (1, 2) }))))
+                                                                            new[] { (1, 2, true, "1/1") }))))
                 .RuleFor(file => file.Content,
                          f => f.Lorem.Lines(10, Environment.NewLine)
                                .Split(Environment.NewLine)
@@ -154,6 +154,6 @@ namespace Test.Hestia.Utils.TestData
                 .RuleFor(file => file.Path, f => f.System.FilePath())
                 .RuleFor(file => file.GitStats, f => new FileGitStats(1, 1))
                 .RuleFor(file => file.CoverageStats,
-                         f => new FileCoverageStats(new FileCoverage(string.Empty, new[] { (1, 2) })));
+                         f => new FileCoverageStats(new FileCoverage(string.Empty, new[] { (1, 2, true, "1/1") })));
     }
 }

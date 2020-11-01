@@ -28,7 +28,7 @@ namespace Test.Hestia.DAL.EFCore.Entities
                                                      "path",
                                                      new List<ISourceLine> { Line },
                                                      new FileGitStats(1, 2),
-                                                     new FileCoverageStats(new FileCoverage("path", new[] { (1, 1) })));
+                                                     new FileCoverageStats(new FileCoverage("path", new[] { (1, 1, true, "1/1") })));
 
         private static readonly RepositorySnapshot Snapshot = new RepositorySnapshot("id",
             "somePath",

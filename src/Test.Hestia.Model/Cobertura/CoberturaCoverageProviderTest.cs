@@ -35,6 +35,25 @@ namespace Test.Hestia.Model.Cobertura
                   .LineCoverages
                   .Should()
                   .HaveCount(12);
+            result.First()
+                  .LineCoverages.First()
+                  .Branch.Should()
+                  .BeFalse();
+            result.First()
+                  .LineCoverages.First()
+                  .ConditionCoverage
+                  .Should()
+                  .BeNullOrEmpty();
+            result.First()
+                  .LineCoverages.ElementAt(1)
+                  .Branch
+                  .Should()
+                  .BeTrue();
+            result.First()
+                  .LineCoverages.ElementAt(1)
+                  .ConditionCoverage
+                  .Should()
+                  .Be("100% (2/2)");
         }
     }
 }

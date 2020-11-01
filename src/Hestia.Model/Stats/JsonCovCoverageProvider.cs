@@ -32,7 +32,9 @@ namespace Hestia.Model.Stats
                                                                         .First() as JObject))))
                 .GroupBy(x => x.Name, tuple => tuple) // project to (FileName, Lines[]) group
                 .Select(g => new
-                            FileCoverage(g.Key, g.SelectMany(l => l.Item2)));
+                            FileCoverage(g.Key,
+                                         g.SelectMany(l => l.Item2.Select(tuple => (tuple.lineNumber, tuple.hitCount,
+                                                                                          false, string.Empty)))));
 
         public Task<IEnumerable<IFileCoverage>> ParseFileCoveragesFromFilePathAsync(string filePath)
             => Task.Run(() => ParseFileCoveragesFromFilePath(filePath));

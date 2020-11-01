@@ -42,7 +42,8 @@ namespace Test.Hestia.Model
                                     },
                                     new FileGitStats(1, 1),
                                     new FileCoverageStats(new FileCoverage(string.Empty,
-                                                                           new List<(int lineNumber, int hitCount)
+                                                                           new List<(int lineNumber, int hitCount, bool
+                                                                               branch, string conditionCoverage)
                                                                            >())));
 
             newFile.Content.Should()

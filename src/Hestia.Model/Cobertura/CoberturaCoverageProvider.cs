@@ -23,7 +23,9 @@ namespace Hestia.Model.Cobertura
             return rawCoverage.Packages
                               .SelectMany(p => p.Classes)
                               .Select(c => new FileCoverage(c.Filename,
-                                                            c.Lines.Select(l => (l.Number, l.Hits))))
+                                                            c.Lines.Select(l => (l.Number, l.Hits, l.Branch,
+                                                                                           l.ConditionCoverage ??
+                                                                                           string.Empty))))
                               .DistinctBy(c => c.FileName);
         }
 
