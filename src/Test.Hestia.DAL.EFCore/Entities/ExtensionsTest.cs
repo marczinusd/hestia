@@ -15,7 +15,10 @@ namespace Test.Hestia.DAL.EFCore.Entities
     {
         private static readonly SourceLine Line = new SourceLine(1,
                                                                  "bla",
-                                                                 new LineCoverageStats(true),
+                                                                 new LineCoverageStats(true,
+                                                                     3,
+                                                                     true,
+                                                                     "1/1"),
                                                                  new LineGitStats(1, 2, 3));
 
         private static readonly SourceLine LineWithNones = new SourceLine(1,
@@ -28,7 +31,8 @@ namespace Test.Hestia.DAL.EFCore.Entities
                                                      "path",
                                                      new List<ISourceLine> { Line },
                                                      new FileGitStats(1, 2),
-                                                     new FileCoverageStats(new FileCoverage("path", new[] { (1, 1, true, "1/1") })));
+                                                     new FileCoverageStats(new FileCoverage("path",
+                                                                               new[] { (1, 1, true, "1/1") })));
 
         private static readonly RepositorySnapshot Snapshot = new RepositorySnapshot("id",
             "somePath",
@@ -173,6 +177,15 @@ namespace Test.Hestia.DAL.EFCore.Entities
                   .BeNull();
             entity.FileId.Should()
                   .BeNull();
+            entity.ConditionCoverage
+                  .Should()
+                  .Be("1/1");
+            entity.HitCount
+                  .Should()
+                  .Be(3);
+            entity.IsBranched
+                  .Should()
+                  .BeTrue();
         }
 
         [Fact]

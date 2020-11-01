@@ -15,7 +15,10 @@ namespace Test.Hestia.DAL.EFCore.Adapters
                                                      2,
                                                      "id",
                                                      1,
-                                                     null);
+                                                     null,
+                                                     "1/1",
+                                                     true,
+                                                     3);
 
         private static readonly File File = new File("path",
                                                      1,
@@ -68,6 +71,12 @@ namespace Test.Hestia.DAL.EFCore.Adapters
                   .Be(2);
             result.LineNumber.Should()
                   .Be(1);
+            result.ConditionCoverage.Should()
+                  .Be("1/1");
+            result.IsBranched.Should()
+                  .BeTrue();
+            result.HitCount.Should()
+                  .Be(3);
         }
 
         [Fact]

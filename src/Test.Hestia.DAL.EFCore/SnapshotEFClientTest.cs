@@ -32,7 +32,10 @@ namespace Test.Hestia.DAL.EFCore
                                                                                             2,
                                                                                             "id",
                                                                                             1,
-                                                                                            null)
+                                                                                            null,
+                                                                                            "1/1",
+                                                                                            true,
+                                                                                            3)
                                                                                     },
                                                                                     SeededFileId,
                                                                                     null)

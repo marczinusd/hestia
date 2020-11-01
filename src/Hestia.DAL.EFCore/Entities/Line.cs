@@ -2,7 +2,6 @@
 
 namespace Hestia.DAL.EFCore.Entities
 {
-    // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
     public class Line
     {
         [UsedImplicitly]
@@ -16,7 +15,10 @@ namespace Hestia.DAL.EFCore.Entities
                     int numberOfChanges,
                     string id,
                     int lineNumber,
-                    string fileId)
+                    string fileId,
+                    string conditionCoverage,
+                    bool isBranched,
+                    int hitCount)
         {
             Content = content;
             IsCovered = isCovered;
@@ -25,6 +27,9 @@ namespace Hestia.DAL.EFCore.Entities
             Id = id;
             LineNumber = lineNumber;
             FileId = fileId;
+            ConditionCoverage = conditionCoverage;
+            IsBranched = isBranched;
+            HitCount = hitCount;
         }
 
         [UsedImplicitly] public string Id { get; set; }
@@ -42,5 +47,11 @@ namespace Hestia.DAL.EFCore.Entities
         [UsedImplicitly] public File File { get; set; }
 
         [UsedImplicitly] public string FileId { get; set; }
+
+        [UsedImplicitly] public string ConditionCoverage { get; set; }
+
+        [UsedImplicitly] public bool IsBranched { get; set; }
+
+        [UsedImplicitly] public int HitCount { get; set; }
     }
 }

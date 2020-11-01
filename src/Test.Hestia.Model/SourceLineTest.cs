@@ -12,7 +12,10 @@ namespace Test.Hestia.Model
         {
             var line = new SourceLine(1,
                                       "bla",
-                                      new LineCoverageStats(true),
+                                      new LineCoverageStats(true,
+                                                            2,
+                                                            true,
+                                                            "1/1"),
                                       new LineGitStats(1, 2, 3));
 
             line.Should()
@@ -24,10 +27,17 @@ namespace Test.Hestia.Model
         {
             var line = new SourceLine(1,
                                       "bla",
-                                      new LineCoverageStats(false),
+                                      new LineCoverageStats(false,
+                                                            0,
+                                                            false,
+                                                            string.Empty),
                                       new LineGitStats(1, 2, 3));
 
-            var newLine = line.With(new LineCoverageStats(true), new LineGitStats(2, 3, 4));
+            var newLine = line.With(new LineCoverageStats(true,
+                                                          2,
+                                                          true,
+                                                          "1/1"),
+                                    new LineGitStats(2, 3, 4));
 
             newLine.LineCoverageStats
                    .Match(x => x.IsCovered, () => false)

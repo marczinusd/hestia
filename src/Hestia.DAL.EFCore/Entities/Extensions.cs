@@ -37,6 +37,9 @@ namespace Hestia.DAL.EFCore.Entities
                                              () => 0),
                      null,
                      line.LineNumber,
-                     null);
+                     null,
+                     line.LineCoverageStats.Match(x => x.ConditionCoverage, string.Empty),
+                     line.LineCoverageStats.Match(x => x.IsBranched, false),
+                     line.LineCoverageStats.Match(x => x.HitCount, -1));
     }
 }

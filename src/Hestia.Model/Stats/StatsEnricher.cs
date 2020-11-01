@@ -162,7 +162,10 @@ namespace Hestia.Model.Stats
 
                         return coveredLine == null || coveredLine.Equals(default)
                                    ? l
-                                   : l.With(new LineCoverageStats(isCovered: true));
+                                   : l.With(new LineCoverageStats(coveredLine.HitCount > 0,
+                                                                  coveredLine.HitCount,
+                                                                  coveredLine.Branch,
+                                                                  coveredLine.ConditionCoverage));
                     });
 
             return file.With(enrichedContent.ToList(),

@@ -13,6 +13,12 @@ namespace Hestia.DAL.EFCore.Adapters
 
         public bool IsCovered => _entity.IsCovered;
 
+        public bool IsBranched => _entity.IsBranched;
+
+        public string ConditionCoverage => _entity.ConditionCoverage;
+
+        public int HitCount => _entity.HitCount;
+
         public int NumberOfAuthors => _entity.NumberOfAuthors;
 
         public int NumberOfChanges => _entity.NumberOfChanges;
