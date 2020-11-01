@@ -15,7 +15,7 @@ namespace Hestia.ConsoleRunner
             var progress = 0;
             progressSubject.Subscribe(_ =>
             {
-                progressBar.Tick($"Processed {Interlocked.Add(ref progress, 1)} of {total} files");
+                progressBar.Tick($"Processed git stats for {Interlocked.Add(ref progress, 1)} of {total} files");
             }); // don't try this at home
 
             return progressBar;

@@ -73,9 +73,10 @@ namespace Hestia.Model.Stats
                                            .Apply(files => files.AsParallel()
                                                                 .Select((f, i) =>
                                                                 {
+                                                                    var result = EnrichWithGitStats(f, granularity);
                                                                     progress.Do(subject => subject.OnNext(i + 1));
 
-                                                                    return EnrichWithGitStats(f, granularity);
+                                                                    return result;
                                                                 }))
                                            .ToList(),
                                            _gitCommands.GetHashForLatestCommit(repositorySnapshot.RootPath),
