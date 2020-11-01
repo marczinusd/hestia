@@ -1,4 +1,5 @@
-﻿using Hestia.ConsoleRunner;
+﻿using System;
+using Hestia.ConsoleRunner;
 using Hestia.DAL.Interfaces;
 using Hestia.Model.Builders;
 using Hestia.Model.Stats;
@@ -21,6 +22,22 @@ namespace Test.Hestia.ConsoleRunner
         private ILogger _logger = Mock.Of<ILogger>();
         private ISnapshotPersistence _snapshotPersistence = Mock.Of<ISnapshotPersistence>();
         private IProgressBarFactory _progressBarFactory = Mock.Of<IProgressBarFactory>();
+        private ICommandLineExecutor _executor = Mock.Of<ICommandLineExecutor>();
+        private ISpinner _spinner;
+
+        public RunnerBuilder()
+        {
+            var spinnerMock = new Mock<ISpinner>();
+            spinnerMock.Setup(mock => mock.Start(It.IsAny<string>(), It.IsAny<Action>()))
+                       .Callback<string, Action>((
+                                                     _,
+                                                     action) =>
+                                                 {
+                                                     action();
+                                                 });
+
+            _spinner = spinnerMock.Object;
+        }
 
         public RunnerBuilder With(IRepositorySnapshotBuilderWrapper snapshotBuilderWrapper)
         {
@@ -58,6 +75,12 @@ namespace Test.Hestia.ConsoleRunner
             return this;
         }
 
+        public RunnerBuilder With(ICommandLineExecutor executor)
+        {
+            _executor = executor;
+            return this;
+        }
+
         public Runner Build() => new Runner(_diskIOWrapper,
                                             _pathValidator,
                                             _snapshotBuilderWrapper,
@@ -65,6 +88,8 @@ namespace Test.Hestia.ConsoleRunner
                                             _converter,
                                             _logger,
                                             _snapshotPersistence,
-                                            _progressBarFactory);
+                                            _progressBarFactory,
+                                            _executor,
+                                            _spinner);
     }
 }

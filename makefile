@@ -17,8 +17,11 @@ build_thesis:
 	mv thesis.pdf ../../dist/thesis.pdf && echo "PDF built at ./dist/thesis.pdf"
 test:
 	dotnet test src/Hestia.sln
+.SILENT:
+tools:
+	dotnet tool install --tool-path . dotnet-reportgenerator-globaltool 2>/dev/null || exit 0
 cover:
-	dotnet tool install --tool-path . dotnet-reportgenerator-globaltool && exit 0
+	$(MAKE) tools
 	dotnet test src/Hestia.sln /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:Exclude="[xunit*]*" /p:CoverletOutput="coverage.json"
 	reportgenerator "-reports:**/coverage.json" "-targetdir:coveragereport" "-reporttypes:Html;HtmlSummary;Cobertura;lcov;XML;JsonSummary;SonarQube"
 run-webservice:

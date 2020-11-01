@@ -24,6 +24,8 @@ namespace Hestia.ConsoleRunner
         private readonly ILogger _log;
         private readonly ISnapshotPersistence _persistence;
         private readonly IProgressBarFactory _progressBarFactory;
+        private readonly ICommandLineExecutor _executor;
+        private readonly ISpinner _spinner;
 
         public Runner(IDiskIOWrapper ioWrapper,
                       IPathValidator pathValidator,
@@ -32,7 +34,9 @@ namespace Hestia.ConsoleRunner
                       ICoverageReportConverter converter,
                       ILogger log,
                       ISnapshotPersistence persistence,
-                      IProgressBarFactory progressBarFactory)
+                      IProgressBarFactory progressBarFactory,
+                      ICommandLineExecutor executor,
+                      ISpinner spinner)
         {
             _ioWrapper = ioWrapper;
             _pathValidator = pathValidator;
@@ -42,10 +46,48 @@ namespace Hestia.ConsoleRunner
             _log = log;
             _persistence = persistence;
             _progressBarFactory = progressBarFactory;
+            _executor = executor;
+            _spinner = spinner;
         }
 
         public void BuildFromConfig(RunnerConfig config, bool dryRun) =>
             ConfigAsBuilder(config)
+                .Apply(arguments =>
+                {
+                    if (config.BuildCommands == null || !config.BuildCommands.Any())
+                    {
+                        _log.Information("No build commands were provided -- skipping");
+
+                        return arguments;
+                    }
+
+                    _log.Information($"Triggering build command '{string.Join(" && ", config.BuildCommands)}' in directory: {config.RepoRoot}");
+                    _spinner.Start("Build in progress...",
+                                   () => config.BuildCommands.Iter(command =>
+                                   {
+                                       var split = command.Split(' ');
+                                       _executor.Execute(split.Head(), string.Join(' ', split.Tail()), config.RepoRoot);
+                                   }));
+                    return arguments;
+                })
+                .Apply(arguments =>
+                {
+                    if (config.TestCommands == null || !config.TestCommands.Any())
+                    {
+                        _log.Information("No test commands were provided -- skipping");
+
+                        return arguments;
+                    }
+
+                    _log.Information($"Triggering test command '{config.BuildCommands}' in directory: {config.RepoRoot}");
+                    _spinner.Start("Running tests...",
+                                   () => config.TestCommands.Iter(command =>
+                                   {
+                                       var split = command.Split(' ');
+                                       _executor.Execute(split.Head(), string.Join(' ', split.Tail()), config.RepoRoot);
+                                   }));
+                    return arguments;
+                })
                 .Apply(arguments =>
                 {
                     _log.Information("Building snapshot");

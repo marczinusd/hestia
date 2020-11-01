@@ -7,5 +7,7 @@
   "sqliteDbLocation": "",
   "sqliteDbName": "",
   "statGranularity": "file",
-  "ignorePatterns": []
+  "ignorePatterns": [],
+  "buildCommands": ["make"],
+  "testCommands": ["make cover"]
 }

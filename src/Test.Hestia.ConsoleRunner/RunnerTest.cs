@@ -29,7 +29,9 @@ namespace Test.Hestia.ConsoleRunner
             CoverageReportLocation = "path/coverage",
             SourceRelativePath = "src",
             SqliteDbLocation = "somePath",
-            SqliteDbName = "some.db"
+            SqliteDbName = "some.db",
+            BuildCommands = new List<string>(),
+            TestCommands = new List<string>()
         };
 
         private static readonly Func<IRepositorySnapshot> Snapshot = () =>
@@ -225,6 +227,38 @@ namespace Test.Hestia.ConsoleRunner
             runner.BuildFromConfig(ConfigFactory(), true);
 
             persistence.Verify(mock => mock.InsertSnapshotSync(It.IsAny<IRepositorySnapshot>()), Times.Never);
+        }
+
+        [Fact]
+        public void RunnerInvokesBuildCommandsIfProvided()
+        {
+            var config = ConfigFactory();
+            var executor = new Mock<ICommandLineExecutor>();
+            config.TestCommands = new List<string> { "step one arg", "step two" };
+            var runner = CreateInitialBuilder()
+                         .With(executor.Object)
+                         .Build();
+
+            runner.BuildFromConfig(config, false);
+
+            executor.Verify(mock => mock.Execute("step", "one arg", config.RepoRoot), Times.Once);
+            executor.Verify(mock => mock.Execute("step", "two", config.RepoRoot), Times.Once);
+        }
+
+        [Fact]
+        public void RunnerInvokesTestCommandsIfProvided()
+        {
+            var config = ConfigFactory();
+            var executor = new Mock<ICommandLineExecutor>();
+            config.BuildCommands = new List<string> { "step one arg", "step two" };
+            var runner = CreateInitialBuilder()
+                         .With(executor.Object)
+                         .Build();
+
+            runner.BuildFromConfig(config, false);
+
+            executor.Verify(mock => mock.Execute("step", "one arg", config.RepoRoot), Times.Once);
+            executor.Verify(mock => mock.Execute("step", "two", config.RepoRoot), Times.Once);
         }
 
         private static RunnerBuilder CreateInitialBuilder()

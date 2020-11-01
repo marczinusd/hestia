@@ -133,6 +133,11 @@ namespace Hestia.ConsoleRunner
             builder.RegisterType<Runner>();
             builder.RegisterType<ProgressBarFactory>()
                    .As<IProgressBarFactory>();
+            builder.RegisterType<CommandLineExecutor>()
+                   .As<ICommandLineExecutor>()
+                   .WithParameter("echoMode", ExecutorEchoMode.NoEcho);
+            builder.RegisterType<SpinnerWrapper>()
+                   .As<ISpinner>();
 
             return builder;
         }

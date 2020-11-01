@@ -20,6 +20,12 @@
       "ignorePatterns": [
         "*AssemblyInfo.cs",
         "*Test.cs"
+      ],
+      "buildCommands": [
+        "make"
+      ],
+      "testCommands": [
+        "make test"
       ]
     }
   ],
@@ -150,6 +156,62 @@
               "(.*)AssemblyInfo.cs(.*)",
               "(.*)Test.cs",
               "Test.Hestia(.*).cs"
+            ]
+          }
+        ]
+      }
+    },
+    "buildCommands": {
+      "$id": "#/properties/buildCommands",
+      "type": "array",
+      "title": "Commands to execute to build the project",
+      "description": "Commands to execute to build the project",
+      "default": [],
+      "examples": [
+        [
+          "make"
+        ]
+      ],
+      "additionalItems": true,
+      "items": {
+        "$id": "#/properties/buildCommands/items",
+        "anyOf": [
+          {
+            "$id": "#/properties/buildCommands/items/anyOf/0",
+            "type": "string",
+            "title": "Build command",
+            "description": "A single command to run -- don't run further commands with && or || !",
+            "default": "",
+            "examples": [
+              "make"
+            ]
+          }
+        ]
+      }
+    },
+    "testCommands": {
+      "$id": "#/properties/testCommands",
+      "type": "array",
+      "title": "Commands to execute to generate coverage reports",
+      "description": "Commands to execute to generate coverage reports",
+      "default": [],
+      "examples": [
+        [
+          "make test"
+        ]
+      ],
+      "additionalItems": true,
+      "items": {
+        "$id": "#/properties/testCommands/items",
+        "anyOf": [
+          {
+            "$id": "#/properties/testCommands/items/anyOf/0",
+            "type": "string",
+            "title": "Test command",
+            "description": "A single command to run -- don't run further commands with && or || !",
+            "default": "",
+            "examples": [
+              "make test"
             ]
           }
         ]

@@ -39,5 +39,13 @@ namespace Hestia.ConsoleRunner
         [UsedImplicitly]
         [JsonPropertyName("ignorePatterns")]
         public List<string> IgnorePatterns { get; set; }
+
+        [UsedImplicitly]
+        [JsonPropertyName("buildCommands")]
+        public IList<string> BuildCommands { get; set; }
+
+        [UsedImplicitly]
+        [JsonPropertyName("testCommands")]
+        public IList<string> TestCommands { get; set; }
     }
 }
