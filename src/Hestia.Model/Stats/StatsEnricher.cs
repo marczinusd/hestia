@@ -70,12 +70,13 @@ namespace Hestia.Model.Stats
 
             return repositorySnapshot.With(repositorySnapshot
                                            .Files
-                                           .Apply(x => x.Select((f, i) =>
-                                           {
-                                               progress.Do(subject => subject.OnNext(i + 1));
+                                           .Apply(files => files.AsParallel()
+                                                                .Select((f, i) =>
+                                                                {
+                                                                    progress.Do(subject => subject.OnNext(i + 1));
 
-                                               return EnrichWithGitStats(f, granularity);
-                                           }))
+                                                                    return EnrichWithGitStats(f, granularity);
+                                                                }))
                                            .ToList(),
                                            _gitCommands.GetHashForLatestCommit(repositorySnapshot.RootPath),
                                            commitCreationDate:
