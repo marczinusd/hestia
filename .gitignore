@@ -504,3 +504,5 @@ reportgenerator.exe
 .ionide
 
 **/*.DotSettings.user
+
+reportgenerator

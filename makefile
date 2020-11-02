@@ -19,7 +19,9 @@ test:
 	dotnet test src/Hestia.sln
 .SILENT:
 tools:
+ifeq (, $(shell which reportgenerator))
 	dotnet tool install --tool-path . dotnet-reportgenerator-globaltool 2>/dev/null || exit 0
+endif
 cover:
 	$(MAKE) tools
 	dotnet test src/Hestia.sln /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:Exclude="[xunit*]*" /p:CoverletOutput="coverage.json"
