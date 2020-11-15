@@ -19,7 +19,7 @@ test:
 	dotnet test src/Hestia.sln
 .SILENT:
 tools:
-ifeq (, $(shell which reportgenerator))
+ifeq (, $(shell which reportgenerator 2>/dev/null))
 	dotnet tool install --tool-path . dotnet-reportgenerator-globaltool 2>/dev/null || exit 0
 endif
 cover:
