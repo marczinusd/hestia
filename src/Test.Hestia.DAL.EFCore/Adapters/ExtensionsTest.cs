@@ -26,7 +26,7 @@ namespace Test.Hestia.DAL.EFCore.Adapters
                                                      3,
                                                      new List<Line> { Line },
                                                      "id",
-                                                     null);
+                                                     "snapshotId");
 
         private static readonly Snapshot Snapshot =
             new Snapshot(new List<File> { File },
@@ -54,6 +54,8 @@ namespace Test.Hestia.DAL.EFCore.Adapters
                   .Be(1);
             result.CoveragePercentage.Should()
                   .Be(3);
+            result.SnapshotId.Should()
+                  .Be("snapshotId");
         }
 
         [Fact]

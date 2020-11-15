@@ -30,5 +30,7 @@ namespace Hestia.DAL.EFCore.Adapters
         // this is incredibly ugly, but due to the EFCore weirdness that I don't have to fix
         // it'll have to stay so I don't pollute entities with manual joins
         public List<ILineEntity> Lines { get; set; }
+
+        public string SnapshotId => _entity.SnapshotId;
     }
 }

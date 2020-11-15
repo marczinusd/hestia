@@ -6,5 +6,7 @@ namespace Hestia.DAL.Interfaces
     public interface IFileEntity : IFileHeader
     {
         List<ILineEntity> Lines { get; }
+
+        string SnapshotId { get; }
     }
 }
