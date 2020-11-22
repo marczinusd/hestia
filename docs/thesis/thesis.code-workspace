@@ -1,0 +1,32 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "thesis.aux": true,
+      "thesis.blg": true,
+      "thesis.toc": true,
+      "thesis.tdo": true,
+      "thesis.nls": true,
+      "thesis.nlg": true,
+      "thesis.nlo": true,
+      "thesis.lot": true,
+      "thesis.lol": true,
+      "thesis.lof": true,
+      "thesis.run.xml": true,
+      "thesis.synctex.gz": true,
+      "thesis.idx": true,
+      "thesis.ilg": true,
+      "thesis.fls": true,
+      "thesis.ind": true,
+      "thesis.fdb_latexmk": true,
+      "thesis-blx.bib": true,
+      "thesis.bbl": true,
+      "**/*__latexindent*": true,
+      "**/*.pdf": true
+    }
+  }
+}
