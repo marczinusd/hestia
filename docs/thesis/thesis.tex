@@ -12,12 +12,12 @@
 \author{Marczinus Dávid}
 \degree{Programtervező informatikus MSc}
 
-\supervisor{Témavezető Tamás}
-\affiliation{egyetemi tanársegéd}
+\supervisor{Kovács Attila}
+\affiliation{tudományos főmunkatárs}
 
 \university{Eötvös Loránd Tudományegyetem}
 \faculty{Informatikai Kar}
-\department{Programozáselmélet és Szoftvertechnológiai\\ Tanszék} % tanszék neve / department's name
+\department{Komputeralgebra Tanszék}
 \city{Budapest}
 \logo{elte_cimer_szines}
 
@@ -25,10 +25,8 @@
 \addbibresource{thesis.bib}
 
 \begin{document}
-	
-\documentlang{magyar}
 
-\listoftodos[\todolabel]
+\documentlang{magyar}
 
 \input{settings.tex}
 
@@ -51,38 +49,12 @@
 \input{chapters/results.tex}
 \cleardoublepage
 
-\input{chapters/user.tex}
-\cleardoublepage
-
-\input{chapters/impl.tex}
-\cleardoublepage
-
 \input{chapters/sum.tex}
-\cleardoublepage
-
-% Appendices
-\appendix
-\input{appendices/sim.tex}
 \cleardoublepage
 
 % Bibliography
 \addcontentsline{toc}{chapter}{\biblabel}
 \hbadness 10000 \printbibliography[title=\biblabel]
-\cleardoublepage
-
-% List of figures
-\addcontentsline{toc}{chapter}{\lstfigurelabel}
-\listoffigures
-\cleardoublepage
-
-% List of tables
-\addcontentsline{toc}{chapter}{\lsttablelabel}
-\listoftables
-\cleardoublepage
-
-% List of codes
-\addcontentsline{toc}{chapter}{\lstcodelabel}
-\lstlistoflistings
 \cleardoublepage
 
 \end{document}
