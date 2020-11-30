@@ -4,66 +4,44 @@
 	%nohyp, % Szavak sorvégi elválasztásának tiltása / No hypenation of words
 	%twoside, % Kétoldalas nyomtatás / Double sided format
 	%final, % Teendők elrejtése / Set final to hide todos
-]{elteikthesis}[2019/06/10]
+]{elteikthesis}[2020/11/23]
 
-% Dolgozat metaadatai
-% Document's metadata
-\title{Dolgozat címe} % cím / title
-\date{2019} % védés éve / year of defense
+\title{Unit teszt coverage a verziókövetőkben}
+\date{2021}
 
-% Szerző metaadatai
-% Author's metadata
-\author{Hallgató Hanga}
-\degree{programtervező informatikus BSc}
+\author{Marczinus Dávid}
+\degree{Programtervező informatikus MSc}
 
-% Témavezető(k) metaadatai
-% Superivsor(s)' metadata
-\supervisor{Témavezető Tamás} % belső témavezető neve / internal supervisor's name
-\affiliation{egyetemi tanársegéd} % belső témavezető beosztása / internal supervisor's affiliation
-%\extsupervisor{Külső Kornél} % külső témavezető neve / external supervisor's name
-%\extaffiliation{informatikai igazgató} % külső témavezető beosztása / external supervisor's affiliation
+\supervisor{Témavezető Tamás}
+\affiliation{egyetemi tanársegéd}
 
-% Egyetem metaadatai
-% University's metadata
-\university{Eötvös Loránd Tudományegyetem} % egyetem neve / university's name
-\faculty{Informatikai Kar} % kar neve / faculty's name
+\university{Eötvös Loránd Tudományegyetem}
+\faculty{Informatikai Kar}
 \department{Programozáselmélet és Szoftvertechnológiai\\ Tanszék} % tanszék neve / department's name
-\city{Budapest} % város / city
-\logo{elte_cimer_szines} % logo
+\city{Budapest}
+\logo{elte_cimer_szines}
 
-% Irodalomjegyzék hozzáadása
-% Add bibliography file
+\BiblatexHungarianWarningOff
 \addbibresource{thesis.bib}
 
-% A dolgozat
-% The document
 \begin{document}
 	
-% Nyelv kiválasztása
-% Set document language
 \documentlang{magyar}
-%\documentlang{english}
 
-% Teendők listája (final dokumentumban nincs)
-% List of todos (not in the final document)
 \listoftodos[\todolabel]
 
-% Dokumentum beállítások
-% Some document settings
 \input{settings.tex}
 
-% Címlap (kötelező)
-% Title page (mandatory)
+% clear annoying hbox/vbox badness errors
+\hfuzz=10000pt
+\vfuzz=10000pt
+
 \maketitle
 \topicdeclaration
 
-% Tartalomjegyzék (kötelező)
-% Table of contents (mandatory)
 \tableofcontents
 \cleardoublepage
 
-% Tartalom
-% Main content
 \input{chapters/intro.tex}
 \cleardoublepage
 
@@ -82,38 +60,29 @@
 \input{chapters/sum.tex}
 \cleardoublepage
 
-% Függelékek (opcionális) - hosszabb részletező táblázatok, sok és/vagy nagy kép esetén hasznos
-% Appendices (optional) - useful for detailed information in long tables, many and/or large figures, etc.
+% Appendices
 \appendix
 \input{appendices/sim.tex}
 \cleardoublepage
 
-% Irodalomjegyzék (kötelező)
-% Bibliography (mandatory)
+% Bibliography
 \addcontentsline{toc}{chapter}{\biblabel}
-\printbibliography[title=\biblabel]
+\hbadness 10000 \printbibliography[title=\biblabel]
 \cleardoublepage
 
-% Ábrajegyzék (opcionális) - 3-5 ábra fölött érdemes
-% List of figures (optional) - useful over 3-5 figures
+% List of figures
 \addcontentsline{toc}{chapter}{\lstfigurelabel}
 \listoffigures
 \cleardoublepage
 
-% Táblázatjegyzék (opcionális) - 3-5 táblázat fölött érdemes
-% List of tables (optional) - useful over 3-5 tables
+% List of tables
 \addcontentsline{toc}{chapter}{\lsttablelabel}
 \listoftables
 \cleardoublepage
 
-% Forráskódjegyzék (opcionális) - 3-5 kódpélda fölött érdemes
-% List of codes (optional) - useful over 3-5 code samples
+% List of codes
 \addcontentsline{toc}{chapter}{\lstcodelabel}
 \lstlistoflistings
 \cleardoublepage
-
-% Jelölésjegyzék (opcionális)
-% List of symbols (optional)
-%\printnomenclature
 
 \end{document}
