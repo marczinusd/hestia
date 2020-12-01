@@ -25,6 +25,7 @@
       "thesis.fdb_latexmk": true,
       "thesis-blx.bib": true,
       "thesis.bbl": true,
+      "thesis.log": true,
       "**/*__latexindent*": true,
       "**/*.pdf": true
     },
@@ -33,6 +34,6 @@
     "files.autoSaveDelay": 3000,
     "latex-workshop.latex.autoClean.run": "onFailed",
     "editor.wordWrap": "bounded",
-    "editor.wordWrapColumn": 80
+    "editor.wordWrapColumn": 90
   }
 }
