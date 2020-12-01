@@ -80,6 +80,10 @@ Gyakorlatban egy konzolos futtatást a következő módon néz ki:
     \item Mentsük el adatbázisba a snapshot végleges formátumát
 \end{enumerate}
 
+Fontos megjegyezni, hogy bár a konzolos futtató per pillanat csak egyedi snapshot analízis futtatásra lett felkészítve, maga a háttérben lévő modell képes repository-szintű analízisre is. 
+
+A repository-szintű analízis annyiban más, hogy paraméterül kap egy számot, ami a mintavételezési sűrűséget reprezentálja, azaz azt, hogy egy repository-ból hány snapshot-ot szeretnénk készíteni. Ugyan ez a fajta analízis is hasznos, a probléma jelenleg abban rejlik, hogy egy repository commit-jai nem egyenletesen oszlanak el az időben, így az implementáció, ami egyenletesen veszi a mintákat a commit-ok számának tekintetében, torzítani fogja az ereményeket a manuális mintavételezéssel szemben, ahol szempontnak számítanak többek között a szoftverfejleszétis mérföldkövet is.
+
 \subsubsection{Web service}
 
 A Hestia backend-jének utolsó nagy részét a ASP.NET Web API alapú, REST-es web service képezi. Ez tulajdonképpen arra hivatott, hogy a konzolos futtatás eredményeit szolgálja ki a külvilág számára könnyen emészthető módon, json formátumban. A service a következő endpoint-okat definiálja:

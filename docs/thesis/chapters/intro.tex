@@ -1,4 +1,66 @@
-\chapter{Bevezetés} % Introduction
+\chapter{Bevezetés}
 \label{ch:intro}
 
-Bevezetés béla
+A modern szoftverfejlesztés egyik népszerű tautológiája, hogy minőségi, hosszú távon is karbantartható szoftvert fejleszteni nehéz. Ennek sok különböző oka
+
+Pár éve jelent meg \citeauthor{tornhillXrays} \textit{Software Design X-Rays}\cite{tornhillXrays} című könyve, ami egy érdekes, gyakorlatban hasznosítható megközelítést prezentál a kódbázisokat gyakori problémáinak felismerésére, programozási nyelvtől, paradigmától és platformtól függetlenül. 
+
+Az ötlet egyszerű: minden olyan szoftverfejlesztési projekt, ahol a minőség akármilyen szinten releváns, ott a kód verziókövető rendszerben van tárolva. Ezek a verziókövető rendszerek nagyon specifikus célokat szolgálnak (erről bővebben az \ref{section:version_control} szekcióban), azonban rengeteg metaadatot tárolnak a kódról projekt, fájl és sor szintjén is.
+
+\citeauthor{tornhillXrays} két statisztikai pontra hivatkozik a könyvében:
+\begin{enumerate}
+    \item Egy fájl, vagy fájlban lévő sor hányszor került módosításra
+    \item Egy fájl, vagy fájlban lévő sor hány különböző szerző által lett módosítva
+\end{enumerate}
+
+A feltételezés, hogy a kódbázisok problémás részein kiemelkedően magas lesz a fent említett két szám az kódbázis többi részéhez képest. Továbbá feltehető az is, hogy azok a fájlok, amiken ez megfigyelhető, azok a fejlesztés korai szakaszaitól jelen vannak és a módosítások száma a projekt életciklusa alatt nagyjából konstans marad.
+
+Jogos kérdés lehet, hogy pontosan miért probléma az, hogy egy fájlt, illetve a benne lévő osztályt gyakran kell módosítani. Ehhez egy pillanatra hátra kell lépnünk és szót kell ejtenünk az úgynevezett code smell-ekről.
+
+\subsection{Code smell}
+
+A code smell, mint koncepció Martin Fowler \textit{Refactoring}\cite{fowlerRefactoring} című könyvével került be a programozói köztudatba. \textit{Code smell} alatt jellemzően olyan kódot értünk, aminek a működése szigorúan vett értelemben nem helytelen, azonban szoftver dizájn szempontból egészségtelen a kód hosszú távú karbantarthatóságára nézve. 
+
+Fowler a könyvében 16 különböző code smell-t definiál, amiből nekünk a következőek relevánsak:
+\begin{enumerate}
+    \item \textit{Long method}: bla
+    \item \textit{Large class}: bla
+    \item \textit{Divergent change}: bla
+    \item \textit{Shotgun surgery}: bla
+    \item \textit{Data clumps}: bla
+\end{enumerate}
+
+Fontos megjegyezni, hogy a code smell, mint olyan, pusztán egy felületi heurisztika: egy kódrészlet, amire egy, vagy akár több code smell is illeszkedik, az a saját kontextusában lehet dizájn szempontból is helyes, hiszen minden szoftver projekt más. Az code smell-ek értéke abban rejlik, hogy a segítségükkel gyorsan fel tudunk ismerni gyakran előforduló problémás mintákat, majd egyéni mérlegelés után dönthetünk arról, hogy szükséges-e változtatást eszközölni a gyanús kódon.
+
+\subsection{Verziókövetők} 
+\label{section:version_control}
+
+\subsubsection{Egy modern verziókövető - git}
+
+\subsubsection{Code smell-ek nyomai a verziókövetőkben}
+
+Egy modern kutatás, ami kifejezetten a code smell-ek empirikus felismerésével foglakozik 2015-ben került publikálásra M. Tufano et al., "When and Why Your Code Starts to Smell Bad"\cite{codeSmells}.
+
+\subsection{Tesztelés}
+
+A modern szoftverfejlesztés egyik legnagyobb előrelépése 
+
+\subsubsection{Magasabb szintű tesztek}
+
+\subsubsection{Unit tesztelés}
+
+A tesztelési piramis legalsó szintjén található a unit tesztelés. \textit{Unit test} alatt jellemzően egy olyan tesztet értünk, ami izolációban teszteli egy nagyon specifikus részét a kódnak. A pontos definíció ebben az esetben erősen vitatott, mert gyakorlatban a unit tesztelésnek nagyon sok különböző stílusa létezik. Jellemzően ezek a stílusok eltérnek az izoláció mértékében, a tesztelt kód specificitásában és az ellenőrzések stílusában is. Sok projekt továbbá kombinálja ezeket a különböző stílusokat az alkalmazás különböző rétegeiben.
+
+Definíciótól függetlenül azonban a unit tesztek célja világos: bizonyítsuk, hogy a kód, amit írtunk tényleg úgy viselkedik, ahogy szeretnénk. Tekinthetünk az ilyen tesztekre a szoftverfejlesztési világ kettős könyveléseként
+
+
+\subsubsection{Teszt coverage}
+
+
+
+\subsection{A teszt coverage és git statisztikák közös vizsgálata}
+
+Most, hogy körbejártuk két empirikus módját a kódminőség felmérésének, itt az ideje definiálni a kérdéseket, amiket ez a dipomamunka hivatott megvizsgálni. 
+
+Milyen relációban van a histórikus code coverage és a korábban definiált git statisztika? Hogyan viselkednek ezek az értékek "jó" és "rossz" minőségű kódbázisokon? Segít-e a megfelelő tesztelés abban, hogy a code smell-eket kordában tudjuk tartani?
+
