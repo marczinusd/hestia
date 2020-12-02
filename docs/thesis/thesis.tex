@@ -2,6 +2,7 @@
 	parspace,
 	%final, % Teendők elrejtése / Set final to hide todos
 ]{elteikthesis}[2020/11/23]
+\usepackage{pdfpages}
 
 \title{Unit teszt coverage a verziókövetőkben}
 \date{2021}
@@ -10,7 +11,7 @@
 \degree{Programtervező informatikus MSc}
 
 \supervisor{Kovács Attila}
-\affiliation{tudományos főmunkatárs}
+\affiliation{Hab. egyetemi docens}
 
 \university{Eötvös Loránd Tudományegyetem}
 \faculty{Informatikai Kar}
@@ -32,7 +33,8 @@
 \vfuzz=10000pt
 
 \maketitle
-\topicdeclaration
+\includepdf[pages={1}]{misc/eredet.pdf}
+\includepdf[pages={1}]{misc/bejelento.pdf}
 
 \tableofcontents
 \cleardoublepage
@@ -49,7 +51,6 @@
 \input{chapters/sum.tex}
 \cleardoublepage
 
-% Bibliography
 \addcontentsline{toc}{chapter}{\biblabel}
 \hbadness 10000 \printbibliography[title=\biblabel]
 \cleardoublepage
