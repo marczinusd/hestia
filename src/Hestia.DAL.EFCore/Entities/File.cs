@@ -25,6 +25,7 @@ namespace Hestia.DAL.EFCore.Entities
             Lines = lines;
             Id = id;
             SnapshotId = snapshotId;
+            LineCount = Lines.Count;
         }
 
         [UsedImplicitly] public string Id { get; set; }
@@ -38,6 +39,8 @@ namespace Hestia.DAL.EFCore.Entities
         [UsedImplicitly] public decimal CoveragePercentage { get; set; }
 
         [UsedImplicitly] public List<Line> Lines { get; set; }
+
+        [UsedImplicitly] public int LineCount { get; set; }
 
         [UsedImplicitly] public Snapshot Snapshot { get; set; }
 

@@ -44,6 +44,8 @@ namespace Test.Hestia.DAL.EFCore.Adapters
 
             result.Lines.Should()
                   .HaveCount(1);
+            result.LineCount.Should()
+                  .Be(1);
             result.Id.Should()
                   .Be("id");
             result.Path.Should()

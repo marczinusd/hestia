@@ -49,6 +49,8 @@ namespace Hestia.Model
 
         [JsonIgnore] [UsedImplicitly] public int LifetimeChanges => GitStats.Match(x => x.LifetimeChanges, -1);
 
+        public int LineCount => Content.Count;
+
         public IFile With(IList<ISourceLine>? content = null,
                           IFileGitStats? gitStats = null,
                           IFileCoverageStats? coverageStats = null) =>

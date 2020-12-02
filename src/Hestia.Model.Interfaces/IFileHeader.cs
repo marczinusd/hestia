@@ -11,5 +11,7 @@
         int LifetimeAuthors { get; }
 
         int LifetimeChanges { get; }
+
+        int LineCount { get; }
     }
 }
