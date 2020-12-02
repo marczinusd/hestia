@@ -12,7 +12,7 @@ Conway törvénye azt fogalmazza meg, hogy egy szervezet szoftverei jellemzően 
 
 Friss vezető fejlesztőként, 2019-ben futottam bele a következő kérdésbe: milyen objektív, empirikus statisztikát alkalmazhatnék egy fejlődő kódbázis elemzésére, ami mentes a saját minőségi kóddal kialakított koncepcióimtól? Ekkor futottam bele az azt megelőző évben megjelent, \textit{Software Design X-Rays}\cite{tornhillXrays} című könyvbe, ami egy számomra új, gyakorlatban hasznosítható megközelítést prezentál a kódbázisokat gyakori problémáinak felismerésére, programozási nyelvtől, paradigmától és platformtól függetlenül.
 
-Az ötlet egyszerű: minden olyan szoftverfejlesztési projekt, ahol a minőség akármilyen szinten releváns, ott a kód verziókövető rendszerben van tárolva. Ezek a verziókövető rendszerek nagyon specifikus célokat szolgálnak (erről bővebben az \ref{section:version_control} szekcióban), azonban rengeteg metaadatot tárolnak a kódról projekt, fájl és sor szintjén is.
+Az ötlet egyszerű: minden olyan szoftverfejlesztési projekt, ahol a minőség akármilyen szinten releváns, ott a kód verziókezelő rendszerben van tárolva. Ezek a verziókezelő rendszerek nagyon specifikus célokat szolgálnak (erről bővebben az \ref{section:version_control} szekcióban), azonban rengeteg metaadatot tárolnak a kódról projekt, fájl és sor szintjén is.
 
 \citeauthor{tornhillXrays} két statisztikai pontra hivatkozik a könyvében:
 \begin{enumerate}
@@ -32,43 +32,43 @@ Fowler a könyvében 16 különböző code smell-t definiál, amiből nekünk a 
 \begin{enumerate}
     \item \textit{Long method}: szükségtelenül hosszú függvény, ami indokolatlanul sok operációt végez, nem fókuszált
     \item \textit{Large class}: indokolatlanul nagy osztály, ami reálisan több különálló osztály logikáját tartalmazza. Manapság \textit{God Class} vagy \textit{God Object} néven hivatkozunk erre a code smell-re
-    \item \textit{Divergent change}: bla
-    \item \textit{Shotgun surgery}: bla
-    \item \textit{Data clumps}: bla
+    \item \textit{Divergent change}: egy változtatás végrehajtásához sok, egymástól független függvény megváltoztatása szükséges
+    \item \textit{Shotgun surgery}: egy kis változtatás sikeres végrehajtása csak sok osztály megváltoztatásával lehetséges
 \end{enumerate}
 
 Fontos megjegyezni, hogy a code smell, mint olyan, pusztán egy felületi heurisztika: egy kódrészlet, amire egy, vagy akár több code smell is illeszkedik, az a saját kontextusában lehet dizájn szempontból is helyes, hiszen minden szoftver projekt más. Az code smell-ek értéke abban rejlik, hogy a segítségükkel gyorsan fel tudunk ismerni gyakran előforduló problémás mintákat, majd egyéni mérlegelés után dönthetünk arról, hogy szükséges-e változtatást eszközölni a gyanús kódon.
 
-\section{Verziókövetők}
+\section{Verziókezelő}
 \label{section:version_control}
 
-A verziókövetők szerves részeit képzik a modern szoftverfejlesztésnek. A fejlesztői körökben híres \textit{Joel Test}\footnote{https://www.joelonsoftware.com/2000/08/09/the-joel-test-12-steps-to-better-code/} legelső lakmusz-tesztje, hogy egy projekt minden forráskódjának valamilyen formában verziókövetőben kell lennie, máskülönben (Spolsky véleménye szerint) a fejlesztők csak a saját és a klienseik életét nehezítik meg.
+A verziókezelő szerves részeit képzik a modern szoftverfejlesztésnek. A fejlesztői körökben híres \textit{Joel Test}\footnote{https://www.joelonsoftware.com/2000/08/09/the-joel-test-12-steps-to-better-code/} legelső lakmusz-tesztje, hogy egy projekt minden forráskódjának valamilyen formában verziókezelőben kell lennie, máskülönben (Spolsky véleménye szerint) a fejlesztők csak a saját és a klienseik életét nehezítik meg.
 
-De mi is pontosan egy verziókövető? Egy verziókövető szoftver célja, hogy több
+De mi is pontosan egy verziókezelő? Egy verziókezelő szoftver célja, hogy a forráskódon történő változtatások mindig világosan visszakövethetőek legyenek, egyértelműen látszódjon a változtatás előtti és utáni állapot és a forráskód akármelyik állapota akármikor elérhető és visszaállítható legyen. Fontos továbbá az is, hogy a verziókezelő rendszerek úgynevezett branch-ek használatával elősegítik, hogy egy fejlesztő csapat minden tagja képes legyen ugyanazokon a fájlokon más-más változtatásokat végrehajtani úgy, hogy a potenciálisan létrejött konfliktusokat csak egyszer kell feloldani.
 
-A legismertebb verziókövetők:
+Koncepcionálisan a verziókezelőket, illetve az azokban tárolt forráskódot nagyon komplex gráfként érdemes elképzelni, ahol minden csúcs a forráskód egy bizonyos állapota.
+
+
+A legismertebb verziókezelők:
 \begin{itemize}
-    \item \textit{CVS}: todo
-    \item \textit{Mercurial}: todo
-    \item \textit{SVN}: todo
-    \item \textit{Perforce}: todo
-    \item \textit{git}: todo
+    \item \textit{SVN}: a 2000-es évek elejének legnépszerűbb, centralizált verziókezelő rendszere.
+    \item \textit{Perforce}: centralizált verziókezelő, ami koncepcionálisan az SVN-hez közelít, azonban nem nyílt forráskódú. Nagy céges környezetben a mai napig viszonylag népszerű, köszönhetően főleg annak, hogy kiválóan képes kezelni a bináris fájlokat.
+    \item \textit{git}: messze a legnépszerűbb modern, decentralizált verziókezelő rendszer. Bővebben részletezve a következő szekcióban.
 \end{itemize}
 
 Terminológia szempontjából a következők lesznek fontosak:
 \begin{itemize}
-    \item \textit{Repository}: todo
-    \item \textit{Commit}: todo
-    \item \textit{Branch}: todo
+    \item \textit{Repository}: egy megosztott adatbázis, ami tartalmazza a verziókezelt forráskód összes különböző verziójának állapotát
+    \item \textit{Commit}: változtatások egy halmaza, ami a forráskód egy korábbi változatát egy új verzióra képezi le
+    \item \textit{Branch}: a forráskód egy bizonyos commit-járól való leágazás, ami egy, a szülő branch-től független commit történettel fog rendelkezni a vágási ponttól
 \end{itemize}
 
-\subsection{A legnépszerűbb verziókövető - git}
+\subsection{A legnépszerűbb verziókezelő - git}
 
-Hála az open source közösség által felkarolt GitHub-nak, az elmúlt évtizedben a git lett az ipar de facto verziókövetője. A korábban említett alternatívákkal szemben a git teljesen decentralizált, ami azt jelenti, hogy nincs egy központi igazságként szolgáló repository, hanem egy git repository minden másolata teljes értékű. Természetesen mivel másolatokról beszélünk, ez implikálja, hogy mégis van egy
+Hála az open source közösség által felkarolt GitHub-nak, az elmúlt évtizedben a git lett az ipar de facto verziókezelője. A korábban említett alternatívákkal szemben a git teljesen decentralizált, ami azt jelenti, hogy nincs egy központi igazságként szolgáló repository, hanem egy git repository minden másolata teljes értékű. Természetesen mivel másolatokról beszélünk, ez implikálja, hogy mégis van egy
 
-\subsection{Code smell-ek nyomai a verziókövetőkben}
+\subsection{Code smell-ek nyomai a verziókezelőben}
 
-Itt az ideje kitérni
+Itt az ideje részleteiben kitérni a \textit{Software Design X-Rays}\cite{tornhillXrays} kapcsán már említett git statisztikákra, illetve a
 
 Egy modern kutatás, ami kifejezetten a code smell-ek empirikus felismerésével foglakozik 2015-ben került publikálásra M. Tufano et al., "When and Why Your Code Starts to Smell Bad"\cite{codeSmells}.
 
@@ -90,13 +90,13 @@ Definíciótól függetlenül azonban a unit tesztek célja világos: bizonyíts
 
 \subsection{Teszt coverage}
 
-Tisztáztuk a korábbiakban a tesztelés alapvető célját és a különböző szintjeit, azonban arról még nem esett szó, hogy milyen metrikákat tudunk kinyerni egy kódbázis tesztjeiből. Itt jön képbe a teszt coverage, ami azt mutatja, hogy a futattott tesztek milyen arányban hajtják meg az éles kódot, bizonyos szempontok szerint. Jellemzően a következő különböző szempontokat értjük coverage alatt:
+Tisztáztuk a korábbiakban a tesztelés alapvető célját és a különböző szintjeit, azonban arról még nem esett szó, hogy milyen metrikákat tudunk kinyerni egy kódbázis tesztjeiből. Itt jön képbe a teszt coverage, ami azt mutatja, hogy a futattott tesztek milyen arányban hajtják meg az éles kódot, bizonyos szempontok szerint. Jellemzően a következő különböző szinten értelmezzük a coverage-et:
 \begin{itemize}
     \item \textit{Statement coverage}: todo
     \item \textit{Line coverage}: todo
-    \item \textit{Function coverage}: todo
-    \item \textit{Branch coverage}: todo
-    \item \textit{Condition coverage}: todo
+    \item \textit{Function coverage}: a kódbázisban lévő függvények
+    \item \textit{Branch coverage}: vezérlési struktúrák ágainak coverage értéke
+    \item \textit{Condition coverage}: boolean
 \end{itemize}
 
 Technikailag a tesztelési piramis minden szintjéből képezhető egy coverage report, de ahogy haladunk felfelé a hierarchiában, ez egyre nehezebb és kevésbé releváns lesz.
