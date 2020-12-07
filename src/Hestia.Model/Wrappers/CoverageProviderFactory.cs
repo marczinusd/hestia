@@ -28,7 +28,7 @@ namespace Hestia.Model.Wrappers
             }
 
             if (Path.GetFileName(filePath)
-                    .Contains("cobertura.xml", StringComparison.OrdinalIgnoreCase))
+                    .Contains("cobertura", StringComparison.OrdinalIgnoreCase))
             {
                 return new CoberturaCoverageProvider(_xmlFileSerializationWrapper);
             }

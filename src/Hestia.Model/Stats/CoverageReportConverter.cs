@@ -27,7 +27,7 @@ namespace Hestia.Model.Stats
 
             var fileName = Path.GetFileName(inputFilePath);
             if (fileName.Contains("coverage.json", StringComparison.OrdinalIgnoreCase) ||
-                fileName.Contains("cobertura.xml", StringComparison.OrdinalIgnoreCase))
+                fileName.Contains("cobertura", StringComparison.OrdinalIgnoreCase))
             {
                 return inputFilePath;
             }
