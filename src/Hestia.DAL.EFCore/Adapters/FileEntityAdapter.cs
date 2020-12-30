@@ -2,7 +2,6 @@
 using System.Linq;
 using Hestia.DAL.EFCore.Entities;
 using Hestia.DAL.Interfaces;
-using JetBrains.Annotations;
 
 namespace Hestia.DAL.EFCore.Adapters
 {
