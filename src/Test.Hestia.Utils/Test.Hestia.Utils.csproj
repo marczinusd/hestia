@@ -16,7 +16,7 @@
   <ItemGroup>
     <PackageReference Include="Bogus" Version="32.0.2" />
     <PackageReference Include="Microsoft.Reactive.Testing" Version="5.0.0" />
-    <PackageReference Include="Moq" Version="4.15.2" />
+    <PackageReference Include="Moq" Version="4.16.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.205" />
   </ItemGroup>
 
