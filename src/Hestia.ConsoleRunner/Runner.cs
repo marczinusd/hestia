@@ -50,108 +50,131 @@ namespace Hestia.ConsoleRunner
             _spinner = spinner;
         }
 
-        public void BuildFromConfig(RunnerConfig config, bool dryRun) =>
-            ConfigAsBuilder(config)
-                .Apply(arguments =>
+        public Unit BuildFromConfig(RunnerConfig config, bool dryRun)
+        {
+            Unit CommitResultsToDb(IRepositorySnapshot snapshot)
+            {
+                if (dryRun)
                 {
-                    if (config.BuildCommands == null || !config.BuildCommands.Any())
-                    {
-                        _log.Information("No build commands were provided -- skipping");
-
-                        return arguments;
-                    }
-
-                    _log.Information($"Triggering build command '{string.Join(" && ", config.BuildCommands)}' in directory: {config.RepoRoot}");
-                    _spinner.Start("Build in progress...",
-                                   () => config.BuildCommands.Iter(command =>
-                                   {
-                                       var split = command.Split(' ');
-                                       _executor.Execute(split.Head(), string.Join(' ', split.Tail()), config.RepoRoot);
-                                   }));
-                    return arguments;
-                })
-                .Apply(arguments =>
-                {
-                    if (config.TestCommands == null || !config.TestCommands.Any())
-                    {
-                        _log.Information("No test commands were provided -- skipping");
-
-                        return arguments;
-                    }
-
-                    _log.Information($"Triggering test command '{string.Join(" && ", config.TestCommands)}' in directory: {config.RepoRoot}");
-                    _spinner.Start("Running tests...",
-                                   () => config.TestCommands.Iter(command =>
-                                   {
-                                       var split = command.Split(' ');
-                                       _executor.Execute(split.Head(), string.Join(' ', split.Tail()), config.RepoRoot);
-                                   }));
-                    return arguments;
-                })
-                .Apply(arguments =>
-                {
-                    _log.Information("Building snapshot");
-                    return _builder.Build(arguments);
-                })
-                .Apply(snapshot =>
-                {
-                    _log.Information($"Converting coverage report at {config.CoverageReportLocation} if applicable");
-                    return ConvertCoverageReport(snapshot);
-                })
-                .Apply(snapshot =>
-                           snapshot.With(files: snapshot.Files.Where(f => FilterFileOnPatterns(config.IgnorePatterns,
-                                                                         f))))
-                .Apply(snapshot =>
-                {
-                    _log.Information("Enriching snapshot with coverage stats");
-                    var coveragePath = snapshot.PathToCoverageResultFile
-                                               .Match(x => x, () => string.Empty);
-                    if (string.IsNullOrWhiteSpace(coveragePath))
-                    {
-                        _log.Warning($"Coverage report provided at {coveragePath} could not be converted and was not processed");
-                        return snapshot;
-                    }
-
-                    return _statsEnricher.EnrichWithCoverage(snapshot);
-                })
-                .Apply(snapshot =>
-                {
-                    var canParse = Enum.GetNames<GitStatGranularity>()
-                                       .Select(val => val.ToLower())
-                                       .Contains(config.StatGranularity);
-                    if (!canParse)
-                    {
-                        _log.Warning($"Could not parse git stat granularity from value {config.StatGranularity}. Possible values: {string.Join(',', Enum.GetValues<GitStatGranularity>())}");
-                    }
-
-                    var progressSubject = new Subject<int>();
-                    var disposable = _progressBarFactory.CreateProgressBar(progressSubject, snapshot.Files.Count);
-                    var granularity = !canParse
-                                          ? GitStatGranularity.File
-                                          : (GitStatGranularity)Enum.Parse(typeof(GitStatGranularity),
-                                                                           config.StatGranularity,
-                                                                           true);
-
-                    _log.Information($"Enriching snapshot with git stats with {granularity.ToString()} granularity");
-                    var result = _statsEnricher.EnrichWithGitStats(snapshot, granularity, progressSubject);
-                    disposable.Dispose();
-
-                    return result;
-                })
-                .Apply(snapshot =>
-                {
-                    if (dryRun)
-                    {
-                        _log.Information("Dry run, skipping db step");
-                        return Unit.Default;
-                    }
-
-                    _log.Information("Saving enriched snapshot to database");
-                    var result = _persistence.InsertSnapshotSync(snapshot);
-                    _log.Information($"Committed {result} state entries to DB successfully");
-
+                    _log.Information("Dry run, skipping db step");
                     return Unit.Default;
-                });
+                }
+
+                _log.Information("Saving enriched snapshot to database");
+                var result = _persistence.InsertSnapshotSync(snapshot);
+                _log.Information($"Committed {result} state entries to DB successfully");
+
+                return Unit.Default;
+            }
+
+            IRepositorySnapshot EnrichSnapshotWithGitStats(IRepositorySnapshot snapshot)
+            {
+                var canParse = Enum.GetNames<GitStatGranularity>()
+                                   .Select(val => val.ToLower())
+                                   .Contains(config.StatGranularity);
+                if (!canParse)
+                {
+                    _log.Warning($"Could not parse git stat granularity from value {config.StatGranularity}. Possible values: {string.Join(',', Enum.GetValues<GitStatGranularity>())}");
+                }
+
+                var progressSubject = new Subject<int>();
+                var disposable = _progressBarFactory.CreateProgressBar(progressSubject, snapshot.Files.Count);
+                var granularity = !canParse
+                                      ? GitStatGranularity.File
+                                      : (GitStatGranularity)Enum.Parse(typeof(GitStatGranularity),
+                                                                       config.StatGranularity,
+                                                                       true);
+
+                _log.Information($"Enriching snapshot with git stats with {granularity.ToString()} granularity");
+                var result = _statsEnricher.EnrichWithGitStats(snapshot, granularity, progressSubject);
+                disposable.Dispose();
+
+                return result;
+            }
+
+            IRepositorySnapshot EnrichSnapshotWithCoverage(IRepositorySnapshot snapshot)
+            {
+                _log.Information("Enriching snapshot with coverage stats");
+                var coveragePath = snapshot.PathToCoverageResultFile
+                                           .Match(x => x, () => string.Empty);
+                if (string.IsNullOrWhiteSpace(coveragePath))
+                {
+                    _log.Warning($"Coverage report provided at {coveragePath} could not be converted and was not processed");
+                    return snapshot;
+                }
+
+                return _statsEnricher.EnrichWithCoverage(snapshot);
+            }
+
+            IRepositorySnapshot FilterFilesBasedOnIgnorePatterns(IRepositorySnapshot snapshot)
+            {
+                return snapshot.With(files: snapshot.Files.Where(f => FilterFileOnPatterns(config.IgnorePatterns,
+                                                                     f)));
+            }
+
+            IRepositorySnapshot ConvertCoverageReportIfApplicable(IRepositorySnapshot snapshot)
+            {
+                _log.Information($"Converting coverage report at {config.CoverageReportLocation} if applicable");
+                return ConvertCoverageReport(snapshot);
+            }
+
+            IRepositorySnapshot BuildSnapshot(RepositorySnapshotBuilderArguments arguments)
+            {
+                _log.Information("Building snapshot");
+                return _builder.Build(arguments);
+            }
+
+            RepositorySnapshotBuilderArguments RunTestsIfApplicable(RepositorySnapshotBuilderArguments arguments)
+            {
+                if (config.TestCommands == null || !config.TestCommands.Any())
+                {
+                    _log.Information("No test commands were provided -- skipping");
+
+                    return arguments;
+                }
+
+                _log.Information($"Triggering test command '{string.Join(" && ", config.TestCommands)}' in directory: {config.RepoRoot}");
+                _spinner.Start("Running tests...",
+                               () => config.TestCommands.Iter(command =>
+                               {
+                                   var split = command.Split(' ');
+                                   _executor.Execute(split.Head(), string.Join(' ', split.Tail()), config.RepoRoot);
+                               }));
+
+                return arguments;
+            }
+
+            RepositorySnapshotBuilderArguments RunBuildIfApplicable(
+                RepositorySnapshotBuilderArguments repositorySnapshotBuilderArguments)
+            {
+                if (config.BuildCommands == null || !config.BuildCommands.Any())
+                {
+                    _log.Information("No build commands were provided -- skipping");
+
+                    return repositorySnapshotBuilderArguments;
+                }
+
+                _log.Information($"Triggering build command '{string.Join(" && ", config.BuildCommands)}' in directory: {config.RepoRoot}");
+                _spinner.Start("Build in progress...",
+                               () => config.BuildCommands.Iter(command =>
+                               {
+                                   var split = command.Split(' ');
+                                   _executor.Execute(split.Head(), string.Join(' ', split.Tail()), config.RepoRoot);
+                               }));
+
+                return repositorySnapshotBuilderArguments;
+            }
+
+            return ConfigAsBuilder(config)
+                   .Apply(RunBuildIfApplicable)
+                   .Apply(RunTestsIfApplicable)
+                   .Apply(BuildSnapshot)
+                   .Apply(ConvertCoverageReportIfApplicable)
+                   .Apply(FilterFilesBasedOnIgnorePatterns)
+                   .Apply(EnrichSnapshotWithCoverage)
+                   .Apply(EnrichSnapshotWithGitStats)
+                   .Apply(CommitResultsToDb);
+        }
 
         private bool FilterFileOnPatterns(List<string> ignorePatterns, IFile file)
         {
